@@ -69,3 +69,5 @@ CREATE TABLE gatos (
     CONSTRAINT fk_gato_ong FOREIGN KEY (id_ong) REFERENCES ongs(id_ong)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+--teste
