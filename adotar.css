@@ -1,0 +1,346 @@
+/* 1. CONFIGURAÇÕES GLOBAIS (Para todas as páginas) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* 2. ESTRUTURA DO MENU SUPERIOR (Idêntico nas duas telas) */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.left-brand-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+}
+
+.logo {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #222;
+}
+
+.menu {
+    display: flex;
+    gap: 25px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.menu a:hover {
+    color: #007bff;
+}
+
+.menu a.active {
+    color: #007bff;
+    font-weight: 600;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 4px;
+}
+
+/* 3. ELEMENTOS DO INDEX.HTML (Página Inicial / Hero) */
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 8%;
+    min-height: calc(100vh - 80px);
+    gap: 40px;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 550px;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #e8f4ff;
+    color: #007bff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    color: #111;
+    margin-bottom: 20px;
+}
+
+.highlight {
+    color: #007bff;
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #333;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.hero-image-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* 4. ELEMENTOS DO ADOTAR.HTML (Página do Catálogo) */
+.container {
+    padding: 40px 8%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-titulo {
+    margin-bottom: 25px;
+}
+
+.header-titulo h1 {
+    font-size: 2.2rem;
+    color: #111;
+    margin-bottom: 5px;
+}
+
+.header-titulo p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 35px;
+    width: 100%;
+}
+
+.search-input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: #fff;
+    outline: none;
+}
+
+.btn-filters {
+    background-color: transparent;
+    color: #333;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-filters:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #ededed;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.card-img-box {
+    position: relative;
+    width: 100%;
+    height: 280px;
+}
+
+.card-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge-disponivel {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: #2ecc71;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.btn-favorito {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    z-index: 2;
+    transition: transform 0.2s ease;
+}
+
+.btn-favorito:hover {
+    transform: scale(1.1);
+}
+
+.card-info {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.pet-nome {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #111;
+}
+
+.pet-raca {
+    font-size: 0.9rem;
+    color: #777;
+    margin-top: 2px;
+}
+
+.pet-idade {
+    font-size: 0.85rem;
+    color: #007bff;
+    background-color: #e8f4ff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* 5. RESPONSIVIDADE PARA CELULARES */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .hero-container {
+        flex-direction: column-reverse;
+        padding: 40px 5%;
+        text-align: center;
+    }
+    
+    .hero-text h1 {
+        font-size: 2.2rem;
+    }
+    
+    .buttons {
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+    }
+}

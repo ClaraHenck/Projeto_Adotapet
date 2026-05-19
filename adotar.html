@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Encontre seu Companheiro</title>
+    <link rel="stylesheet" href="adotar.css">
+    <style>
+        /* Cursor de clique para os cards */
+        .card { cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho / Menu de Navegação -->
+    <header class="navbar">
+        <div class="left-brand-box">
+            <img src="C:\Users\42619841801\Desktop\inicio_HTML\img\Captura de tela 2026-05-13 110314.png" alt="Foto de Perfil" class="brand-avatar">
+            <div class="logo">🐾 AdotaPet</div>
+        </div>
+        <nav class="menu">
+            <a href="index.html">Início</a>
+            <a href="adotar.html" class="active">Adotar</a>
+            <a href="#">Mapa</a>
+            <a href="#">Candidaturas</a>
+            <a href="#">Mensagens</a>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal da Página de Listagem -->
+    <main class="container">
+        
+        <div class="header-titulo">
+            <h1>Encontre seu Companheiro</h1>
+            <p>27 cães disponíveis para adoção</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="🔍 Buscar por nome, raça ou cidade...">
+            <button class="btn-filters">🎛️ Filtros</button>
+        </div>
+
+        <!-- Grade de Exibição dos Animais -->
+        <div class="cards-grid">
+            
+            <!-- Card 1: Luna -->
+            <div class="card" data-id="luna">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <button class="btn-favorito">🤍</button>
+                    <img src="C:\Users\42619841801\Desktop\inicio_HTML\img\foto de gato - Pesquisar Imagens_files\photo-1514888286974-6c03e2ca1dba.jpg" alt="Luna">
+                </div>
+                <div class="card-info">
+                    <div class="pet-detalhes">
+                        <div class="pet-nome">Luna</div>
+                        <div class="pet-raca">Gato SRD</div>
+                    </div>
+                    <div class="pet-idade">1 ano</div>
+                </div>
+            </div>
+
+            <!-- Card 2: Simba -->
+            <div class="card" data-id="simba">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <button class="btn-favorito">🤍</button>
+                    <img src="C:\Users\42619841801\Desktop\inicio_HTML\img\foto de gato - Pesquisar Imagens_files\photo-1574158622682-e40e69881006.jpg" alt="Simba">
+                </div>
+                <div class="card-info">
+                    <div class="pet-detalhes">
+                        <div class="pet-nome">Simba</div>
+                        <div class="pet-raca">Gato</div>
+                    </div>
+                    <div class="pet-idade">2 anos</div>
+                </div>
+            </div>
+
+            <!-- Card 3: Felix -->
+            <div class="card" data-id="felix">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <button class="btn-favorito">🤍</button>
+                    <img src="https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=400" alt="Felix">
+                </div>
+                <div class="card-info">
+                    <div class="pet-detalhes">
+                        <div class="pet-nome">Felix</div>
+                        <div class="pet-raca">Gato Maine Coon</div>
+                    </div>
+                    <div class="pet-idade">3 anos</div>
+                </div>
+            </div>
+
+            <!-- Card 4: Baruck -->
+            <div class="card" data-id="baruck">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <button class="btn-favorito">🤍</button>
+                    <img src="https://images.unsplash.com/photo-1605897472359-85e4b94d685d?w=400" alt="Baruck">
+                </div>
+                <div class="card-info">
+                    <div class="pet-detalhes">
+                        <div class="pet-nome">Baruck</div>
+                        <div class="pet-raca">Golden</div>
+                    </div>
+                    <div class="pet-idade">3 anos</div>
+                </div>
+            </div>
+
+            <!-- Card 5: Balu -->
+            <div class="card" data-id="balu">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <button class="btn-favorito">🤍</button>
+                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400" alt="Balu">
+                </div>
+                <div class="card-info">
+                    <div class="pet-detalhes">
+                        <div class="pet-nome">Balu</div>
+                        <div class="pet-raca">Beagle</div>
+                    </div>
+                    <div class="pet-idade">Filhote</div>
+                </div>
+            </div>
+
+            <!-- Card 6: Marcão -->
+            <div class="card" data-id="marcao">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <button class="btn-favorito">🤍</button>
+                    <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400" alt="Marcão">
+                </div>
+                <div class="card-info">
+                    <div class="pet-detalhes">
+                        <div class="pet-nome">Marcão</div>
+                        <div class="pet-raca">Border Collie</div>
+                    </div>
+                    <div class="pet-idade">2 anos</div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Script de redirecionamento simples -->
+    <script>
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-favorito')) return;
+                const petId = card.getAttribute('data-id');
+                window.location.href = `detalhes.html?id=${petId}`;
+            });
+        });
+    </script>
+</body>
+</html>

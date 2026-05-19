@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Meu Perfil</title>
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+
+    <!-- Cabeçalho / Menu de Navegação -->
+    <header class="navbar">
+        <div class="logo">🐾 AdotaPet</div>
+        <nav class="menu">
+            <a href="index.html">Início</a>
+            <a href="adotar.html">Adotar</a>
+            <a href="#">Mapa</a>
+            <a href="#">Candidaturas</a>
+            <a href="#">Mensagens</a>
+            <a href="perfil.html" class="active">👤 Perfil</a>
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        
+        <div class="header-titulo">
+            <h1>Meu Perfil</h1>
+            <p>Quanto mais completo, melhor o match com os animais!</p>
+        </div>
+
+        <form class="form-perfil">
+            
+            <!-- Bloco 1: Informações Pessoais -->
+            <div class="secao-bloco">
+                <h2>👤 Informações Pessoais</h2>
+                
+                <div class="form-grid">
+                    <div class="campo-grupo">
+                        <label>Nome Completo</label>
+                        <input type="text" value="ANA LAURA PUPPO" placeholder="Digite seu nome">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Telefone</label>
+                        <input type="text" value="19984228373" placeholder="Digite seu telefone">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Cidade</label>
+                        <input type="text" value="Santa Rita Do Passa Quatro" placeholder="Sua cidade">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Estado</label>
+                        <input type="text" value="SP" placeholder="UF">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloco 2: Perfil de Adoção -->
+            <div class="secao-bloco">
+                <h2>🏠 Perfil de Adoção e Algoritmo de Compatibilidade</h2>
+                
+                <div class="form-grid">
+                    <div class="campo-grupo">
+                        <label>Tipo de Moradia</label>
+                        <select>
+                            <option selected>🏡 Casa com quintal</option>
+                            <option>🏢 Apartamento</option>
+                            <option>🏡 Casa sem quintal</option>
+                        </select>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Experiência com animais</label>
+                        <select>
+                            <option selected>🐾 Já tive animais</option>
+                            <option>❌ Nunca tive animais</option>
+                        </select>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Nível de atividade</label>
+                        <select>
+                            <option selected>🏃 Moderado</option>
+                            <option>🛋️ Baixo</option>
+                            <option>⚡ Alto</option>
+                        </select>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Porte preferido</label>
+                        <select>
+                            <option selected>🤷 Sem preferência</option>
+                            <option>🐕 Pequeno</option>
+                            <option>🦮 Médio</option>
+                            <option>🐕‍🦺 Grande</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo-grupo" style="margin-top: 15px;">
+                    <label>Horas fora de casa por dia: <strong>8h</strong></label>
+                    <input type="range" min="0" max="24" value="8" style="width: 100%; margin-top: 5px;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+
+        </form>
+    </main>
+
+</body>
+</html>

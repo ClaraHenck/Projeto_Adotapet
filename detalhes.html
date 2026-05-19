@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Detalhes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-voltar { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #00a896; font-weight: bold; }
+        .pet-imagem { width: 100%; height: 350px; object-fit: cover; border-radius: 8px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .info-box { background: #f9f9f9; padding: 10px; border-radius: 6px; border: 1px solid #eee; }
+        .btn-adotar { display: block; width: 100%; text-align: center; background: #00a896; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; text-decoration: none; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="adotar.html" class="btn-voltar">← Voltar</a>
+       <link rel="stylesheet" href="de.css">
+        
+        <img id="pet-foto" class="pet-imagem" src="" alt="Foto do pet">
+        
+        <h1 id="pet-nome">Nome</h1>
+        <p id="pet-raca" style="color: #666; margin-top: -10px;">Raça</p>
+
+        <div class="info-grid">
+            <div class="info-box"><strong>Idade:</strong> <span id="pet-idade">-</span></div>
+            <div class="info-box"><strong>Porte:</strong> <span id="pet-porte">-</span></div>
+            <div class="info-box"><strong>Energia:</strong> <span id="pet-energia">-</span></div>
+            <div class="info-box"><strong>Temperamento:</strong> <span id="pet-temperamento">-</span></div>
+        </div>
+
+        <p id="pet-descricao">Carregando descrição...</p>
+
+        <a href="#" class="btn-adotar" id="btn-acao">Quero Adotar</a>
+    </div>
+
+    <script>
+        // Dados de todos os seus 6 pets cadastrados de forma simples
+        const bancoDeDadosPets = {
+            "luna": {
+                nome: "Luna", raca: "Gato SRD", idade: "1 ano", porte: "Pequeno", energia: "Moderado", temperamento: "Dócil",
+                descricao: "Luna é uma gatinha dócil e carinhosa que adora colo e ronronar. Ótima para apartamento.",
+                foto: "C:\\Users\\42619841801\\Desktop\\inicio_HTML\\img\\foto de gato - Pesquisar Imagens_files\\photo-1514888286974-6c03e2ca1dba.jpg"
+            },
+            "simba": {
+                nome: "Simba", raca: "Gato", idade: "2 anos", porte: "Pequeno", energia: "Alta", temperamento: "Brincalhão",
+                descricao: "Simba é super enérgico, adora brinquedos e correr pela casa. Muito carinhoso.",
+                foto: "C:\\Users\\42619841801\\Desktop\\inicio_HTML\\img\\foto de gato - Pesquisar Imagens_files\\photo-1574158622682-e40e69881006.jpg"
+            },
+            "felix": {
+                nome: "Felix", raca: "Gato Maine Coon", idade: "3 anos", porte: "Grande", energia: "Baixa", temperamento: "Calmo",
+                descricao: "Felix é um companheiro muito tranquilo e reservado. Adora tirar sonecas ao sol.",
+                foto: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=400"
+            },
+            "baruck": {
+                nome: "Baruck", raca: "Golden Retriever", idade: "3 anos", porte: "Grande", energia: "Alta", temperamento: "Dócil e Brincalhão",
+                descricao: "Baruck adora nadar, buscar bolinhas e correr em espaços abertos. Ótimo com crianças.",
+                foto: "https://images.unsplash.com/photo-1605897472359-85e4b94d685d?w=400"
+            },
+            "balu": {
+                nome: "Balu", raca: "Beagle", idade: "Filhote", porte: "Médio", energia: "Muito Alta", temperamento: "Curioso",
+                descricao: "Balu adora farejar tudo, é muito brincalhão e precisa de tutores ativos.",
+                foto: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400"
+            },
+            "marcao": {
+                nome: "Marcão", raca: "Border Collie", idade: "2 anos", porte: "Médio", energia: "Extrema", temperamento: "Focado e Inteligente",
+                descricao: "Marcão é focado, aprende comandos super rápido e precisa de muitos desafios mentais.",
+                foto: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400"
+            }
+        };
+
+        // Identifica qual pet foi clicado na url
+        const urlParams = new URLSearchParams(window.location.search);
+        const petId = urlParams.get('id');
+        const petInfo = bancoDeDadosPets[petId];
+
+        // Altera o HTML dinamicamente com as informações estruturadas
+        if (petInfo) {
+            document.getElementById('pet-foto').src = petInfo.foto;
+            document.getElementById('pet-nome').innerText = petInfo.nome;
+            document.getElementById('pet-raca').innerText = petInfo.raca;
+            document.getElementById('pet-idade').innerText = petInfo.idade;
+            document.getElementById('pet-porte').innerText = petInfo.porte;
+            document.getElementById('pet-energia').innerText = petInfo.energia;
+            document.getElementById('pet-temperamento').innerText = petInfo.temperamento;
+            document.getElementById('pet-descricao').innerText = petInfo.descricao;
+            document.getElementById('btn-acao').innerText = `Quero Adotar o ${petInfo.nome}`;
+        } else {
+            document.querySelector('.container').innerHTML = "<h1>Pet não encontrado!</h1><a href='adotar.html'>Voltar para Listagem</a>";
+        }
+    </script>
+</body>
+</html>
