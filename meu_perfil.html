@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Meu Perfil</title>
+    <link rel="stylesheet" href="perfil.css">
+    <style>
+        /* Estilo da mensagem de sucesso na tela */
+        .toast-sucesso {
+            display: none;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+            animation: surgir 0.3s ease-in-out;
+        }
+
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+   
+    <header class="navbar">
+        <div class="logo">🐾 AdotaPet</div>
+        <nav class="menu" id="menu-navegacao">
+            <a href="index.html">Início</a>
+            <a href="adotar.html">Adotar</a>
+            <a href="#">Mapa</a>
+            <a href="#">Candidaturas</a>
+            <a href="mensagens.html">Mensagens</a>
+           |
+            <a href="perfil.html" id="link-perfil-pessoal" style="display: none;">👤 Perfil</a>
+           
+        </nav>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        
+        <div class="header-titulo">
+            <h1>Meu Perfil</h1>
+            <p>Quanto mais completo, melhor o match com os animais!</p>
+        </div>
+
+        <!-- Mensagem de feedback na tela -->
+        <div id="mensagemSucesso" class="toast-sucesso">
+            🐾 Alterações salvas com sucesso! Redirecionando...
+        </div>
+
+        <!-- Adicionado ID e onsubmit para salvar com JavaScript -->
+        <form class="form-perfil" id="formPerfil" onsubmit="salvarDados(event)">
+            
+            <!-- SELEÇÃO DO TIPO DE PERFIL -->
+            
+
+            <!-- BLOCO LOCALIZAÇÃO E CONTATO (Comum para ambos) -->
+            <div class="secao-bloco">
+                <h2>📍 Localização e Contato</h2>
+                <div class="form-grid">
+                    <div class="campo-grupo">
+                        <label>Telefone / WhatsApp</label>
+                        <input type="text" id="telContato" value="19984228373" placeholder="Digite o telefone">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Cidade</label>
+                        <input type="text" id="cidadeContato" value="Santa Rita Do Passa Quatro" placeholder="Sua cidade">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Estado</label>
+                        <input type="text" id="estadoContato" value="SP" placeholder="UF">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCO EXCLUSIVO: PERFIL PESSOAL -->
+            <div id="blocoPessoal" style="display: none;">
+                <div class="secao-bloco">
+                    <h2>👤 Informações Pessoais</h2>
+                    <div class="form-grid">
+                        <div class="campo-grupo">
+                            <label>Nome Completo</label>
+                            <input type="text" id="nomePessoal" value="ANA LAURA PUPPO" placeholder="Digite seu nome">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secao-bloco">
+                    <h2>🏠 Perfil de Adoção e Algoritmo de Compatibilidade</h2>
+                    <div class="form-grid">
+                        <div class="campo-grupo">
+                            <label>Tipo de Moradia</label>
+                            <select id="moradiaPessoal">
+                                <option selected>🏡 Casa com quintal</option>
+                                <option>🏢 Apartamento</option>
+                                <option>🏡 Casa sem quintal</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Experiência com animais</label>
+                            <select id="experienciaPessoal">
+                                <option selected>🐾 Já tive animais</option>
+                                <option>❌ Nunca tive animais</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Nível de atividade</label>
+                            <select id="atividadePessoal">
+                                <option selected>🏃 Moderado</option>
+                                <option>🛋️ Baixo</option>
+                                <option>⚡ Alto</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Porte preferido</label>
+                            <select id="portePessoal">
+                                <option selected>🤷 Sem preferência</option>
+                                <option>🐕 Pequeno</option>
+                                <option>🦮 Médio</option>
+                                <option>🐕‍🦺 Grande</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="campo-grupo" style="margin-top: 15px;">
+                        <label>Horas fora de casa por dia: <strong>8h</strong></label>
+                        <input type="range" id="horasForaPessoal" min="0" max="24" value="8" style="width: 100%; margin-top: 5px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCO EXCLUSIVO: PERFIL ONG -->
+            <div id="blocoONG">
+                <div class="secao-bloco">
+                    <h2>🏢 Informações da Instituição</h2>
+                    <div class="form-grid">
+                        <div class="campo-grupo">
+                            <label>Razão Social / Nome da ONG</label>
+                            <input type="text" id="nomeONG" placeholder="Ex: Associação Anjos de Patas">
+                        </div>
+                        <div class="campo-grupo">
+                            <label>CNPJ (opcional)</label>
+                            <input type="text" id="cnpjONG" placeholder="00.000.000/0001-00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secao-bloco">
+                    <h2>🐾 Capacidade e Foco de Atuação</h2>
+                    <div class="form-grid">
+                        <div class="campo-grupo">
+                            <label>Foco Principal de Resgate</label>
+                            <select id="focoONG">
+                                <option>🐶 Cachorros</option>
+                                <option>🐱 Gatos</option>
+                                <option selected>🐾 Ambos (Cães e Gatos)</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Capacidade Total do Abrigo</label>
+                            <select id="capacidadeONG">
+                                <option>Até 20 animais</option>
+                                <option selected>De 20 a 50 animais</option>
+                                <option>Mais de 50 animais</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+
+        </form>
+    </main>
+
+    <!-- Script de Alternância, Carregamento e Persistência de Dados -->
+    <script>
+        function alternarPerfil() {
+            const tipo = document.getElementById('tipoPerfil').value;
+            const blocoPessoal = document.getElementById('blocoPessoal');
+            const blocoONG = document.getElementById('blocoONG');
+
+            if (tipo === 'pessoal') {
+                blocoPessoal.style.display = 'block';
+                blocoONG.style.display = 'none';
+            } else {
+                blocoPessoal.style.display = 'none';
+                blocoONG.style.display = 'block';
+            }
+        }
+
+        // Executa ao carregar para alinhar os blocos e aplicar regras de visibilidade no menu superior
+        window.onload = function() {
+            const perfilTipo = localStorage.getItem('perfilTipo');
+            
+            const linkPerfil = document.getElementById('link-perfil-pessoal');
+            const linkOng = document.getElementById('link-minha-ong');
+            
+            // Controle do menu baseado no login efetuado
+            if (!perfilTipo) {
+                if (linkPerfil) linkPerfil.style.display = 'none';
+                if (linkOng) linkOng.style.display = 'none';
+            } else if (perfilTipo === 'ong') {
+                document.getElementById('tipoPerfil').value = 'ong';
+                if (linkPerfil) linkPerfil.style.display = 'none';
+                if (linkOng) linkOng.style.display = 'inline-block';
+            } else if (perfilTipo === 'pessoal') {
+                document.getElementById('tipoPerfil').value = 'pessoal';
+                if (linkPerfil) linkPerfil.style.display = 'inline-block';
+                if (linkOng) linkOng.style.display = 'none';
+            }
+
+            alternarPerfil();
+        };
+
+        // Salva os dados no localStorage, atualiza visibilidade e redireciona
+        function salvarDados(event) {
+            event.preventDefault();
+
+            const tipo = document.getElementById('tipoPerfil').value;
+
+            // Salva o tipo principal de login
+            localStorage.setItem('perfilTipo', tipo);
+
+            // Salva dados comuns
+            localStorage.setItem('user_telefone', document.getElementById('telContato').value);
+            localStorage.setItem('user_cidade', document.getElementById('cidadeContato').value);
+            localStorage.setItem('user_estado', document.getElementById('estadoContato').value);
+
+            // Salva dados baseados na conta escolhida
+            if (tipo === 'pessoal') {
+                localStorage.setItem('pes_nome', document.getElementById('nomePessoal').value);
+                localStorage.setItem('pes_moradia', document.getElementById('moradiaPessoal').value);
+                localStorage.setItem('pes_experiencia', document.getElementById('experienciaPessoal').value);
+                localStorage.setItem('pes_atividade', document.getElementById('atividadePessoal').value);
+                localStorage.setItem('pes_porte', document.getElementById('portePessoal').value);
+                localStorage.setItem('pes_horas_fora', document.getElementById('horasForaPessoal').value);
+            } else {
+                localStorage.setItem('ong_nome', document.getElementById('nomeONG').value);
+                localStorage.setItem('ong_cnpj', document.getElementById('cnpjONG').value);
+                localStorage.setItem('ong_foco', document.getElementById('focoONG').value);
+                localStorage.setItem('ong_capacidade', document.getElementById('capacidadeONG').value);
+            }
+
+            // Mostra o Toast na tela
+            const toast = document.getElementById('mensagemSucesso');
+            toast.style.display = 'block';
+
+            // Redireciona após 2 segundos
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdotaPet - Minha ONG</title>
+    <!-- CSS unificado baseado no estilo limpo e moderno da sua plataforma -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      /* Estilização da Navbar idêntica à do index.html */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 7%;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      }
+
+      .logo {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .menu a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: #666;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .menu a:hover, .menu a.active {
+        color: #ff4a75;
+      }
+
+      /* Container Principal do Perfil da ONG */
+      .container-ong {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .card-perfil {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+      }
+
+      .titulo-secao {
+        font-size: 24px;
+        margin-bottom: 25px;
+        color: #333;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 10px;
+      }
+
+      /* Área de Upload e Foto de Perfil */
+      .zona-foto {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 35px;
+        background: #fbfbfb;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px dashed #ddd;
+      }
+
+      .preview-foto-ong {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #2196F3;
+        background-color: #eee;
+      }
+
+      .btn-upload {
+        background-color: #2196F3;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background 0.2s;
+      }
+
+      .btn-upload:hover {
+        background-color: #1976D2;
+      }
+
+      #input-foto {
+        display: none;
+      }
+
+      /* Organização do Formulário em Grade */
+      .grid-formulario {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .full-width {
+        grid-column: span 2;
+      }
+
+      .grupo-campo {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .grupo-campo label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      .grupo-campo input, .grupo-campo textarea, .grupo-campo select {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .grupo-campo input:focus, .grupo-campo textarea:focus {
+        border-color: #2196F3;
+      }
+
+      /* Rodapé com Ações */
+      .acoes-container {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+      }
+
+      .btn-salvar {
+        background-color: #ff4a75;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-salvar:hover {
+        background-color: #e03e65;
+      }
+
+      .btn-voltar {
+        background-color: #e0e0e0;
+        color: #555;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: background 0.2s;
+      }
+
+      .btn-voltar:hover {
+        background-color: #d5d5d5;
+      }
+
+      /* Responsividade para telas menores */
+      @media (max-width: 768px) {
+        .grid-formulario {
+          grid-template-columns: 1fr;
+        }
+        .full-width {
+          grid-column: span 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- NAVBAR IDENTICA DO PROJETO -->
+    <header class="navbar">
+      <div class="left-brand-box">
+        <div class="logo">🐾 AdotaPet</div>
+      </div>
+      <nav class="menu">
+        <a href="index.html">Início</a>
+        <a href="candidaturas.html">Candidaturas Recebidas</a>
+        <a href="#" class="active">MINHA ONG</a>
+        <a href="#" onclick="logout()" style="color: #ff4d4d">Sair</a>
+      </nav>
+    </header>
+
+    <main class="container-ong">
+      <div class="card-perfil">
+        <h2 class="titulo-secao">🐾 Perfil de Instituição / ONG</h2>
+        
+        <form id="form-ong" onsubmit="salvarDadosOng(event)">
+          
+          <!-- SEÇÃO 1: FOTO DO ABRIGO -->
+          <div class="zona-foto">
+            <img id="preview-ong" src="https://flaticon.com" alt="Logo da ONG" class="preview-foto-ong" />
+            <label for="input-foto" class="btn-upload">Selecionar Logo / Foto</label>
+            <input type="file" id="input-foto" accept="image/*" onchange="processarFoto(event)" />
+            <span style="font-size: 12px; color: #888;">Envie uma foto quadrada para melhor visualização.</span>
+          </div>
+
+          <!-- SEÇÃO 2: INFORMAÇÕES CADASTRAIS (EDITAR) -->
+          <div class="grid-formulario">
+            <div class="grupo-campo">
+              <label for="nome-ong">Nome da ONG / Abrigo</label>
+              <input type="text" id="nome-ong" required placeholder="Ex: Instituto Patinhas Felizes" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="cnpj-ong">CNPJ (Se houver)</label>
+              <input type="text" id="cnpj-ong" placeholder="00.000.000/0001-00" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="telefone-ong">Telefone / WhatsApp Comercial</label>
+              <input type="text" id="telefone-ong" required placeholder="(00) 00000-0000" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="responsavel-ong">Nome do Responsável / Presidente</label>
+              <input type="text" id="responsavel-ong" required placeholder="Quem gerencia a conta" />
+            </div>
+
+            <!-- SEÇÃO 3: INFORMAÇÕES ADICIONAIS -->
+            <div class="grupo-campo full-width">
+              <h3 class="titulo-secao" style="margin-top: 20px; font-size: 18px;">✨ Informações Adicionais</h3>
+            </div>
+
+            <div class="grupo-campo">
+              <label for="capacidade-animais">Capacidade Máxima de Abrigados</label>
+              <input type="number" id="capacidade-animais" placeholder="Ex: 50" min="1" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="instagram-ong">Link do Instagram</label>
+              <input type="url" id="instagram-ong" placeholder="https://instagram.com" />
+            </div>
+
+            <div class="grupo-campo full-width">
+              <label for="descricao-ong">História ou Descrição do Trabalho da ONG</label>
+              <textarea id="descricao-ong" rows="4" placeholder="Conte resumidamente sobre o abrigo, missão e como o trabalho é feito..."></textarea>
+            </div>
+          </div>
+
+          <!-- BOTÕES DE AÇÃO -->
+          <div class="acoes-container">
+            <a href="index.html" class="btn-voltar">Voltar ao Painel</a>
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+          </div>
+
+        </form>
+      </div>
+    </main>
+
+    <script>
+      // Verifica o login do usuário
+      const tipoUsuario = localStorage.getItem("tipoUsuario");
+      const emailLogado = localStorage.getItem("usuarioLogadoEmail");
+
+      if (!tipoUsuario || tipoUsuario !== "ong") {
+        alert("Acesso restrito apenas para perfis de ONG cadastrados.");
+        window.location.href = "login.html";
+      }
+
+      // Variável global para armazenar a foto em Base64
+      let imagemBase64String = "";
+
+      // Executa automaticamente ao abrir a página
+      document.addEventListener("DOMContentLoaded", function() {
+        // Carrega dados textuais existentes do localStorage
+        const dadosArmazenados = localStorage.getItem("dados_perfil_" + emailLogado);
+        if (dadosArmazenados) {
+          const dados = JSON.parse(dadosArmazenados);
+          
+          // Preenche os campos cadastrais/base
+          document.getElementById("nome-ong").value = dados.nomeOng || "";
+          document.getElementById("cnpj-ong").value = dados.cnpj || "";
+          document.getElementById("telefone-ong").value = dados.telefone || "";
+          
+          // Preenche os campos adicionais novos
+          if (dados.responsavel) document.getElementById("responsavel-ong").value = dados.responsavel;
+          if (dados.capacidade) document.getElementById("capacidade-animais").value = dados.capacidade;
+          if (dados.instagram) document.getElementById("instagram-ong").value = dados.instagram;
+          if (dados.descricao) document.getElementById("descricao-ong").value = dados.descricao;
+        }
+
+        // Carrega a foto de perfil se ela já existir
+        const fotoSalva = localStorage.getItem("foto_perfil_" + emailLogado);
+        if (fotoSalva) {
+          document.getElementById("preview-ong").src = fotoSalva;
+          imagemBase64String = fotoSalva; // Mantém a foto atual armazenada
+        }
+      });
+
+      // Transforma a imagem selecionada do computador em String Base64 para salvar no LocalStorage

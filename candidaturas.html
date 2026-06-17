@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Minhas Candidaturas</title>
+    <link rel="stylesheet" href="candidaturas.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">🐾 Adota<span>Pet</span></div>
+        <div class="nav-links">
+            <button class="nav-btn active" id="btnAbaCandidaturas">🩵 Candidaturas (<span id="contador">0</span>)</button>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        
+        <div id="telaCandidaturas">
+            <h1 class="page-title">Minhas Candidaturas</h1>
+            <p class="page-subtitle">Acompanhe o status e andamento das suas adoções</p>
+            <div class="candidaturas-list" id="listaCandidaturas">
+                </div>
+            <button id="btnVerMaisCandidaturas" class="btn-ver-mais hidden" onclick="alternarCandidaturas()">Ver mais</button>
+        </div>
+
+    </div>
+
+<script>
+    // Array de candidaturas do usuário
+    let minhasCandidaturas = [
+        { id: 1, nome: "Mia", tipo: "Gato SRD", match: "80%", dataEnvio: "06/05/2026" },
+        { id: 2, nome: "Simba", tipo: "Gato Persa", match: "95%", dataEnvio: "02/05/2026" }
+    ];
+
+    // Estados dos botões de paginação (Limite de 3 por padrão)
+    let expandidoCandidaturas = false;
+    const LIMITE = 3;
+
+    // Altera a expansão das candidaturas
+    function alternarCandidaturas() {
+        expandidoCandidaturas = !expandidoCandidaturas;
+        atualizarListaCandidaturas();
+    }
+
+    // Função para remover candidatura pelo botão da lixeira
+    function removerCandidatura(id) {
+        minhasCandidaturas = minhasCandidaturas.filter(c => c.id !== id);
+        atualizarListaCandidaturas();
+    }
+
+    // Renderiza e mantém atualizada de forma limpa a aba Candidaturas
+    function atualizarListaCandidaturas() {
+        const lista = document.getElementById("listaCandidaturas");
+        const btn = document.getElementById("btnVerMaisCandidaturas");
+        lista.innerHTML = "";
+
+        document.getElementById("contador").innerText = minhasCandidaturas.length;
+
+        if (minhasCandidaturas.length === 0) {
+            lista.innerHTML = `<p style="text-align: center; color: #7f8c8d; padding: 40px 0;">Nenhuma candidatura ativa no momento.</p>`;
+            btn.classList.add("hidden");
+            return;
+        }
+
+        const itensExibidos = expandidoCandidaturas ? minhasCandidaturas : minhasCandidaturas.slice(0, LIMITE);
+
+        itensExibidos.forEach(pet => {
+            lista.innerHTML += `
+                <div class="candidatura-card">
+                    <div class="pct-badge">${pet.match}</div>
+                    <div class="pet-info">
+                        <div class="pet-header">
+                            <span class="pet-name">${pet.nome}</span>
+                            <span class="status-badge">Pendente</span>
+                        </div>
+                        <div class="envio-data">Enviada em ${pet.dataEnvio}</div>
+                    </div>
+                    <div class="actions-group">
+                        <button class="btn-icon" title="Mensagens">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </button>
+                        <button class="btn-icon" title="Ver detalhes">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                        <button class="btn-icon" title="Remover" onclick="removerCandidatura(${pet.id})" style="color: #ff4757; border-color: #ffccd0; background: #fff5f5;">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        if (minhasCandidaturas.length > LIMITE) {
+            btn.classList.remove("hidden");
+            btn.innerText = expandidoCandidaturas ? "Ver menos" : "Ver mais";
+        } else {
+            btn.classList.add("hidden");
+        }
+    }
+
+    // ==========================================
+    // EXECUÇÃO INICIAL (Garante a renderização ao carregar a página)
+    // ==========================================
+    window.onload = function() {
+        atualizarListaCandidaturas();
+    };
+</script>
+</body>
+</html>

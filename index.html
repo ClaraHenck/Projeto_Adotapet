@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdotaPet - Plataforma de Adoção</title>
+    <link rel="stylesheet" href="index.css" />
+    
+    <style>
+      /* Estilos para alinhar a foto com o link de perfil */
+      .perfil-link-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 13px;
+        transition: opacity 0.2s;
+      }
+
+      .perfil-link-container:hover {
+        opacity: 0.8;
+      }
+
+      .avatar-nav-mini {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ff4a75;
+        background-color: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="left-brand-box">
+        <div class="logo">🐾 AdotaPet</div>
+      </div>
+
+      <nav class="menu" id="menu-navegacao">
+        <a href="index.html" class="active">Início</a>
+        <a href="adotar.html" id="link-adotar">Adotar</a>
+        <a href="mapa.html">Mapa</a> 
+        <a href="candidaturas.html" id="link-candidaturas">Candidaturas</a>
+
+        <!-- LINK DIRETO PARA A PAGINA DE PERFIL -->
+        <a href="meu_perfil.html" id="link-perfil-dinamico" class="perfil-link-container">
+          <img id="nav-foto-perfil" src="https://flaticon.com" alt="Foto" class="avatar-nav-mini" />
+          <span id="texto-link-perfil">MEU PERFIL</span>
+        </a>
+
+        <!-- Link de sair para poder testar os dois perfis -->
+        <a href="#" onclick="logout()" style="color: #ff4d4d">Sair</a>
+      </nav>
+    </header>
+
+    <main class="hero-container">
+      <section class="hero-text">
+        <span class="badge">✨ Plataforma de Adoção Responsável</span>
+        <h1>
+          Encontre seu <br /><span class="highlight">melhor amigo</span>
+          <br />para a vida toda
+        </h1>
+        <p id="hero-descricao">
+          A AdotaPet conecta você ao animal perfeito usando inteligência
+          artificial. Um lar amoroso está a poucos cliques de distância.
+        </p>
+
+        <!-- CONTAINER DOS BOTÕES ORGANIZADO VERTICALMENTE -->
+        <div class="buttons" id="botoes-container" style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start;">
+          
+          <!-- Div para alinhar os dois botões principais originais lado a lado -->
+          <div style="display: flex; gap: 10px;">
+            <a
+              href="adotar.html"
+              id="btn-encontrar"
+              class="btn-primary"
+              style="text-decoration: none; display: inline-block; text-align: center; border-radius: 10px;"
+              >🔍 Encontrar um Animal</a
+            >
+           
+          </div>
+
+         
+         <a
+        href="questionario.html"
+        id="btn-questionario"
+       class="btn-secondary"
+      style="text-decoration: none; display: none; text-align: center; background-color: #ff6070ce; color: white; border: none; padding: 10px 20px; border-radius: 10px; width: fit-content; font-weight: bold;"
+  >📝 Responder Questionário de Adoção</a
+>
+
+        </div>
+      </section>
+
+      <section class="hero-image-box">
+        <img
+          src="img/f2792368c_generated_926ddb32.png"
+          alt="Cachorro Feliz"
+          class="main-img"
+        />
+      </section>
+    </main>
+
+    <!-- SCRIPT DE CONTROLE DE TELAS -->
+    <script>
+      // 1. Verifica quem está logado
+      const tipoUsuario = localStorage.getItem("tipoUsuario");
+      const emailLogado = localStorage.getItem("usuarioLogadoEmail") || "usuario@email.com";
+
+      // Se não tiver ninguém logado, manda direto para a tela de login
+      if (!tipoUsuario) {
+        window.location.href = "login.html";
+      }
+
+      // 2. Elementos que vamos modificar via JS
+      const menuNavegacao = document.getElementById("menu-navegacao");
+      const botoesContainer = document.getElementById("botoes-container");
+      const linkAdotar = document.getElementById("link-adotar");
+      const linkCandidaturas = document.getElementById("link-candidaturas");
+      const heroDescricao = document.getElementById("hero-descricao");
+      const btnEncontrar = document.getElementById("btn-encontrar");
+      const btnPerfil = document.getElementById("btn-perfil");
+      const btnQuestionario = document.getElementById("btn-questionario");
+
+      // Elementos do perfil dinâmico no menu
+      const linkPerfilDinamico = document.getElementById("link-perfil-dinamico");
+      const textoLinkPerfil = document.getElementById("texto-link-perfil");
+      const elementoFoto = document.getElementById("nav-foto-perfil");
+
+      // Carrega a foto salva se houver no LocalStorage
+      const fotoPerfilSalva = localStorage.getItem("foto_perfil_" + emailLogado);
+      if (fotoPerfilSalva && elementoFoto) {
+        elementoFoto.src = fotoPerfilSalva;
+      }
+
+      // 3. Aplica as regras baseadas no tipo de perfil
+      if (tipoUsuario === "ong") {
+        if (linkPerfilDinamico) linkPerfilDinamico.href = "minha_ong.html";
+        if (textoLinkPerfil) textoLinkPerfil.innerText = "MINHA ONG";
+        if (linkAdotar) linkAdotar.style.display = "none"; 
+        if (linkCandidaturas) linkCandidaturas.innerText = "Candidaturas Recebidas";
+        if (btnEncontrar) btnEncontrar.style.display = "none";
+        if (btnPerfil) btnPerfil.style.display = "none";
+        if (btnQuestionario) btnQuestionario.style.display = "none"; // Garante sumiço na ONG
+
+        heroDescricao.innerText = "Gerencie seus animais cadastrados, avalie candidaturas de adoção e encontre tutores responsáveis.";
+
+        const btnCadastrar = document.createElement("a");
+        btnCadastrar.href = "cadastrarAnimal.html";
+        btnCadastrar.className = "btn-primary";
+        btnCadastrar.style.cssText = "text-decoration: none; display: inline-block; text-align: center; background-color: #2196F3;";
+        btnCadastrar.innerHTML = "➕ Cadastrar Novo Animal"; 
+
+        const btnVerAnimais = document.createElement("a");
+        btnVerAnimais.href = "meus_animais.html";
+        btnVerAnimais.className = "btn-secondary";
+        btnVerAnimais.style.cssText = "text-decoration: none; display: inline-block; text-align: center;";
+        btnVerAnimais.innerHTML = "Gerenciar Animais →";
+
+        // Insere os botões de ONG dentro da div interna de botões para manter organização
+        const divAux = document.createElement("div");
+        divAux.style.cssText = "display: flex; gap: 10px;";
+        divAux.appendChild(btnCadastrar);
+        divAux.appendChild(btnVerAnimais);
+        botoesContainer.appendChild(divAux);
+
+      } else {
+        console.log("Acessando como Perfil Pessoal");
+        if (linkPerfilDinamico) linkPerfilDinamico.href = "meu_perfil.html";
+        if (textoLinkPerfil) textoLinkPerfil.innerText = "MEU PERFIL";
+
+        // CONTROLE DO BOTÃO DE QUESTIONÁRIO VIA LOCALSTORAGE
+        const jaRespondeu = localStorage.getItem("questionario_respondido_" + emailLogado);
+        if (jaRespondeu === "sim") {
+          btnQuestionario.style.display = "none"; // Some se já respondeu
+        } else {
+          btnQuestionario.style.display = "block"; // Aparece embaixo se não respondeu
+        }
+      }
+
+      // Função simulada que roda quando clica no questionário
+      function responderQuestionario(event) {
+        event.preventDefault();
+        
+        // Aqui simulamos que ela respondeu com sucesso
+        alert("Obrigado por responder ao nosso questionário de perfil de adotante!");
+        
+        // Salva o status atrelado ao e-mail logado
+        localStorage.setItem("questionario_respondido_" + emailLogado, "sim");
+        
+        // Esconde o botão na hora da tela
+        btnQuestionario.style.display = "none";
+      }
+
+      // Função para deslogar
+      function logout() {
+        localStorage.removeItem("tipoUsuario");
+        localStorage.removeItem("usuarioLogadoEmail");
+        window.location.href = "login.html";
+      }
+    </script>
+  </body>
+</html>

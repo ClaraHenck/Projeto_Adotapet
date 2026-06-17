@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="login.css" />
+    <title>AdotaPet - Acesso</title>
+    <style>
+      /* Estilos para a seleção visual do tipo de conta */
+      .seletor-conta-container {
+        display: flex;
+        gap: 15px;
+        margin: 20px 0;
+        justify-content: center;
+      }
+      .card-opcao {
+        flex: 1;
+        border: 2px solid #0a0aef;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: #f9f9f9;
+      }
+      .card-opcao:hover {
+        border-color: #ff8c00;
+        background: #fff5eb;
+      }
+      .card-opcao.selecionado {
+        border-color: #ff8c00;
+        background: #ffe4cc;
+        font-weight: bold;
+      }
+      .icone-opcao {
+        font-size: 15px;
+        display: block;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <img
+        src="img/Captura de tela 2026-05-13 110314.png"
+        alt="AdotaPet Logo"
+        class="logo-destaque"
+      />
+
+      🐾
+      <h2 id="tela-titulo">Entrar no AdotaPet</h2>
+      <p id="tela-subtitulo">Insira suas credenciais para acessar o painel.</p>
+
+      <form id="form-autenticacao" onsubmit="gerenciarFormulario(event)">
+        <!-- Campos Base: E-mail e Senha (Sempre visíveis) -->
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" required placeholder="exemplo@email.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" required placeholder="Digite sua senha" />
+        </div>
+
+        <!-- Seção de Cadastro (Escondida no modo Login) -->
+        <div id="secao-cadastro-extra" style="display: none;">
+          
+          <label style="display: block; margin-top: 15px; font-weight: bold;">Escolha o Tipo de Conta:</label>
+          
+          <!-- Botões de Seleção Tipo Card -->
+          <div class="seletor-conta-container">
+            <div id="card-pessoal" class="card-opcao selecionado" onclick="selecionarTipo('pessoal')">
+              <span class="icone-opcao">ADOTANTE</span>
+              Conta Pessoal
+            </div>
+            <div id="card-ong" class="card-opcao" onclick="selecionarTipo('ong')">
+              <span class="icone-opcao">ONG</span>
+              Conta ONG / Abrigo
+            </div>
+          </div>
+
+          <!-- Input oculto para armazenar a escolha atual -->
+          <input type="hidden" id="tipo-usuario" value="pessoal" />
+
+          <!-- Campos Exclusivos para Perfil Pessoal -->
+          <div id="campos-pessoal">
+            <div class="form-group">
+              <label for="nome-completo">Nome Completo</label>
+              <input type="text" id="nome-completo" placeholder="Seu nome aqui" />
+            </div>
+          </div>
+
+          <!-- Campos Exclusivos para ONG / Abrigo -->
+          <div id="campos-ong" style="display: none;">
+            <div class="form-group">
+              <label for="nome-ong">Nome da ONG / Instituição</label>
+              <input type="text" id="nome-ong" placeholder="Nome do Abrigo" />
+            </div>
+            <div class="form-group">
+              <label for="cnpj">CNPJ</label>
+              <input type="text" id="cnpj" placeholder="00.000.000/0001-00" />
+            </div>
+          </div>
+
+          <!-- Campo Comum para os dois cadastros -->
+          <div class="form-group">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input type="text" id="telefone" placeholder="(00) 00000-0000" />
+          </div>
+        </div>
+
+        <button type="submit" id="btn-acao" class="btn-login">Entrar</button>
+      </form>
+
+      <p style="margin-top: 15px">
+        <span id="texto-alternar">Não tem uma conta?</span>
+        <span id="link-alternar" class="alternar-link" onclick="alternarTela()">Criar Conta</span>
+      </p>
+    </div>
+
+    <script>
+      let modoLogin = true;
+
+      // Alterna a tela inteira entre Login e Cadastro
+      function alternarTela() {
+        modoLogin = !modoLogin;
+        const titulo = document.getElementById("tela-titulo");
+        const subtitulo = document.getElementById("tela-subtitulo");
+        const secaoCadastro = document.getElementById("secao-cadastro-extra");
+        const btnAcao = document.getElementById("btn-acao");
+        const textoAlternar = document.getElementById("texto-alternar");
+        const linkAlternar = document.getElementById("link-alternar");
+
+        if (modoLogin) {
+          titulo.innerText = "Entrar no AdotaPet";
+          subtitulo.innerText = "Insira suas credenciais para acessar o painel.";
+          secaoCadastro.style.display = "none";
+          btnAcao.innerText = "Entrar";
+          textoAlternar.innerText = "Não tem uma conta?";
+          linkAlternar.innerText = "Criar Conta";
+          configurarObrigatoriedadeCampos(false);
+        } else {
+          titulo.innerText = "Criar Nova Conta";
+          subtitulo.innerText = "Preencha todas as suas informações abaixo.";
+          secaoCadastro.style.display = "block";
+          btnAcao.innerText = "Criar Minha Conta";
+          textoAlternar.innerText = "Já possui uma conta?";
+          linkAlternar.innerText = "Fazer Login";
+          selecionarTipo(document.getElementById("tipo-usuario").value);
+        }
+      }
+
+      // Controla a seleção visual e exibe os campos correspondentes
+      function selecionarTipo(tipo) {
+        document.getElementById("tipo-usuario").value = tipo;
+        
+        const cardPessoal = document.getElementById("card-pessoal");
+        const cardOng = document.getElementById("card-ong");
+        const camposPessoal = document.getElementById("campos-pessoal");
+        const camposOng = document.getElementById("campos-ong");
+
+        if (tipo === "pessoal") {
+          cardPessoal.classList.add("selecionado");
+          cardOng.classList.remove("selecionado");
+          camposPessoal.style.display = "block";
+          camposOng.style.display = "none";
+        } else {
+          cardOng.classList.add("selecionado");
+          cardPessoal.classList.remove("selecionado");
+          camposPessoal.style.display = "none";
+          camposOng.style.display = "block";
+        }
+        configurarObrigatoriedadeCampos(true);
+      }
+
+      // Ativa ou desativa o atributo 'required' dinamicamente sem gerar quebras
+      function configurarObrigatoriedadeCampos(noModoCadastro) {
+        const tipo = document.getElementById("tipo-usuario").value;
+        
+        const txtNome = document.getElementById("nome-completo");
+        const txtOng = document.getElementById("nome-ong");
+        const txtTelefone = document.getElementById("telefone");
+
+        if (noModoCadastro) {
+          if (txtTelefone) txtTelefone.required = true;
+          if (tipo === "pessoal") {
+            if (txtNome) txtNome.required = true;
+            if (txtOng) txtOng.required = false;
+          } else {
+            if (txtNome) txtNome.required = false;
+            if (txtOng) txtOng.required = true;
+          }
+        } else {
+          if (txtNome) txtNome.required = false;
+          if (txtOng) txtOng.required = false;
+          if (txtTelefone) txtTelefone.required = false;
+        }
+      }
+
+      // Processa o envio do formulário único e efetua os redirecionamentos
+      function gerenciarFormulario(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const senha = document.getElementById("senha").value;
+
+        if (modoLogin) {
+          // --- FLUXO DE LOGIN ---
+          const contaLocal = localStorage.getItem("usuario_credenciais_" + email);
+
+          if (contaLocal) {
+            const dadosConta = JSON.parse(contaLocal);
+            if (dadosConta.senha === senha) {
+              localStorage.setItem("usuarioLogadoEmail", email);
+              localStorage.setItem("tipoUsuario", dadosConta.tipo);
+              
+              window.location.href = "index.html"; // Redireciona para o painel principal
+              return false;
+            }
+          }
+          alert("E-mail ou senha incorretos.");
+        } else {
+          // --- FLUXO DE CRIAÇÃO DE CONTA ---
+          if (localStorage.getItem("usuario_credenciais_" + email)) {
+            alert("Este e-mail já está cadastrado!");
+            return false;
+          }
+
+          const tipo = document.getElementById("tipo-usuario").value;
+          const telefone = document.getElementById("telefone").value;
+
+          const novaConta = { email: email, senha: senha, tipo: tipo };
+          const dadosPerfil = { telefone: telefone };
+
+          if (tipo === "pessoal") {
+            dadosPerfil.nome = document.getElementById("nome-completo").value;
+          } else {
+            dadosPerfil.nomeOng = document.getElementById("nome-ong").value;
+            dadosPerfil.cnpj = document.getElementById("cnpj").value;
+          }
+
+          // Grava todas as informações juntas nas chaves locais do navegador
+          localStorage.setItem("usuario_credenciais_" + email, JSON.stringify(novaConta));
+          localStorage.setItem("dados_perfil_" + email, JSON.stringify(dadosPerfil));
+          
+          localStorage.setItem("usuarioLogadoEmail", email);
+          localStorage.setItem("tipoUsuario", tipo);
+
+          alert("Conta criada com sucesso!");
+          window.location.href = "index.html"; // Leva diretamente à Home ao clicar em criar conta
+        }
+        return false;
+      }
+    </script>
+  </body>
+</html>

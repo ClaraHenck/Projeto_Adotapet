@@ -1,0 +1,232 @@
+/* ==========================================================================
+   Variáveis de Cores e Estilos Gerais
+   ========================================================================== */
+:root {
+  --primary-color: #ff6b6b;
+  --primary-hover: #fa5252;
+  --text-main: #2b2d42;
+  --text-muted: #6c757d;
+  --input-bg: #f8f9fa;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --shadow-box: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   Reset e Configuração da Página (Background de Animais)
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ==========================================================================
+   Configurações Globais (Paleta Azul e Reset)
+   ========================================================================== */
+:root {
+    --primary-color: #2563eb;       /* Azul Moderno */
+    --primary-hover: #1d4ed8;       /* Azul Escuro para os estados de foco/hover */
+    --text-main: #1e293b;           /* Cor escura para textos legíveis */
+    --text-muted: #64748b;          /* Cinza para descrições */
+    --radius-card: 16px;
+    --radius-input: 10px;
+    --shadow-main: 0 20px 25px -5px rgba(15, 23, 42, 0.2), 0 10px 10px -5px rgba(15, 23, 42, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    /* Gradiente azul sofisticado por cima de uma linda imagem de cão e gatinho */
+    background-image: linear-gradient(135deg, rgba(37, 99, 235, 0.75), rgba(15, 23, 42, 0.9)), 
+                      url('C:\Users\42619841801\Desktop\inicio_HTML\img\Captura de tela 2026-05-13 110314.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ==========================================================================
+   Container de Login (Card com Efeito de Vidro Suave)
+   ========================================================================== */
+.login-container {
+    background-color: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    width: 100%;
+    max-width: 420px;
+    padding: 45px 35px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-main);
+    text-align: center; /* Garante que a logo e os cabeçalhos fiquem centralizados */
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Estilização da Imagem da Logo em Destaque */
+.logo-destaque {
+    width: 140px;                        /* Aumentou o tamanho (de 110px para 140px) */
+    height: 140px;                       /* Mantém a proporção quadrada perfeita */
+    object-fit: cover;                   /* Ideal para imagens redondas sem distorcer */
+    margin: 0 auto 25px auto;
+    display: block;
+    border-radius: 50%;                  /* Deixa a logo perfeitamente redonda */
+    background-color: #ffffff;           /* Garante um fundo branco caso a imagem seja transparente */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Sombra elegante e destacada */
+    cursor: pointer;                     /* Mostra a mãozinha indicando que é clicável */
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease; /* Transição suave com efeito rebote */
+}
+
+/* Efeito ao passar o mouse (opcional, prepara o usuário para o clique) */
+.logo-destaque:hover {
+    transform: translateY(-2px);         /* Leve flutuação */
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25); /* Sombra aumenta na flutuação */
+}
+
+/* 🌟 EFEITO DE ZOOM AO CLICAR 🌟 */
+.logo-destaque:active {
+    transform: scale(1.15);              /* Dá o zoom aumentando em 15% o tamanho original */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra diminui simulando aproximação da tela */
+}
+
+
+/* Alinhamento do Título e Remoção do emoji de texto original */
+.login-container {
+    font-size: 0px; /* Remove visualmente o emoji "🐾" solto no HTML original */
+}
+
+#tela-titulo {
+    display: block;
+    font-size: 1.75rem;
+    color: var(--text-main);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+
+#tela-subtitulo {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   Formulários e Inputs (Alinhados de volta à esquerda)
+   ========================================================================== */
+#form-autenticacao {
+    text-align: left;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid #cbd5e1;
+    background-color: #f8fafc;
+    border-radius: var(--radius-input);
+    font-size: 0.95rem;
+    color: var(--text-main);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* Seta customizada elegante para o campo Select */
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* ==========================================================================
+   Botão de Ação e Rodapé
+   ========================================================================== */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #38a9c0;
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-input);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(238, 106, 172, 0.2);
+}
+
+.btn-login:hover {
+    background-color: #307f8f;
+    transform: translateY(-0.5px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* Configurações do link de alternar */
+p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.alternar-link {
+    color: #ff9641;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    margin-left: 3px;
+}
+
+.alternar-link:hover {
+    color: hsl(28, 85%, 44%);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Responsividade Básica para Celulares
+   ========================================================================== */
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+    .login-container {
+        padding: 35px 20px;
+    }
+}

@@ -1,0 +1,104 @@
+/* leaflet.css - Versão Corrigida para Destravar a Interatividade */
+
+.leaflet-map-pane,
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.leaflet-container {
+    overflow: hidden;
+    position: relative;
+    /* Destrava o cursor do mouse para arrastar */
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+
+/* Força os blocos do mapa a aceitarem cliques e arrastos */
+.leaflet-tile-container {
+    pointer-events: auto;
+    position: absolute;
+    z-index: 1;
+}
+
+.leaflet-tile {
+    position: absolute;
+    pointer-events: auto;
+    box-sizing: border-box;
+}
+
+.leaflet-tile-pane { 
+    z-index: 200; 
+    position: absolute;
+}
+
+/* Impede o usuário de selecionar as imagens como texto ao arrastar */
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Botões de Controle de Zoom (+ e -) */
+.leaflet-control {
+    position: relative;
+    z-index: 800;
+    pointer-events: auto;
+    float: left;
+    clear: both;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.leaflet-top { top: 0; }
+.leaflet-left { left: 0; }
+
+.leaflet-top .leaflet-control { 
+    margin-top: 10px; 
+    margin-left: 10px; 
+}
+
+.leaflet-bar {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
+    background-color: #fff;
+    display: inline-block;
+}
+
+.leaflet-bar a {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.leaflet-bar a:hover {
+    background-color: #f4f4f4;
+}

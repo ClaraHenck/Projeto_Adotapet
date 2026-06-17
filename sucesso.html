@@ -1,0 +1,12 @@
+    <script>
+        // Captura o formulário de perfil
+        const formulario = document.querySelector('.form-perfil');
+        
+        formulario.addEventListener('submit', (evento) => {
+            // Impede a página de recarregar do jeito padrão
+            evento.preventDefault(); 
+            
+            // Redireciona o usuário de forma direta para a página fofa de sucesso
+            window.location.href = "sucesso.html";
+        });
+    </script>

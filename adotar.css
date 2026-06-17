@@ -1,0 +1,313 @@
+/* ==========================================================================
+   1. CONFIGURAÇÕES GERAIS E VARIÁVEIS
+   ========================================================================== */
+:root {
+    --primary: #2bc4b6;
+    --primary-hover: #24a89c;
+    --danger: #f87171;
+    --background: #f9fafb;
+    --surface: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #9ca3af;
+    --text-body: #4b5563;
+    --border: #e5e7eb;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --transition: all 0.2s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   2. NAVBAR (CABEÇALHO)
+   ========================================================================== */
+.navbar {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.left-brand-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.menu {
+    display: flex;
+    gap: 24px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: var(--text-body);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.menu a:hover {
+    color: var(--primary);
+    background-color: #f0fdfa;
+}
+
+.menu a.active {
+    color: var(--primary);
+    background-color: #f0fdfa;
+}
+
+/* ==========================================================================
+   3. CONTAINER PRINCIPAL E TÍTULO
+   ========================================================================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.header-titulo {
+    margin-bottom: 32px;
+}
+
+.header-titulo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
+.header-titulo p {
+    font-size: 15px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   4. BARRA DE BUSCA E FILTROS
+   ========================================================================== */
+.search-container {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    background-color: var(--surface);
+    color: var(--text-main);
+    outline: none;
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(43, 196, 182, 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.btn-filters {
+    padding: 16px 24px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-body);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.btn-filters:hover {
+    background-color: var(--background);
+    border-color: var(--text-muted);
+}
+
+/* ==========================================================================
+   5. GRID E CARDS DE PETS
+   ========================================================================== */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background-color: var(--surface);
+    border: 1px solid #f3f4f6;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Caixa da Imagem e Elementos Absolutos */
+.card-img-box {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    background-color: #eaeaea;
+}
+
+.card-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge-disponivel {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background-color: rgba(43, 196, 182, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+}
+
+.btn-favorito {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: rgba(255, 255, 255, 0.85);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.btn-favorito:hover {
+    background-color: var(--surface);
+    transform: scale(1.1);
+    color: var(--danger);
+}
+
+/* Informações do Pet */
+.card-info {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pet-detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pet-nome {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.pet-raca {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.pet-idade {
+    background-color: #f3f4f6;
+    color: var(--text-body);
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   6. RESPONSIVIDADE (MOBILE)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 16px 20px;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .menu {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .menu a {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .search-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-filters {
+        justify-content: center;
+    }
+
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+}

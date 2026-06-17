@@ -1,0 +1,271 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f6d2b927;
+    color: #2d3748;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+
+body::before,
+body::after {
+    content: "🐾";
+    position: fixed;
+    font-size: 38px;
+    
+    opacity: 0.15; 
+    pointer-events: none;
+  
+    z-index: 9999; 
+    bottom: -60px;
+    display: block !important;
+}
+
+
+body::before {
+    left: 4%;
+    animation: flutuarPatinhaEsquerda 18s linear infinite;
+}
+
+
+body::after {
+    right: 6%;
+    animation: flutuarPatinhaDireita 24s linear infinite;
+    animation-delay: 4s;
+}
+
+
+@keyframes flutuarPatinhaEsquerda {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 10;
+    }
+    10% {
+        opacity: 0.30;
+    }
+    90% {
+        opacity: 0.30;
+    }
+    100% {
+        transform: translateY(-115vh) translateX(40px) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+
+@keyframes flutuarPatinhaDireita {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 10;
+    }
+    15% {
+        opacity: 0.30;
+    }
+    85% {
+        opacity: 0.30;
+    }
+    100% {
+        transform: translateY(-115vh) translateX(-50px) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: #f6d2b911;;
+    border-bottom: 1px solid #f0eef1;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a202c;
+    letter-spacing: -0.5px;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.menu a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #718096;
+    transition: color 0.2s ease;
+}
+
+.menu a:hover {
+    color: #00bcd4;
+}
+
+.menu a.active {
+    color: #ffffff;
+    background-color: #00bcd4;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 8%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 540px;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #ffeef0;
+    color: #ff6584;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.hero-text h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #1a202c;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.highlight {
+    color: #ff6584;
+}
+
+.hero-text p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #718096;
+    margin-bottom: 36px;
+}
+
+
+.buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: #00bcd4;
+    color: #ffffff !important;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+    background-color: #00acc1;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #4a5568 !important;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #f7fafc;
+    border-color: #cbd5e0;
+}
+
+
+.hero-image-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.main-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    object-fit: cover;
+}
+
+
+@media (max-width: 968px) {
+    .navbar {
+        padding: 15px 5%;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .hero-container {
+        flex-direction: column-reverse;
+        padding: 40px 5%;
+        text-align: center;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .hero-text h1 {
+        font-size: 36px;
+    }
+
+    .buttons {
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+    }
+    
+   
+    body::before, body::after {
+        display: none;
+    }
+}

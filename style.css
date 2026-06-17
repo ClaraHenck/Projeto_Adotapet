@@ -1,0 +1,185 @@
+/* Reset e Configurações Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f9fbfd;
+  color: #333333;
+  overflow-x: hidden;
+}
+
+/* --- BARRA DE NAVEGAÇÃO (HEADER) --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.left-brand-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.menu {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #666666;
+  font-size: 15px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.menu a:hover,
+.menu a.active {
+  color: #ff6b6b;
+}
+
+/* --- ESTRUTURA PRINCIPAL (HERO) --- */
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 8%;
+  min-height: calc(100vh - 80px);
+  gap: 40px;
+}
+
+.hero-text {
+  flex: 1;
+  max-width: 600px;
+}
+
+.badge {
+  display: inline-block;
+  background-color: #ffeef0;
+  color: #ff6b6b;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  color: #ff6b6b;
+}
+
+.hero-text p {
+  font-size: 16px;
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-bottom: 35px;
+}
+
+/* --- BOTÕES DA TELA INICIAL --- */
+.buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Estilo padrão para botões principais (Achar Animal / Cadastrar) */
+.btn-primary {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+/* Estilo padrão para botões secundários (Perfil / Gerenciar) */
+.btn-secondary {
+  background-color: transparent;
+  color: #2c3e50;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+/* --- IMAGEM DO HERO --- */
+.hero-image-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.main-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive para telas menores */
+@media (max-width: 968px) {
+  .hero-container {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 40px;
+  }
+  .hero-text h1 {
+    font-size: 36px;
+  }
+  .buttons {
+    justify-content: center;
+  }
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

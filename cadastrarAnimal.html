@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Cadastrar Animal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cadastrar.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">🐾 AdotaPet</div>
+        <nav class="menu" id="menu-navegacao">
+    <a href="index.html" class="active">Início</a>
+    <a href="adotar.html">Adotar</a>
+    <a href="mapa.html">Mapa</a>
+    <a href="candidaturas.html">Candidaturas</a>
+    <a href="mensagens.html">Mensagens</a>
+    
+    
+    <a href="perfil.html" id="link-perfil-pessoal" style="display: none;">perfil</a>
+    <a href="perfil.html" id="link-minha-ong" style="display: none;">Minha ONG</a>
+</nav>
+    </header>
+
+    <main class="container-perfil">
+        <h1 class="title-perfil">➕ Cadastrar Novo Animal</h1>
+        
+        <p class="subtitle-perfil">Insira as informações completas do pet para disponibilizá-lo para adoção.</p>
+
+        <div id="msgSucesso" class="toast-sucesso">🐾 Animal publicado com sucesso! Redirecionando...</div>
+
+        <form id="formCadastrarPet" onsubmit="publicarAnimal(event)">
+            <div class="form-group">
+                <label for="petNome">Nome do Animal</label>
+                <input type="text" id="petNome" required placeholder="Ex: Mel, Thor...">
+            </div>
+            
+            <div class="form-group">
+                <label for="petTipo">Espécie / Raça</label>
+                <input type="text" id="petTipo" required placeholder="Ex: Gato SRD, Poodle...">
+            </div>
+
+            <div class="form-group">
+                <label for="petIdade">Idade Estimada</label>
+                <input type="text" id="petIdade" required placeholder="Ex: 1 ano, 6 meses...">
+            </div>
+
+            <div class="form-group">
+                <label for="petPorte">Porte do Animal</label>
+                <select id="petPorte" required>
+                    <option value="" disabled selected>Selecione o porte...</option>
+                    <option value="Pequeno">🐕 Pequeno</option>
+                    <option value="Médio">🦮 Médio</option>
+                    <option value="Grande">🐕‍🦺 Grande</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="petVacinacao">Carteira de Vacinação</label>
+                <select id="petVacinacao" required>
+                    <option value="" disabled selected>Situação das vacinas...</option>
+                    <option value="Vacinado (Completa)">💉 Totalmente Vacinado</option>
+                    <option value="Parcialmente Vacinado">💉 Parcialmente Vacinado</option>
+                    <option value="Não Vacinado">❌ Nenhuma Vacina Tomada</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="petImagem">Foto do Animal (Link/URL da Imagem)</label>
+                <input type="url" id="petImagem" required placeholder="https://exemplo.com">
+            </div>
+
+            <div class="form-group">
+                <label for="petDescricao">Breve Descrição do Animal</label>
+                <textarea id="petDescricao" rows="4" required placeholder="Conte um pouco sobre o temperamento, história ou cuidados especiais do pet..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-salvar">Publicar Animal</button>
+        </form>
+    </main>
+
+    <script>
+        function publicarAnimal(event) {
+            event.preventDefault();
+
+            // Resgata o nome da ONG cadastrada no Perfil. Se estiver vazio, usa um padrão.
+            const nomeOngAtual = localStorage.getItem('ong_nome') || "ONG Protetora";
+
+            // Monta o objeto com TODOS os novos campos pedidos
+            const novoPet = {
+                id: Date.now(),
+                nome: document.getElementById('petNome').value,
+                tipo: document.getElementById('petTipo').value,
+                idade: document.getElementById('petIdade').value,
+                porte: document.getElementById('petPorte').value,
+                vacinacao: document.getElementById('petVacinacao').value,
+                imagem: document.getElementById('petImagem').value,
+                descricao: document.getElementById('petDescricao').value,
+                ongResponsavel: nomeOngAtual,
+                match: "92%" // Simulação do algoritmo da plataforma
+            };
+
+            // Salva na lista global do localStorage
+            let listaAnimais = JSON.parse(localStorage.getItem('bancoAnimaisDigitais')) || [];
+            listaAnimais.push(novoPet);
+            localStorage.setItem('bancoAnimaisDigitais', JSON.stringify(listaAnimais));
+
+            // Feedback na tela e redirecionamento
+            document.getElementById('msgSucesso').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = 'adotar.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

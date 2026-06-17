@@ -1,0 +1,347 @@
+/* ==========================================================================
+   1. CONFIGURAÇÕES GERAIS E VARIÁVEIS
+   ========================================================================== */
+:root {
+    --primary: #2bc4b6;
+    --primary-hover: #24a89c;
+    --primary-light: #f0fdfa;
+    --danger: #ff4d4d;
+    --danger-hover: #e04343;
+    --background: #fcfcfd;
+    --surface: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --text-body: #4b5563;
+    --border: #f3f4f6;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    --transition: all 0.2s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   2. NAVBAR (CABEÇALHO)
+   ========================================================================== */
+.navbar {
+    background-color: var(--surface);
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.left-brand-box {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.menu a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    transition: var(--transition);
+}
+
+.menu a:hover, .menu a.active {
+    color: var(--text-main);
+    background-color: var(--border);
+}
+
+/* ==========================================================================
+   3. CONTAINER PRINCIPAL E BOTÃO VOLTAR
+   ========================================================================== */
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.btn-voltar {
+    display: inline-block;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 24px;
+    transition: var(--transition);
+}
+
+.btn-voltar:hover {
+    color: var(--text-main);
+    transform: translateX(-4px);
+}
+
+/* BLOCK ESTRUTURAL: Divisão em duas colunas */
+.pet-details-wrapper {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    gap: 48px;
+    margin-bottom: 48px;
+}
+
+/* ==========================================================================
+   4. COLUNA ESQUERDA: IMAGEM DO PET
+   ========================================================================== */
+.pet-image-side img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+/* ==========================================================================
+   5. COLUNA DIREITA: INFORMAÇÕES DO PET
+   ========================================================================== */
+.pet-info-side {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabeçalho de Texto */
+.pet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.pet-main-title h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.pet-main-title p {
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.badge-status {
+    background-color: #22c55e;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Grid de Caixas de Atributos (Idade, Porte, Energia, Temperamento) */
+.attributes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.attr-box {
+    background-color: #f8fafc;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid #f1f5f9;
+}
+
+.attr-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0f2fe;
+    color: #0284c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.attr-text span {
+    display: block;
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.attr-text strong {
+    font-size: 15px;
+    color: #1e293b;
+}
+
+/* Flexbox de Tags de Vacina e Convivência */
+.tags-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.tag-item {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.tag-item.checked {
+    color: #16a34a;
+    background-color: #dcfce7;
+}
+
+.tag-item.alert {
+    color: #ea580c;
+    background-color: #ffedd5;
+}
+
+/* Descrição e Localização */
+.pet-description {
+    font-size: 15px;
+    color: var(--text-body);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.pet-location {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 32px;
+}
+
+/* Botão Quero Adotar */
+.btn-adotar {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 18px;
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(43, 196, 182, 0.2);
+}
+
+.btn-adotar:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   6. SEÇÃO INFERIOR: ABAS DE HISTÓRICOS
+   ========================================================================== */
+.tabs-section {
+    margin-top: 24px;
+}
+
+.tabs-header {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 16px;
+}
+
+.tab-link {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 999px;
+    transition: var(--transition);
+}
+
+.tab-link:hover {
+    color: var(--text-main);
+    background-color: #f1f5f9;
+}
+
+.tab-link.active {
+    background-color: var(--surface);
+    color: #1e293b;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+/* Painéis de Conteúdo das Abas */
+.tab-panel {
+    display: none; /* Escondido por padrão */
+    background: var(--surface);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    margin-top: 16px;
+    border: 1px solid #f1f5f9;
+    text-align: center;
+    color: var(--text-body);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.tab-panel.active {
+    display: block; /* Exibe apenas o painel ativo */
+}
+
+.empty-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    color: #94a3b8;
+}
+
+/* ==========================================================================
+   7. RESPONSIVIDADE (MOBILE)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 14px 20px;
+    }
+
+    .pet-details-wrapper {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .pet-main-title h1 {
+        font-size: 28px;
+    }
+
+    .attributes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tab-panel {
+        padding: 24px;
+    }
+}

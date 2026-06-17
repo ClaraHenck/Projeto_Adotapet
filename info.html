@@ -1,0 +1,111 @@
+<!-- Adicione este link de ícones no seu <head> para usar os símbolos de usuário/configurações -->
+<link rel="stylesheet" href="https://cloudflare.com">
+
+<!-- Estrutura do Menu de Navegação Superior -->
+<nav class="nav-menu">
+  <a href="index.html" class="nav-link active">Início</a>
+  <a href="mapa.html" class="nav-link">Mapa</a>
+  <a href="candidaturas.html" class="nav-link">Candidaturas Recebidas</a>
+  <a href="mensagens.html" class="nav-link">Mensagens</a>
+  <a href="info.html" class="nav-link">MEU PERFIL</a>
+  
+  <!-- Elemento Dinâmico do Perfil -->
+  <div class="perfil-dropdown-container">
+    <button class="btn-perfil-menu" onclick="alternarMenuPerfil()">
+      <!-- A foto de perfil padrão ou a salva pelo usuário aparecerá aqui -->
+      <img id="nav-foto-perfil" src="https://flaticon.com" alt="Foto de Perfil" class="avatar-nav" />
+      <span id="nav-texto-perfil">Meu Perfil</span>
+      <i class="fas fa-caret-down"></i>
+
+   
+<div id="status-questionario-box" style="display: none; margin-top: 15px; background-color: #e8f5e9; border: 1px solid #c8e6c9; padding: 12px; border-radius: 8px; color: #2e7d32; font-weight: bold; text-align: center;">
+  ✅ Você já respondeu ao questionário de adoção de forma correta!
+</div>
+
+    </button>
+    
+    <!-- Opções do Menu Suspenso -->
+    <div id="dropdown-opcoes" class="dropdown-conteudo">
+      <div class="dropdown-header">
+        <strong id="dropdown-nome-usuario">Carregando...</strong>
+        <span id="dropdown-email-usuario" style="font-size: 11px; color: #777;">email@teste.com</span>
+      </div>
+      <hr>
+      <a href="#" onclick="abrirModalConfiguracoes()"><i class="fas fa-user-edit"></i> Editar Informações</a>
+      <a href="#" onclick="abrirModalConfiguracoes()"><i class="fas fa-camera"></i> Alterar Foto</a>
+      <a href="#" id="opcao-complementar"><i class="fas fa-plus-circle"></i> Dados Adicionais</a>
+      <hr>
+      <a href="#" onclick="efetuarSair()" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Executa assim que a página carrega para adaptar o menu ao tipo de conta
+  document.addEventListener("DOMContentLoaded", function() {
+    const emailLogado = localStorage.getItem("usuarioLogadoEmail");
+    const tipoUsuario = localStorage.getItem("tipoUsuario"); // 'pessoal' ou 'ong'
+    
+    if (!emailLogado) {
+      window.location.assign("login.html"); // Proteção: se não estiver logado, volta pro login
+      return;
+    }
+
+    const textoPerfil = document.getElementById("nav-texto-perfil");
+    const labelNome = document.getElementById("dropdown-nome-usuario");
+    const labelEmail = document.getElementById("dropdown-email-usuario");
+    const opcaoComplementar = document.getElementById("opcao-complementar");
+    
+    labelEmail.innerText = emailLogado;
+
+    // Busca os dados detalhados salvos na tela de cadastro unificada
+    const dadosPerfilCompletos = localStorage.getItem("dados_perfil_" + emailLogado);
+    let dados = dadosPerfilCompletos ? JSON.parse(dadosPerfilCompletos) : null;
+
+    // Carrega a foto de perfil se ela já existir no localStorage
+    const fotoSalva = localStorage.getItem("foto_perfil_" + emailLogado);
+    if (fotoSalva) {
+      document.getElementById("nav-foto-perfil").src = fotoSalva;
+    }
+
+    // Customização baseada no tipo de conta cadastrada
+    if (tipoUsuario === "ong") {
+      textoPerfil.innerText = "Minha ONG";
+      labelNome.innerText = dados ? dados.nomeOng : "Minha ONG / Abrigo";
+      opcaoComplementar.innerHTML = '<i class="fas fa-hands-helping"></i> Dados do Abrigo';
+    } else {
+      textoPerfil.innerText = "Meu Perfil";
+      labelNome.innerText = dados ? dados.nome : "Usuário Adotante";
+      opcaoComplementar.innerHTML = '<i class="fas fa-heart"></i> Preferências de Adoção';
+    }
+  });
+
+  // Abre e fecha o menu suspenso do perfil
+  function alternarMenuPerfil() {
+    const dropdown = document.getElementById("dropdown-opcoes");
+    dropdown.classList.toggle("mostrar-menu");
+  }
+
+  // Fecha o dropdown se o usuário clicar fora dele
+  window.onclick = function(event) {
+    if (!event.target.matches('.btn-perfil-menu') && !event.target.closest('.btn-perfil-menu')) {
+      const dropdowns = document.getElementsByClassName("dropdown-conteudo");
+      for (let i = 0; i < dropdowns.length; i++) {
+        if (dropdowns[i].classList.contains('mostrar-menu')) {
+          dropdowns[i].classList.remove('mostrar-menu');
+        }
+      }
+    }
+  }
+
+  function efetuarSair() {
+    localStorage.removeItem("usuarioLogadoEmail");
+    localStorage.removeItem("tipoUsuario");
+    window.location.assign("login.html");
+  }
+
+  // Função provisória para demonstrar a edição (Pode abrir um modal ou nova página)
+  function abrirModalConfiguracoes() {
+    alert("Aqui você abrirá a tela/modal para carregar a nova foto (usando input tipo file e convertendo para Base64) ou editar os inputs de texto.");
+  }
+</script>
