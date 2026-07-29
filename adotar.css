@@ -17,6 +17,50 @@
     --transition: all 0.2s ease;
 }
 
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f6d2b927;
+    color: #2d3748;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+
+body::before,
+body::after {
+    content: "🐾";
+    position: fixed;
+    font-size: 38px;
+    
+    opacity: 0.15; 
+    pointer-events: none;
+  
+    z-index: 9999; 
+    bottom: -60px;
+    display: block !important;
+}
+
+
+body::before {
+    left: 4%;
+    animation: flutuarPatinhaEsquerda 18s linear infinite;
+}
+
+
+body::after {
+    right: 6%;
+    animation: flutuarPatinhaDireita 24s linear infinite;
+    animation-delay: 4s;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;

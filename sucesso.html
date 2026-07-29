@@ -1,12 +1,56 @@
-    <script>
-        // Captura o formulário de perfil
-        const formulario = document.querySelector('.form-perfil');
-        
-        formulario.addEventListener('submit', (evento) => {
-            // Impede a página de recarregar do jeito padrão
-            evento.preventDefault(); 
-            
-            // Redireciona o usuário de forma direta para a página fofa de sucesso
-            window.location.href = "sucesso.html";
-        });
-    </script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Realizado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .success-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+        h1 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #555;
+            margin-bottom: 25px;
+        }
+        .btn-voltar {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-voltar:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-box">
+    <h1>🐾 Sucesso!</h1>
+    <p>O animal foi cadastrado corretamente no sistema.</p>
+    <a href="index.html" class="btn-voltar">voltar</a>
+</div>
+
+</body>
+</html>

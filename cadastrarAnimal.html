@@ -3,116 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdotaPet - Cadastrar Animal</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="cadastrar.css">
+    <title>Cadastro de Animal - AdotaPet</title>
+    
+    <!-- ESTILIZAÇÃO CSS INTEGRADA -->
+    <style>
+        /* RESET E CONFIGURAÇÕES GERAIS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #ffffff; /* Fundo totalmente branco solicitado */
+            color: #2D3748;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* HEADER TOTALMENTE BRANCO */
+        header {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff; /* Header branco solicitado */
+            border-bottom: 1px solid #EDF2F7; /* Linha sutil para separar o cabeçalho do conteúdo */
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1A202C;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #FF4081; /* Cor rosa de destaque da logo */
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #718096;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: #1A202C;
+        }
+
+        /* Botão Início ativo/estilizado */
+        nav a.active {
+            background-color: #00B0FF; /* Azul claro do botão Início */
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+        }
+
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .perfil-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .perfil-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #E2E8F0;
+            display: inline-block;
+        }
+
+        .btn-sair {
+            color: #FF5A5F;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* CONTEÚDO PRINCIPAL (FORMULÁRIO) */
+        main {
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Sombra leve para destacar o formulário no fundo branco */
+            width: 100%;
+            max-width: 480px;
+            border: 1px solid #EDF2F7; /* Borda sutil de acabamento */
+        }
+
+        h2 {
+            text-align: center;
+            color: #1A202C;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #4A5568;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2D3748;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: #F7FAFC;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #00B0FF;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 176, 255, 0.1);
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #00B0FF;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 14px rgba(0, 176, 255, 0.3);
+        }
+
+        button:hover {
+            background-color: #0091EA;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo">🐾 AdotaPet</div>
-        <nav class="menu" id="menu-navegacao">
-    <a href="index.html" class="active">Início</a>
-    <a href="adotar.html">Adotar</a>
-    <a href="mapa.html">Mapa</a>
-    <a href="candidaturas.html">Candidaturas</a>
-    <a href="mensagens.html">Mensagens</a>
-    
-    
-    <a href="perfil.html" id="link-perfil-pessoal" style="display: none;">perfil</a>
-    <a href="perfil.html" id="link-minha-ong" style="display: none;">Minha ONG</a>
-</nav>
+    <!-- CABEÇALHO INTEGRADO BRANCO -->
+    <header>
+        <a href="index.html" class="logo">
+            🐾 <span>Adota</span>Pet
+        </a>
+        <nav>
+            <a href="index.html" class="active">Início</a>
+            <a href="#">Mapa</a>
+            <a href="#">Candidaturas Recebidas</a>
+            <div class="perfil-container">
+                <a href="#" class="perfil-link">
+                    <span class="perfil-avatar"></span>
+                    Meu Perfil
+                </a>
+                <a href="#" class="btn-sair">Sair</a>
+            </div>
+        </nav>
     </header>
 
-    <main class="container-perfil">
-        <h1 class="title-perfil">➕ Cadastrar Novo Animal</h1>
-        
-        <p class="subtitle-perfil">Insira as informações completas do pet para disponibilizá-lo para adoção.</p>
-
-        <div id="msgSucesso" class="toast-sucesso">🐾 Animal publicado com sucesso! Redirecionando...</div>
-
-        <form id="formCadastrarPet" onsubmit="publicarAnimal(event)">
-            <div class="form-group">
-                <label for="petNome">Nome do Animal</label>
-                <input type="text" id="petNome" required placeholder="Ex: Mel, Thor...">
-            </div>
+    <!-- CONTEÚDO DO FORMULÁRIO -->
+    <main>
+        <div class="container">
+            <h2>Cadastrar Animal</h2>
+            <p class="subtitle">Insira as informações do pet abaixo</p>
             
-            <div class="form-group">
-                <label for="petTipo">Espécie / Raça</label>
-                <input type="text" id="petTipo" required placeholder="Ex: Gato SRD, Poodle...">
-            </div>
+            <form id="formCadastro">
+                
+                <div class="form-group">
+                    <label for="nome">Nome do Animal</label>
+                    <input type="text" id="nome" required placeholder="Ex: Thor, Mel, Luna">
+                </div>
 
-            <div class="form-group">
-                <label for="petIdade">Idade Estimada</label>
-                <input type="text" id="petIdade" required placeholder="Ex: 1 ano, 6 meses...">
-            </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="especie">Espécie</label>
+                        <select id="especie" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="Cachorro">Cachorro</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Pássaro">Pássaro</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label for="petPorte">Porte do Animal</label>
-                <select id="petPorte" required>
-                    <option value="" disabled selected>Selecione o porte...</option>
-                    <option value="Pequeno">🐕 Pequeno</option>
-                    <option value="Médio">🦮 Médio</option>
-                    <option value="Grande">🐕‍🦺 Grande</option>
-                </select>
-            </div>
+                    <div class="form-group">
+                        <label for="idade">Idade (Anos)</label>
+                        <input type="number" id="idade" min="0" max="30" placeholder="Ex: 2">
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="petVacinacao">Carteira de Vacinação</label>
-                <select id="petVacinacao" required>
-                    <option value="" disabled selected>Situação das vacinas...</option>
-                    <option value="Vacinado (Completa)">💉 Totalmente Vacinado</option>
-                    <option value="Parcialmente Vacinado">💉 Parcialmente Vacinado</option>
-                    <option value="Não Vacinado">❌ Nenhuma Vacina Tomada</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="raca">Raça / Tipo</label>
+                    <input type="text" id="raca" placeholder="Ex: Vira-lata, Labrador, Siamês">
+                </div>
 
-            <div class="form-group">
-                <label for="petImagem">Foto do Animal (Link/URL da Imagem)</label>
-                <input type="url" id="petImagem" required placeholder="https://exemplo.com">
-            </div>
+                <div class="form-group">
+                    <label for="observacoes">Observações Médicas ou Comportamento</label>
+                    <textarea id="observacoes" placeholder="Ex: Alérgico a medicamentos, dócil, etc."></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="petDescricao">Breve Descrição do Animal</label>
-                <textarea id="petDescricao" rows="4" required placeholder="Conte um pouco sobre o temperamento, história ou cuidados especiais do pet..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-salvar">Publicar Animal</button>
-        </form>
+                <button type="submit">Cadastrar Animal</button>
+            </form>
+        </div>
     </main>
 
+    <!-- JAVASCRIPT PARA CAPTURAR E SALVAR OS DADOS -->
     <script>
-        function publicarAnimal(event) {
-            event.preventDefault();
-
-            // Resgata o nome da ONG cadastrada no Perfil. Se estiver vazio, usa um padrão.
-            const nomeOngAtual = localStorage.getItem('ong_nome') || "ONG Protetora";
-
-            // Monta o objeto com TODOS os novos campos pedidos
-            const novoPet = {
-                id: Date.now(),
-                nome: document.getElementById('petNome').value,
-                tipo: document.getElementById('petTipo').value,
-                idade: document.getElementById('petIdade').value,
-                porte: document.getElementById('petPorte').value,
-                vacinacao: document.getElementById('petVacinacao').value,
-                imagem: document.getElementById('petImagem').value,
-                descricao: document.getElementById('petDescricao').value,
-                ongResponsavel: nomeOngAtual,
-                match: "92%" // Simulação do algoritmo da plataforma
+        document.getElementById('formCadastro').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const novoAnimal = {
+                nome: document.getElementById('nome').value,
+                especie: document.getElementById('especie').value,
+                idade: document.getElementById('idade').value || 'Não informada',
+                raca: document.getElementById('raca').value || 'Não informada'
             };
 
-            // Salva na lista global do localStorage
-            let listaAnimais = JSON.parse(localStorage.getItem('bancoAnimaisDigitais')) || [];
-            listaAnimais.push(novoPet);
-            localStorage.setItem('bancoAnimaisDigitais', JSON.stringify(listaAnimais));
+            let listaAnimais = JSON.parse(localStorage.getItem('animais')) || [];
+            listaAnimais.push(novoAnimal);
+            localStorage.setItem('animais', JSON.stringify(listaAnimais));
 
-            // Feedback na tela e redirecionamento
-            document.getElementById('msgSucesso').style.display = 'block';
-            setTimeout(() => {
-                window.location.href = 'adotar.html';
-            }, 2000);
-        }
+            window.location.href = 'meus_animais.html';
+        });
     </script>
+
 </body>
 </html>

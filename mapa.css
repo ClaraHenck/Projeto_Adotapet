@@ -1,228 +1,257 @@
-/* Reset */
+/* --- RESET E ESTILOS GERAIS --- */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body{
-    font-family: Inter, Arial, sans-serif;
-    background:#f8fafc;
-    color:#1e293b;
-}
-
-/* Container principal */
-
-.container{
-    max-width:1300px;
-    margin:auto;
-    padding:40px 20px;
-}
-
-/* Cabeçalho */
-
-.header{
-    margin-bottom:25px;
-}
-
-.header h1{
-    font-size:42px;
-    font-weight:700;
-    margin-bottom:8px;
-}
-
-.header p{
-    color:#64748b;
-    font-size:16px;
-}
-
-/* Barra superior */
-
-.top-bar{
-    display:flex;
-    gap:15px;
-    margin-bottom:20px;
+body {
+    background-color: #f6d2b927;
+    color: #2d3748;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
 }
 
 
-
-.btn-cadastrar{
-    background:#06b6d4;
-    color:white;
-    border:none;
-    padding:0 24px;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:600;
-    transition:.3s;
+body::before,
+body::after {
+    content: "🐾";
+    position: fixed;
+    font-size: 38px;
+    
+    opacity: 0.15; 
+    pointer-events: none;
+  
+    z-index: 9999; 
+    bottom: -60px;
+    display: block !important;
 }
 
-.btn-cadastrar:hover{
-    background:#0891b2;
+
+body::before {
+    left: 4%;
+    animation: flutuarPatinhaEsquerda 18s linear infinite;
 }
 
-/* Layout principal */
 
-.content{
-    display:grid;
-    grid-template-columns: 1fr 340px;
-    gap:20px;
+body::after {
+    right: 6%;
+    animation: flutuarPatinhaDireita 24s linear infinite;
+    animation-delay: 4s;
 }
 
-/* Card do mapa */
 
-.map-wrapper{
-    background:white;
-    border-radius:18px;
-    overflow:hidden;
-    border:1px solid #e2e8f0;
-    box-shadow:0 4px 20px rgba(0,0,0,.05);
+.badge {
+    display: inline-block;
+    background-color: #ffeef0;
+    color: #ff6584;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
 }
 
-/* Mapa */
 
-#map{
-    width:100%;
-    height:500px;
-}
-
-/* Sidebar */
-
-.sidebar{
-    background:white;
-    border-radius:18px;
-    border:1px solid #e2e8f0;
-    padding:15px;
-    height:500px;
-    overflow-y:auto;
-    box-shadow:0 4px 20px rgba(0,0,0,.05);
-}
-
-/* Card ONG */
-
-.ong-card{
-    border:1px solid #e2e8f0;
-    border-radius:14px;
-    padding:16px;
-    margin-bottom:15px;
-    transition:.3s;
-    cursor:pointer;
-}
-
-.ong-card:hover{
-    border-color:#06b6d4;
-    transform:translateY(-2px);
-}
-
-.card-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:10px;
-}
-
-.card-header h3{
-    font-size:18px;
-}
-
-.status{
-    background:#dcfce7;
-    color:#15803d;
-    padding:4px 10px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:600;
-}
-
-.cidade{
-    color:#64748b;
-    font-size:14px;
-    margin-bottom:10px;
-}
-
-.descricao{
-    color:#475569;
-    font-size:14px;
-    line-height:1.5;
-    margin-bottom:10px;
-}
-
-.telefone{
-    color:#64748b;
-    font-size:14px;
-}
-
-/* Scroll bonito */
-
-.sidebar::-webkit-scrollbar{
-    width:8px;
-}
-
-.sidebar::-webkit-scrollbar-thumb{
-    background:#cbd5e1;
-    border-radius:10px;
-}
-
-/* Responsivo */
-
-@media(max-width:1000px){
-
-    .content{
-        grid-template-columns:1fr;
+@keyframes flutuarPatinhaEsquerda {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 10;
     }
-
-    .sidebar{
-        height:350px;
+    10% {
+        opacity: 0.30;
     }
-
-    #map{
-        height:400px;
+    90% {
+        opacity: 0.30;
     }
-
-    .top-bar{
-        flex-direction:column;
-    }
-
-    .btn-cadastrar{
-        height:50px;
+    100% {
+        transform: translateY(-115vh) translateX(40px) rotate(45deg);
+        opacity: 0;
     }
 }
 
-/* Pesquisa */
 
-.search-container{
-    margin-bottom:15px;
+@keyframes flutuarPatinhaDireita {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 10;
+    }
+    15% {
+        opacity: 0.30;
+    }
+    85% {
+        opacity: 0.30;
+    }
+    100% {
+        transform: translateY(-115vh) translateX(-50px) rotate(-45deg);
+        opacity: 0;
+    }
 }
 
-.search-input{
-    width:100%;
-    height:52px;
-    border:1px solid #e2e8f0;
-    border-radius:14px;
-    padding:0 18px;
-    font-size:15px;
-    background:white;
+body {
+    /* Define a mesma cor de fundo clara e suave da sua imagem */
+    background-color: #FAF8F6; 
+    font-family: 'Arial', sans-serif; /* Ajuste para a fonte do seu projeto */
 }
 
-.search-input:focus{
-    outline:none;
-    border-color:#06b6d4;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background-color: #f6d2b911;;
+    border-bottom: 1px solid #f0eef1;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-/* Botão */
-
-.actions{
-    margin-bottom:20px;
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a202c;
+    letter-spacing: -0.5px;
 }
 
-.btn-cadastrar{
-    background:#06b6d4;
-    color:white;
-    border:none;
-    padding:12px 24px;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:600;
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.menu a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #718096;
+    transition: color 0.2s ease;
+}
+
+.menu a:hover {
+    color: #00bcd4;
+}
+
+.menu a.active {
+    color: #ffffff;
+    background-color: #00bcd4;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 8%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 540px;
+}
+
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #f6d2b927; /* Fundo do index */
+    color: #1e293b;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* --- ANIMAÇÃO DAS PATINHAS (Fundo) --- */
+body::before, body::after {
+    content: "🐾";
+    position: fixed;
+    font-size: 38px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 9999;
+    bottom: -60px;
+}
+body::before { left: 4%; animation: flutuarPatinhaEsquerda 18s linear infinite; }
+body::after { right: 6%; animation: flutuarPatinhaDireita 24s linear infinite; animation-delay: 4s; }
+
+@keyframes flutuarPatinhaEsquerda {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.15; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
+@keyframes flutuarPatinhaDireita {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.15; }
+    100% { transform: translateY(-110vh) rotate(-360deg); opacity: 0; }
+}
+
+/* --- HEADER PADRONIZADO --- */
+.navbar {
+    width: 100%;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.left-brand-box { display: flex; align-items: center; gap: 10px; }
+.logo { font-size: 24px; font-weight: bold; color: #131212; }
+
+.menu { display: flex; align-items: center; gap: 25px; list-style: none; }
+.menu a { text-decoration: none; color: #64748b; font-weight: 500; transition: 0.3s; }
+.menu a:hover { color: #00bcd4; }
+.menu a.active {  text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #718096;
+    transition: color 0.2s ease;}
+.menu a[onclick*="logout"] { color: #ed1a1a; font-weight: bold; }
+
+
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.container { max-width: 1300px; margin: auto; padding: 40px 20px; }
+
+.header { margin-bottom: 25px; }
+.header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; color: #ff6584; }
+.header p { color: #1d191a; font-size: 16px; }
+
+.content { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+
+/* --- MAPA E SIDEBAR --- */
+.map-wrapper, .sidebar {
+    background: white;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0,0,0,.05);
+}
+
+#map { width: 100%; height: 500px; border-radius: 18px; }
+.sidebar { padding: 15px; height: 500px; overflow-y: auto; }
+
+.ong-card { border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 15px; transition: .3s; cursor: pointer; }
+.ong-card:hover { border-color: #ff6584; transform: translateY(-2px); }
+
+/* --- BOTÕES E BUSCA --- */
+.search-input { width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 14px; padding: 0 18px; margin-bottom: 15px; }
+.btn-cadastrar { background: #ff6584; color: white; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+
+/* --- RESPONSIVIDADE --- */
+@media(max-width:1000px) {
+    .content { grid-template-columns: 1fr; }
+    .sidebar { height: 350px; }
+    #map { height: 400px; }
 }
 

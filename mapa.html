@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa OpenStreetMap</title>
-    <link rel="stylesheet" href="mapa.css">
 
+    <link rel="stylesheet" href="mapa.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-    
-
     <style>
-
         *{
             margin:0;
             padding:0;
@@ -55,126 +52,145 @@
             width:100%;
             height:100%;
         }
-
     </style>
-
 </head>
 <body>
 
-<div class="container">
+    <header class="navbar">
+      <div class="left-brand-box">
+        <div class="logo">🐾 AdotaPet</div>
+      </div>
 
-<div class="container">
+      <nav class="menu" id="menu-navegacao">
+        <a href="index.html">Início</a>
+        <a href="../Projeto_Adotapet/adoção/adotar.html" id="link-adotar">Adotar</a>
+        <!-- Mudado a classe active para cá -->
+        <a href="mapa.html" class="active">Mapa</a> 
+        <a href="candidaturas.html" id="link-candidaturas">Candidaturas</a>
 
-    <div class="header">
-        <h1>Mapa de ONGs & Abrigos</h1>
-        <p>Encontre ONGs e abrigos próximos de você</p>
-    </div>
+        <!-- LINK DIRETO PARA A PAGINA DE PERFIL -->
+        <a href="meu_perfil.html" id="link-perfil-dinamico" class="perfil-link-container">
+          <img id="nav-foto-perfil" src="https://flaticon.com" alt="Foto" class="avatar-nav-mini" />
+          <span id="texto-link-perfil">MEU PERFIL</span>
+        </a>
 
-    <!-- PESQUISA EM CIMA -->
-    <div class="search-container">
-        <input
-            type="text"
-            class="search-input"
-            placeholder="Buscar por nome, cidade ou estado..."
-        >
-    </div>
+        <!-- Link de sair para poder testar os dois perfis -->
+        <a href="#" onclick="logout()" style="color: #ff4d4d">Sair</a>
+      </nav>
+    </header>
 
-    <!-- BOTÃO ABAIXO DA PESQUISA -->
-    <div class="actions">
-        <button
-            class="btn-cadastrar"
-            onclick="window.location.href='cadastrarOng.html'">
-            + Cadastre sua ONG
-        </button>
-    </div>
-
-    <div class="content">
-
-        <div class="map-wrapper">
-            <div id="map"></div>
+    <div class="container">
+        <div class="header">
+            <h1>Mapa de ONGs & Abrigos</h1>
+            <p>Encontre ONGs e abrigos próximos de você</p>
         </div>
 
-        <div class="sidebar">
-            <!-- Cards das ONGs -->
+        <!-- PESQUISA EM CIMA -->
+        <div class="search-container">
+            <input
+                type="text"
+                class="search-input"
+                placeholder="Buscar por nome, cidade ou estado..."
+            >
         </div>
 
+        <!-- BOTÃO ABAIXO DA PESQUISA -->
+        <div class="actions">
+            <button
+                class="btn-cadastrar"
+                onclick="window.location.href='cadastrarOng.html'">
+                + Cadastre sua ONG
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="map-wrapper">
+                <div id="map"></div>
+            </div>
+            <div class="sidebar"></div>
+        </div>
     </div>
 
-</div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-</div>
-</div>
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script>
-
-    const map = L.map('map').setView(
-        [-23.55052, -46.633308],
-        12
-    );
-
-    L.tileLayer(
-        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-            attribution:'&copy; OpenStreetMap Contributors'
+    <script>
+        // Função para manter a lógica de sessão
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
         }
-    ).addTo(map);
 
-    // marcador inicial
-    L.marker([-23.55052, -46.633308])
-        .addTo(map)
-        .bindPopup('São Paulo')
-        .openPopup();
+        const map = L.map('map').setView(
+            [-23.55052, -46.633308],
+            12
+        );
 
-    // transforma endereço em coordenadas
-    async function geocode(endereco) {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`;
+        L.tileLayer(
+            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                attribution:'&copy; OpenStreetMap Contributors'
+            }
+        ).addTo(map);
 
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
+        // marcador inicial
+        L.marker([-23.55052, -46.633308])
+            .addTo(map)
+            .bindPopup('São Paulo')
+            .openPopup();
 
-            if (!data.length) return null;
+        // transforma endereço em coordenadas
+        async function geocode(endereco) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}`;
 
-            return {
-                lat: data[0].lat,
-                lon: data[0].lon
-            };
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-        } catch (err) {
-            console.error("Erro no geocode:", err);
-            return null;
+                if (!data.length) return null;
+
+                return {
+                    lat: data[0].lat,
+                    lon: data[0].lon
+                };
+
+            } catch (err) {
+                console.error("Erro no geocode:", err);
+                return null;
+            }
         }
-    }
 
-    // carrega ONGs salvas
+        function salvarOng() {
+            const nome = document.getElementById("nome").value;
+            const endereco = document.getElementById("endereco").value;
 
-function salvarOng() {
+            if (!nome || !endereco) {
+                alert("Preencha tudo!");
+                return;
+            }
 
-    const nome = document.getElementById("nome").value;
-    const endereco = document.getElementById("endereco").value;
+            let ongs = JSON.parse(localStorage.getItem("ongs")) || [];
 
-    if (!nome || !endereco) {
-        alert("Preencha tudo!");
-        return;
-    }
+            ongs.push({
+                nome: nome,
+                endereco: endereco
+            });
 
-    let ongs = JSON.parse(localStorage.getItem("ongs")) || [];
+            localStorage.setItem("ongs", JSON.stringify(ongs));
+            window.location.href = "mapa.html";
+        }
 
-    ongs.push({
-        nome: nome,
-        endereco: endereco
-    });
+        function carregarHeader() {
+            const tipoUsuario = localStorage.getItem("tipoUsuario");
+            const textoLink = document.getElementById("texto-link-perfil");
+            
+            if (tipoUsuario === "ong") {
+                textoLink.innerText = "MINHA ONG";
+            } else {
+                textoLink.innerText = "MEU PERFIL";
+            }
+        }
 
-    localStorage.setItem("ongs", JSON.stringify(ongs));
-
-    // 🔥 volta para o mapa
-    window.location.href = "mapa.html";
-}
-
-
-</script>
-
+        document.addEventListener("DOMContentLoaded", carregarHeader);
+    </script>
 </body>
 </html>

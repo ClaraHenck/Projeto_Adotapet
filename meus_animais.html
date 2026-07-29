@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Animais - AdotaPet</title>
+    <style>
+        /* RESET E CONFIGURAÇÕES GERAIS */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
+        
+        body { 
+            min-height: 100vh; 
+            background-color: #FFFDF9; /* Tom de fundo off-white igual à página inicial */
+            color: #2D3748;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* HEADER IDENTICO À PÁGINA INICIAL */
+        header {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: transparent;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1A202C;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #FF4081; /* Cor rosa de destaque da logo */
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #718096;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: #1A202C;
+        }
+
+        /* Botão Início ativo/estilizado */
+        nav a.active {
+            background-color: #00B0FF; /* Azul claro do botão Início */
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+        }
+
+        .perfil-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .perfil-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .perfil-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #E2E8F0;
+            display: inline-block;
+        }
+
+        .btn-sair {
+            color: #FF5A5F;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* CONTEÚDO PRINCIPAL (GERENCIAMENTO) */
+        main {
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { 
+            background-color: #ffffff; 
+            padding: 40px; 
+            border-radius: 24px; /* Bordas arredondadas e suaves como os cards da página principal */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); 
+            width: 100%; 
+        }
+
+        h2 { 
+            text-align: left; 
+            color: #1A202C; 
+            margin-bottom: 25px; 
+            font-size: 26px;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 25px; 
+        }
+        
+        th, td { 
+            padding: 16px; 
+            text-align: left; 
+            border-bottom: 1px solid #EDF2F7; 
+        }
+        
+        th { 
+            background-color: #F7FAFC; 
+            color: #4A5568; 
+            font-weight: 600; 
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-size: 15px;
+            color: #4A5568;
+        }
+        
+        tr:hover { 
+            background-color: #F7FAFC; 
+        }
+        
+        .empty-msg { 
+            text-align: center; 
+            color: #718096; 
+            padding: 40px 20px; 
+            font-style: italic; 
+            font-size: 16px;
+        }
+        
+        .actions { 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 15px; 
+        }
+        
+        .btn { 
+            padding: 12px 24px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-decoration: none; 
+            border: none; 
+            font-size: 15px; 
+            transition: all 0.2s ease;
+        }
+        
+        .btn-limpar { 
+            background-color: #FFF5F5; 
+            color: #E53E3E; 
+        }
+        
+        .btn-limpar:hover { 
+            background-color: #FED7D7; 
+        }
+
+        .btn-adicionar {
+            background-color: #00B0FF;
+            color: white;
+            box-shadow: 0 4px 14px rgba(0, 176, 255, 0.3);
+        }
+
+        .btn-adicionar:hover {
+            background-color: #0091EA;
+            transform: translateY(-1px);
+        }
+        
+        .btn-deletar { 
+            background-color: transparent; 
+            color: #E53E3E; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 16px; 
+            padding: 6px 10px; 
+            border-radius: 8px; 
+            transition: background 0.2s;
+        }
+        
+        .btn-deletar:hover { 
+            background-color: #FFF5F5; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO INTEGRADO -->
+    <header>
+        <a href="index.html" class="logo">
+            🐾 <span>Adota</span>Pet
+        </a>
+        <nav>
+            <a href="index.html" class="active">Início</a>
+            <a href="#">Mapa</a>
+            <a href="#">Candidaturas Recebidas</a>
+            <div class="perfil-container">
+                <a href="#" class="perfil-link">
+                    <span class="perfil-avatar"></span>
+                    Meu Perfil
+                </a>
+                <a href="#" class="btn-sair">Sair</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO DA LISTAGEM -->
+    <main>
+        <div class="container">
+            <h2>Animais Cadastrados</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Espécie</th>
+                        <th>Idade</th>
+                        <th>Raça</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaAnimais"></tbody>
+            </table>
+
+            <div id="mensagemVazia" class="empty-msg" style="display: none;">
+                Nenhum animal cadastrado ainda.
+            </div>
+
+            <div class="actions">
+                <button onclick="limparTudo()" class="btn btn-limpar">🗑️ Apagar Tudo</button>
+                <!-- Alterado para redirecionar de volta à sua página de cadastro -->
+                <a href="cadastroAnimal.html" class="btn btn-adicionar">＋ Cadastrar Novo</a>
+            </div>
+        </div>
+    </main>
+
+<script>
+    function carregarAnimais() {
+        const tabela = document.getElementById('tabelaAnimais');
+        const msgVazia = document.getElementById('mensagemVazia');
+        const listaAnimais = JSON.parse(localStorage.getItem('animais')) || [];
+        
+        tabela.innerHTML = '';
+
+        if (listaAnimais.length === 0) {
+            msgVazia.style.display = 'block';
+            return;
+        }
+
+        msgVazia.style.display = 'none';
+
+        listaAnimais.forEach((animal, index) => {
+            const linha = document.createElement('tr');
+            linha.innerHTML = `
+                <td><strong>${animal.nome}</strong></td>
+                <td>${animal.especie}</td>
+                <td>${animal.idade} anos</td>
+                <td>${animal.raca}</td>
+                <td><button class="btn-deletar" onclick="removerAnimal(${index})">❌</button></td>
+            `;
+            tabela.appendChild(linha);
+        });
+    }
+
+    function removerAnimal(index) {
+        let listaAnimais = JSON.parse(localStorage.getItem('animais')) || [];
+        listaAnimais.splice(index, 1);
+        localStorage.setItem('animais', JSON.stringify(listaAnimais));
+        carregarAnimais();
+    }
+
+    function limparTudo() {
+        if(confirm("Deseja realmente apagar todos os animais salvos?")) {
+            localStorage.removeItem('animais');
+            carregarAnimais();
+        }
+    }
+
+    window.onload = carregarAnimais;
+</script>
+</body>
+</html>
