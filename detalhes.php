@@ -3,34 +3,36 @@
 require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
 
-// Pega o ID do usuário logado diretamente da Sessão do seu sistema
-$adotante_id = $_SESSION['usuario_id'];
+// Captura o ID do usuário logado na sessão
+$adotante_id = $_SESSION['usuario_id'] ?? $_SESSION['adotante_id'] ?? $_SESSION['id'] ?? null;
 
 // 1. CAPTURA E VALIDAÇÃO DO ID DO ANIMAL DA URL
 $pet_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if (!$pet_id) {
-    die("ID do animal é inválido ou não foi fornecido.");
+    header("Location: adotar.php");
+    exit;
 }
 
 // 2. BUSCA OS DADOS DO ANIMAL E DA ONG RESPONSÁVEL
 $stmt = $pdo->prepare("
     SELECT a.*, o.nome_instituicao, o.telefone as ong_telefone
     FROM animais a
-    JOIN ongs o ON a.ong_id = o.id
+    LEFT JOIN ongs o ON a.ong_id = o.id
     WHERE a.id = :id
 ");
 $stmt->execute(['id' => $pet_id]);
-$pet = $stmt->fetch();
+$pet = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$pet) {
-    die("Animal não encontrado no banco de dados.");
+    header("Location: adotar.php");
+    exit;
 }
 
 // 3. BUSCA O QUESTIONÁRIO DO ADOTANTE LOGADO
 $stmtQ = $pdo->prepare("SELECT * FROM questionarios WHERE adotante_id = :adotante_id ORDER BY id DESC LIMIT 1");
 $stmtQ->execute(['adotante_id' => $adotante_id]);
-$questionario = $stmtQ->fetch();
+$questionario = $stmtQ->fetch(PDO::FETCH_ASSOC);
 
 // 4. LÓGICA DE COMPATIBILIDADE (MATCH)
 $tem_questionario = (bool)$questionario;
@@ -38,19 +40,18 @@ $porcentagem_match = 70; // Pontuação base
 $mensagem_match = "";
 
 if ($tem_questionario) {
-    if (strtolower($pet['porte']) === 'grande' && strtolower($questionario['onde_mora']) === 'apartamento') {
+    if (!empty($pet['porte']) && strtolower($pet['porte']) === 'grande' && !empty($questionario['onde_mora']) && strtolower($questionario['onde_mora']) === 'apartamento') {
         $porcentagem_match -= 15;
-    } elseif (in_array(strtolower($questionario['onde_mora']), ['casa_com_quintal', 'sitio', 'casa'])) {
+    } elseif (!empty($questionario['onde_mora']) && in_array(strtolower($questionario['onde_mora']), ['casa_com_quintal', 'sitio', 'casa'])) {
         $porcentagem_match += 20;
     }
 
-    if ($questionario['horas_fora_casa'] > 6) {
+    if (!empty($questionario['horas_fora_casa']) && $questionario['horas_fora_casa'] > 6) {
         $porcentagem_match -= 10;
     } else {
         $porcentagem_match += 10;
     }
 
-    // Trava os limites entre 0% e 100%
     $porcentagem_match = min(100, max(0, $porcentagem_match));
 
     if ($porcentagem_match >= 85) {
@@ -64,16 +65,15 @@ if ($tem_questionario) {
 
 // 5. PROCESSAMENTO DO ENVIO DE CANDIDATURA (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
-    // Se o adotante ainda não fez o questionário, manda preencher primeiro
     if (!$tem_questionario) {
         header("Location: questionario.php?returnTo={$pet_id}");
         exit;
     }
 
     try {
-        // Verifica se o usuário já enviou candidatura para este pet para não duplicar
-        $stmtCheck = $pdo->prepare("SELECT id FROM candidaturas WHERE adotante_id = :adotante AND animal_id = :animal");
-        $stmtCheck->execute(['adotante' => $adotante_id, 'animal' => $pet_id]);
+        // Verifica se a candidatura já existe no banco usando as colunas reais (adotante_id e animal_id)
+        $stmtCheck = $pdo->prepare("SELECT id FROM candidaturas WHERE adotante_id = :adotante_id AND animal_id = :animal_id");
+        $stmtCheck->execute(['adotante_id' => $adotante_id, 'animal_id' => $pet_id]);
 
         if (!$stmtCheck->fetch()) {
             $stmtInsert = $pdo->prepare("
@@ -81,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
                 VALUES (:adotante_id, :animal_id, :questionario_id, 'Pendente')
             ");
             $stmtInsert->execute([
-                'adotante_id' => $adotante_id,
-                'animal_id' => $pet_id,
+                'adotante_id'     => $adotante_id,
+                'animal_id'       => $pet_id,
                 'questionario_id' => $questionario['id']
             ]);
         }
@@ -117,14 +117,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
     <main class="main-container">
         <!-- FOTO DO PET -->
         <div class="imagem-container">
-            <img src="<?= htmlspecialchars($pet['foto_url']) ?>" alt="Foto do <?= htmlspecialchars($pet['nome']) ?>">
+            <img src="<?= htmlspecialchars($pet['foto_url'] ?? $pet['imagem'] ?? 'img/default-pet.png') ?>" alt="Foto do <?= htmlspecialchars($pet['nome']) ?>">
         </div>
 
         <div class="info-container">
             <div class="cabecalho-pet">
                 <div class="titulo-pet">
                     <h1><?= htmlspecialchars($pet['nome']) ?></h1>
-                    <p><?= htmlspecialchars($pet['especie_raca']) ?></p>
+                    <p><?= htmlspecialchars($pet['especie_raca'] ?? $pet['raca'] ?? '') ?></p>
                 </div>
                 <div class="badge-status">Disponível</div>
             </div>
@@ -158,39 +158,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
                     <div class="icone-caract">📅</div>
                     <div class="textos-caract">
                         <span>Idade</span>
-                        <strong><?= htmlspecialchars($pet['idade_estimada']) ?></strong>
+                        <strong><?= htmlspecialchars($pet['idade_estimada'] ?? $pet['idade'] ?? 'Não informada') ?></strong>
                     </div>
                 </div>
                 <div class="card-caracteristica">
                     <div class="icone-caract">🛡️</div>
                     <div class="textos-caract">
                         <span>Porte</span>
-                        <strong><?= htmlspecialchars($pet['porte']) ?></strong>
+                        <strong><?= htmlspecialchars($pet['porte'] ?? 'Não informado') ?></strong>
                     </div>
                 </div>
                 <div class="card-caracteristica">
                     <div class="icone-caract">🏢</div>
                     <div class="textos-caract">
                         <span>ONG</span>
-                        <strong><?= htmlspecialchars($pet['nome_instituicao']) ?></strong>
+                        <strong><?= htmlspecialchars($pet['nome_instituicao'] ?? 'ONG Parceira') ?></strong>
                     </div>
                 </div>
                 <div class="card-caracteristica">
                     <div class="icone-caract">💉</div>
                     <div class="textos-caract">
                         <span>Vacinação</span>
-                        <strong><?= htmlspecialchars($pet['carteira_vacinacao']) ?></strong>
+                        <strong><?= htmlspecialchars($pet['carteira_vacinacao'] ?? 'Em dia') ?></strong>
                     </div>
                 </div>
             </div>
 
             <!-- TAGS E DESCRIÇÃO -->
             <div class="tags-container">
-                <span class="tag vacinado">💉 <?= htmlspecialchars($pet['carteira_vacinacao']) ?></span>
+                <span class="tag vacinado">💉 <?= htmlspecialchars($pet['carteira_vacinacao'] ?? 'Vacinado') ?></span>
             </div>
 
-            <p class="descricao-pet"><?= nl2br(htmlspecialchars($pet['descricao'])) ?></p>
-            <div class="localizacao">📍 ONG Responsável: <?= htmlspecialchars($pet['nome_instituicao']) ?> (Contato: <?= htmlspecialchars($pet['ong_telefone']) ?>)</div>
+            <p class="descricao-pet"><?= nl2br(htmlspecialchars($pet['descricao'] ?? '')) ?></p>
+            <div class="localizacao">📍 ONG Responsável: <?= htmlspecialchars($pet['nome_instituicao'] ?? 'ONG Parceira') ?> (Contato: <?= htmlspecialchars($pet['ong_telefone'] ?? 'N/A') ?>)</div>
 
             <!-- BOTÃO DE AÇÃO DA CANDIDATURA -->
             <form method="POST">
