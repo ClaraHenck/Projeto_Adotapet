@@ -9,7 +9,7 @@ if (isset($_SESSION["usuario_id"])) {
 }
 
 // Carrega apenas o banco de dados
-require_once "../config/db.php";
+require_once __DIR__ . "/../config/db.php";
 
 $erro = "";
 

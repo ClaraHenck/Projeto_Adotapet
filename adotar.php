@@ -1,11 +1,7 @@
 <?php
-// Inicia a sessão APENAS se ela ainda não estiver ativa
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Conexão com o banco de dados
-require_once "../teste/config/db.php"; 
+// Carrega a conexão com o banco de dados de forma segura
+require_once __DIR__ . "../config/db.php";
+require_once __DIR__ . "../config/auth.php";
 
 $logado = isset($_SESSION["usuario_id"]);
 $usuario_nome = $_SESSION["usuario_nome"] ?? "";
@@ -52,7 +48,7 @@ $total = count($animais);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Encontre seu Companheiro</title>
-    <link rel="stylesheet" href="adotar1.css">
+    <link rel="stylesheet" href="adotar.css">
 </head>
 <body>
 
@@ -93,11 +89,11 @@ $total = count($animais);
     <main class="container">
         <div class="header-titulo">
             <h1>Encontre seu Companheiro</h1>
-            <p><?php echo $total; ?> animais encontrados para adoção</p>
+            <p><?= $total; ?> animais encontrados para adoção</p>
         </div>
 
         <form method="GET" action="adotar.php" class="search-container">
-            <input type="text" name="search" class="search-input" placeholder="Buscar por nome ou raça..." value="<?php echo htmlspecialchars($search); ?>">
+            <input type="text" name="search" class="search-input" placeholder="Buscar por nome ou raça..." value="<?= htmlspecialchars($search); ?>">
             
             <select name="porte" class="filter-select">
                 <option value="">Porte (Todos)</option>
@@ -116,25 +112,21 @@ $total = count($animais);
             <button type="submit" class="btn-filtrar">Filtrar</button>
         </form>
 
-        <div class="pet-grid">
-            <?php if ($total > 0): ?>
-                <?php foreach ($animais as $pet): ?>
-                    <div class="card" data-id="<?php echo $pet['id']; ?>">
-                        <div class="card-img-box">
-                            <img src="<?php echo htmlspecialchars($pet['foto_url']); ?>" alt="<?php echo htmlspecialchars($pet['nome']); ?>">
+        <div class="cards">
+            <?php if ($total > 0) { ?>
+                <?php foreach($animais as $pet) { ?>
+                    <div class="card" data-id="<?= $pet['id']; ?>">
+                        <div class="area-imagem-card">
+                            <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= $pet['nome']; ?>">
                         </div>
-                        <div class="card-info">
-                            <div class="pet-detalhes">
-                                <div class="pet-nome"><?php echo htmlspecialchars($pet['nome']); ?></div>
-                                <div class="pet-raca"><?php echo htmlspecialchars($pet['especie_raca']); ?></div>
-                            </div>
-                            <div class="pet-idade"><?php echo htmlspecialchars($pet['idade_estimada']); ?></div>
-                        </div>
+                        <h2><?= $pet['nome']; ?></h2>
+                        <p><?= htmlspecialchars($pet['especie_raca']); ?></p>
+                        <div class="pet-idade-badge"><?= htmlspecialchars($pet['idade_estimada']); ?></div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
+                <?php } ?>
+            <?php } else { ?>
                 <p class="empty-state">Nenhum animal cadastrado com os filtros selecionados.</p>
-            <?php endif; ?>
+            <?php } ?>
         </div>
     </main>
 
@@ -142,10 +134,10 @@ $total = count($animais);
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 const petId = card.getAttribute('data-id');
-                const petNome = card.querySelector('.pet-nome').innerText;
+                const petNome = card.querySelector('h2').innerText;
                 
                 localStorage.setItem('petSelecionadoNome', petNome);
-                window.location.href = `detalhes.html?id=${petId}`;
+                window.location.href = `detalhes.php?id=${petId}`;
             });
         });
     </script>

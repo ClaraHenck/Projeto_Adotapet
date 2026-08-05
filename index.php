@@ -36,15 +36,15 @@ if ($logado) {
 
         <?php if ($logado): ?>
           <a href="mapa.html" id="link-mapa">Mapa</a> 
-          <a href="candidaturas.html" id="link-candidaturas">
+          <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
         <?php endif; ?>
 
         <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
             <?php if (!$logado): ?>
-                <a href="../teste/login/login.php" class="btn-nav-login">Entrar</a>
-                <a href="../teste/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
+                <a href="../projeto_adotapet/login/login.php" class="btn-nav-login">Entrar</a>
+                <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
                     $linkHref = ($tipoUsuario === "ong") ? "minha_ong.html" : "meu_perfil.html";
@@ -95,7 +95,7 @@ if ($logado) {
           </div>
 
           <?php if ($tipoUsuario === "adotante"): ?>
-            <a href="questionario.html" id="btn-questionario" class="btn-secondary" style="text-decoration: none; text-align: center; background-color: #ff6070ce; color: white; border: none; padding: 10px 20px; border-radius: 10px; width: fit-content; font-weight: bold;">
+            <a href="questionario.php" id="btn-questionario" class="btn-secondary" style="text-decoration: none; text-align: center; background-color: #ff6070ce; color: white; border: none; padding: 10px 20px; border-radius: 10px; width: fit-content; font-weight: bold;">
               📝 Responder Questionário de Adoção
             </a>
           <?php endif; ?>

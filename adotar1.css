@@ -1,163 +1,178 @@
 /* ==========================================================================
-   1. CONFIGURAÇÕES GERAIS E VARIÁVEIS (Padrão Página Inicial)
+   1. CONFIGURAÇÕES GERAIS E IDENTIDADE (Baseado no index.css)
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-:root {
-    --primary: #38a9c0;
-    --primary-hover: #2d8a9d;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
-    --background: #f9fafb;
-    --surface: #ffffff;
-    --text-main: #111827;
-    --text-muted: #6b7280;
-    --border: #e5e7eb;
-    --radius-lg: 20px;
-    --radius-md: 12px;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --transition: all 0.2s ease;
-}
-
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    background-color: var(--background);
-    color: var(--text-main);
+    background-color: #f4ede4; /* Fundo bege sólido acolhedor para contraste */
+    color: #2d3748;
+    overflow-x: hidden;
+    position: relative;
     min-height: 100vh;
 }
 
+/* Animação das Patinhas Flutuantes (Idêntico ao index.css) */
+body::before,
+body::after {
+    content: "🐾";
+    position: fixed;
+    font-size: 38px;
+    opacity: 0.15; 
+    pointer-events: none;
+    z-index: 9999; 
+    bottom: -60px;
+    display: block !important;
+}
+
+body::before {
+    left: 4%;
+    animation: flutuarPatinhaEsquerda 18s linear infinite;
+}
+
+body::after {
+    right: 6%;
+    animation: flutuarPatinhaDireita 24s linear infinite;
+    animation-delay: 4s;
+}
+
+@keyframes flutuarPatinhaEsquerda {
+    0% { transform: translateY(0) rotate(0deg); opacity: 10; }
+    10% { opacity: 0.30; }
+    90% { opacity: 0.30; }
+    100% { transform: translateY(-115vh) translateX(40px) rotate(45deg); opacity: 0; }
+}
+
+@keyframes flutuarPatinhaDireita {
+    0% { transform: translateY(0) rotate(0deg); opacity: 10; }
+    15% { opacity: 0.30; }
+    85% { opacity: 0.30; }
+    100% { transform: translateY(-115vh) translateX(-50px) rotate(-45deg); opacity: 0; }
+}
+
 /* ==========================================================================
-   2. NAVBAR (CABEÇALHO) - Estilo Minimalista e Limpo
+   2. NAVBAR (CABEÇALHO) - Alinhamento e Identidade Visual
    ========================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 48px;
-    background-color: var(--surface);
-    border-bottom: 1px solid var(--border);
+    padding: 20px 8%;
+    background-color: #ffffff; /* Branca para sobressair no bege */
+    border-bottom: 1px solid #e2e8f0;
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
-/* Área Esquerda: Logo e Avatar */
 .left-brand-box {
     display: flex;
     align-items: center;
-    gap: 12px;
-}
-
-.brand-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border);
 }
 
 .logo {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 800;
-    color: var(--text-main);
+    color: #1a202c;
     letter-spacing: -0.5px;
 }
 
-/* Menu Central */
 .menu {
     display: flex;
     align-items: center;
-    gap: 32px; /* Espaçamento idêntico ao print */
+    gap: 24px;
 }
 
 .menu a {
     text-decoration: none;
-    color: var(--text-muted);
+    font-size: 14px;
     font-weight: 500;
-    font-size: 15px;
-    transition: var(--transition);
+    color: #718096;
+    transition: all 0.2s ease;
 }
 
 .menu a:hover {
-    color: var(--text-main);
+    color: #00bcd4;
 }
 
-/* Estado Ativo - Apenas Negrito e Cor Escura, sem fundo colorido */
+/* Link Ativo em Formato de Pílula Ciano */
 .menu a.active {
-    color: var(--text-main) !important;
-    font-weight: 700;
+    color: #ffffff !important;
+    background-color: #00bcd4;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
 }
 
-/* Área Direita: Perfil e Logout */
+/* Área de Usuário dentro do Menu */
 #area-usuario-nav {
     display: flex;
     align-items: center;
-    gap: 24px;
-    margin-left: auto;
+    gap: 16px;
 }
 
 .btn-nav-login {
+    color: #ff6584 !important;
+    border: 1.5px solid #ff6584;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600 !important;
     text-decoration: none;
-    color: var(--text-main);
-    font-weight: 600;
-    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.btn-nav-login:hover {
+    background-color: #ff6584;
+    color: #ffffff !important;
 }
 
 .btn-nav-cadastro {
+    background-color: #ff6584;
+    color: #ffffff !important;
+    padding: 9px 18px;
+    border-radius: 20px;
+    font-weight: 600 !important;
     text-decoration: none;
-    background-color: var(--text-main);
-    color: var(--surface) !important;
-    padding: 10px 24px;
-    border-radius: 99px; /* Botão em formato de pílula */
-    font-weight: 600;
-    font-size: 14px;
-    transition: var(--transition);
+    transition: all 0.2s ease;
 }
 
 .btn-nav-cadastro:hover {
-    background-color: #374151;
+    background-color: #e05370;
 }
 
 .perfil-link-container {
-    text-decoration: none;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    font-weight: bold;
+    font-size: 13px;
+    text-decoration: none;
 }
 
 .perfil-link-container span {
-    font-weight: 600;
-    color: var(--text-main);
-    font-size: 14px;
+    color: #1a202c;
 }
 
-.menu a[href="logout.php"],
-#area-usuario-nav a[href="logout.php"],
-a[onclick="logout()"] {
-    color: var(--danger);
-    font-weight: 600;
-    font-size: 15px;
+.perfil-link-container:hover {
+    opacity: 0.8;
 }
 
-.menu a[href="logout.php"]:hover,
-#area-usuario-nav a[href="logout.php"]:hover {
-    color: var(--danger-hover);
+.menu a[href="logout.php"] {
+    color: #e53e3e;
+    font-weight: 600;
 }
 
 /* ==========================================================================
-   3. LAYOUT DA PÁGINA E CABEÇALHO DA BUSCA
+   3. ESTRUTURA DO CONTEÚDO (PÁGINA ADOTAR)
    ========================================================================== */
 .container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 24px;
+    max-width: 1400px;
+    margin: 50px auto;
+    padding: 0 8%;
 }
 
 .header-titulo {
@@ -165,202 +180,209 @@ a[onclick="logout()"] {
 }
 
 .header-titulo h1 {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 800;
+    color: #1a202c;
     letter-spacing: -1px;
     margin-bottom: 8px;
 }
 
 .header-titulo p {
-    color: var(--text-muted);
     font-size: 16px;
-    font-weight: 500;
+    color: #718096;
 }
 
 /* ==========================================================================
-   4. BARRA DE FILTROS (Formulário)
+   4. BARRA DE FILTROS
    ========================================================================== */
 .search-container {
-    background-color: var(--surface);
-    padding: 12px;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+    border: 1px solid #e2e8f0;
     display: flex;
-    gap: 12px;
-    margin-bottom: 40px;
-    border: 1px solid var(--border);
+    gap: 16px;
+    margin-bottom: 48px;
 }
 
 .search-input {
     flex: 1;
-    padding: 14px 16px;
-    border: 1px solid transparent;
+    padding: 14px 18px;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 15px;
+    color: #2d3748;
     outline: none;
-    background-color: var(--background);
-    transition: var(--transition);
+    background-color: #f7fafc;
+    transition: all 0.2s ease;
 }
 
 .search-input:focus {
-    border-color: var(--primary);
-    background-color: var(--surface);
-    box-shadow: 0 0 0 3px rgba(56, 169, 192, 0.15);
+    border-color: #00bcd4;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.15);
 }
 
 .filter-select {
     width: 200px;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
+    padding: 14px 18px;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 15px;
+    color: #4a5568;
     outline: none;
-    background-color: var(--surface);
-    color: var(--text-main);
-    font-weight: 500;
+    background-color: #ffffff;
     cursor: pointer;
-    transition: var(--transition);
+    transition: border-color 0.2s ease;
 }
 
 .filter-select:focus {
-    border-color: var(--primary);
+    border-color: #00bcd4;
 }
 
 .btn-filtrar {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 14px 32px;
+    background-color: #00bcd4;
+    color: #ffffff !important;
+    padding: 14px 28px;
     border-radius: 8px;
-    font-weight: 600;
     font-size: 15px;
+    font-weight: 600;
+    border: none;
     cursor: pointer;
-    transition: var(--transition);
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .btn-filtrar:hover {
-    background-color: var(--primary-hover);
+    background-color: #00acc1;
+}
+
+.btn-filtrar:active {
+    transform: scale(0.98);
 }
 
 /* ==========================================================================
-   5. GRID DE PETS (CARDS)
+   5. GRID E CARDS DOS ANIMAIS (Inspirado na sua estrutura)
    ========================================================================== */
-.pet-grid {
+.cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
+    gap: 32px;
 }
 
 .card {
-    background-color: var(--surface);
-    border-radius: var(--radius-lg);
+    background-color: #ffffff; /* Card branco destacado no fundo bege */
+    border-radius: 24px;       /* Casando com o estilo da .main-img do index */
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border);
-    transition: var(--transition);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    padding: 20px;             /* Padding interno para dar respiro aos textos */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s ease;
     cursor: pointer;
+    position: relative;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1);
 }
 
-.card-img-box {
-    position: relative;
+.area-imagem-card {
     width: 100%;
-    height: 260px;
-    background-color: var(--background);
+    height: 220px;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #f7fafc;
 }
 
-.card-img-box img {
+.area-imagem-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Badges sobre a foto */
-.badge-disponivel {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background-color: rgba(255, 255, 255, 0.95);
-    color: var(--text-main);
-    padding: 6px 14px;
-    border-radius: 99px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: var(--shadow-sm);
-}
-
-/* Informações do Pet */
-.card-info {
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.pet-detalhes {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.pet-nome {
+/* Elementos do seu modelo adaptados ao design */
+.card h2 {
     font-size: 18px;
     font-weight: 700;
-    color: var(--text-main);
+    color: #1a202c;
+    margin-top: 4px;
 }
 
-.pet-raca {
+.card p {
     font-size: 14px;
-    color: var(--text-muted);
+    color: #718096;
     font-weight: 500;
+    line-height: 1.4;
 }
 
-.pet-idade {
-    background-color: var(--background);
-    color: var(--text-muted);
-    padding: 6px 12px;
-    border-radius: 8px;
+/* Badge de idade que entra no lugar do preço do exemplo */
+.pet-idade-badge {
+    align-self: flex-start;
+    background-color: #ffeef0; /* Fundo rosa sutil */
+    color: #ff6584;            /* Rosa forte do index */
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
-    border: 1px solid var(--border);
+    margin-top: auto;          /* Empurra para o fundo do card se o texto for curto */
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #718096;
+    padding: 60px;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 /* ==========================================================================
    6. RESPONSIVIDADE (MOBILE)
    ========================================================================== */
-@media (max-width: 900px) {
+@media (max-width: 968px) {
     .navbar {
-        padding: 16px 24px;
+        padding: 15px 5%;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
     }
-    
+
     .menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        text-align: center;
     }
-    
+
     #area-usuario-nav {
-        margin-left: 0;
-        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .btn-nav-login, .btn-nav-cadastro {
+        width: 100%;
+        text-align: center;
+    }
+
+    .container {
+        padding: 0 5%;
+        margin: 30px auto;
     }
 
     .search-container {
         flex-direction: column;
-        background-color: transparent;
-        box-shadow: none;
-        border: none;
-        padding: 0;
+        gap: 12px;
     }
-    
-    .filter-select {
+
+    .filter-select, .btn-filtrar {
         width: 100%;
+    }
+
+    body::before, body::after {
+        display: none;
     }
 }
