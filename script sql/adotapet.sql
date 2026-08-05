@@ -84,10 +84,3 @@ CREATE TABLE candidaturas (
     FOREIGN KEY (animal_id) REFERENCES animais(id) ON DELETE CASCADE,
     FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE
 );
-
-
-INSERT INTO animais (nome, especie_raca, idade_estimada, porte, foto_url) VALUES
-('Bolinha', 'Cão - Poodle', 'Filhote', 'Pequeno', 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=500'),
-('Mel', 'Cão - Golden Retriever', 'Adulto', 'Grande', 'https://images.unsplash.com/photo-1552053831-71594a27632d?q=80&w=500'),
-('Mia', 'Gato - Siamês', 'Idoso', 'Pequeno', 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=500'),
-('Thor', 'Cão - Vira-lata', 'Adulto', 'Médio', 'https://images.unsplash.com/photo-1537151625747-768eb64269f5?q=80&w=500');

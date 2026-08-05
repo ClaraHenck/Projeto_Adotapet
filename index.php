@@ -43,8 +43,8 @@ if ($logado) {
 
         <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
             <?php if (!$logado): ?>
-                <a href="../teste/login/login.php" class="btn-nav-login">Entrar</a>
-                <a href="../teste/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
+                <a href="../projeto_adotapet/login/login.php" class="btn-nav-login">Entrar</a>
+                <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
                     $linkHref = ($tipoUsuario === "ong") ? "minha_ong.html" : "meu_perfil.html";
@@ -85,10 +85,10 @@ if ($logado) {
                 🔍 Encontrar um Animal
               </a>
             <?php else: ?>
-              <a href="cadastrarAnimal.html" class="btn-primary" style="text-decoration: none; display: inline-block; text-align: center; background-color: #2196F3; border-radius: 10px;">
+              <a href="cadastrarAnimal.php" class="btn-primary" style="text-decoration: none; display: inline-block; text-align: center; background-color: #2196F3; border-radius: 10px;">
                 ➕ Cadastrar Novo Animal
               </a>
-              <a href="meus_animais.html" class="btn-secondary" style="text-decoration: none; display: inline-block; text-align: center; border-radius: 10px;">
+              <a href="meus_animais.php" class="btn-secondary" style="text-decoration: none; display: inline-block; text-align: center; border-radius: 10px;">
                 Gerenciar Animais →
               </a>
             <?php endif; ?>

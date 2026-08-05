@@ -1,4 +1,4 @@
-use adotapet_db;
+use adotapet;
 SELECT * FROM animais;
 INSERT INTO animais
 (`id`,

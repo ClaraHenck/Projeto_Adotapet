@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["pode_excluir"] = $pode_excluir;
             
             // Redireciona corretamente para a index principal
-            header("Location: ../projeto_adotapet/index.php");
+            header("Location: ../index.php");
             exit;
         } else {
             $erro = "Ocorreu um erro ao criar a conta.";
