@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Minha ONG</title>
+    <!-- Certifique-se de que o caminho do CSS unificado está correto -->
+    <link rel="stylesheet" href="candidaturas.css">
+    <style>
+
+        /* ==========================================================================
+   CABEÇALHO (NAVBAR) PADRONIZADO IGUAL AOS OUTROS
+   ========================================================================== */
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.left-brand-box {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1A202C;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px; /* Formato pílula arredondada */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Estado Ativo: Fica verde ciano com texto branco ao ser clicado */
+.menu a.active {
+    background-color: #00C1E8 !important;
+    color: #FFFFFF !important;
+}
+
+/* Efeito hover nos botões que não estão ativos */
+.menu a:hover:not(.active) {
+    background-color: #F1F5F9;
+    color: #1A202C;
+}
+
+/* Elementos do perfil na barra de navegação */
+.perfil-link-container {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-nav-mini {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #E2E8F0;
+}
+
+/* Responsividade Mobile do Header */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 16px 20px;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .menu {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .menu a {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+}
+
+        /* Estilos específicos para a página de perfil da ONG */
+        .ong-container {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid #E2E8F0;
+            margin-top: 20px;
+        }
+
+        .profile-header-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #EDF2F7;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar-big {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 3px solid var(--primary, #00C1E8);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D3748;
+        }
+
+        .form-group input, .form-group textarea {
+            padding: 12px 16px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: #F8FAFC;
+            color: #4A5568;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary, #00C1E8);
+            background-color: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(0, 193, 232, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background-color: #EDF2F7;
+            color: #718096;
+            cursor: not-allowed;
+        }
+
+        .btn-salvar {
+            background-color: var(--primary, #00C1E8);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-salvar:hover {
+            background-color: #00a4c5;
+        }
+
+        @media (max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO PADRONIZADO IGUAL AOS OUTROS -->
+    <header class="navbar">
+      <div class="left-brand-box">
+        <div class="logo">🐾 AdotaPet</div>
+      </div>
+
+      <nav class="menu" id="menu-navegacao">
+        <a href="index.html">Início</a>
+        <a href="candidaturas_recebidas.html" id="link-candidaturas">Candidaturas Recebidas</a>
+
+        <!-- LINK DIRETO PARA A PAGINA DE PERFIL COM A CLASSE ACTIVE -->
+        <a href="minha_ong.html" id="link-perfil-dinamico" class="perfil-link-container active">
+          <img id="nav-foto-perfil" src="https://flaticon.com" alt="Foto" class="avatar-nav-mini" />
+          <span id="texto-link-perfil">MINHA ONG</span>
+        </a>
+
+        <!-- Link de sair padronizado -->
+        <a href="#" onclick="logout()" style="color: #ff4d4d">Sair</a>
+      </nav>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="content-wrapper">
+        <div class="header-titulo">
+            <h2 class="page-title">Perfil da ONG</h2>
+            <p class="subtitle">Gerencie as informações cadastrais e de localização da sua instituição</p>
+        </div>
+
+        <div class="ong-container">
+            <div class="profile-header-box">
+                <div class="profile-avatar-big">🏠</div>
+                <div>
+                    <h3 id="ong-nome-titulo" style="font-size: 20px; color: #1A202C;">Nome da ONG</h3>
+                    <p style="color: #718096; font-size: 14px;">Conta do tipo Instituição / ONG</p>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO DE INFORMAÇÕES -->
+            <form id="form-ong" onsubmit="salvarDadosOng(event)">
+                <div class="form-grid">
+                    
+                    <div class="form-group">
+                        <label for="ong-nome">Nome da ONG</label>
+                        <input type="text" id="ong-nome" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ong-email">E-mail de Contato</label>
+                        <input type="email" id="ong-email" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ong-telefone">Telefone / WhatsApp</label>
+                        <input type="tel" id="ong-telefone" placeholder="(11) 99999-9999" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ong-cep">CEP</label>
+                        <input type="text" id="ong-cep" placeholder="00000-000" onblur="buscarCep()" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="ong-endereco">Endereço Completo (Rua, Número, Bairro)</label>
+                        <input type="text" id="ong-endereco" placeholder="Ex: Av. Paulista, 1000 - Bela Vista" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ong-cidade">Cidade</label>
+                        <input type="text" id="ong-cidade" placeholder="Ex: São Paulo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ong-estado">Estado (UF)</label>
+                        <input type="text" id="ong-estado" placeholder="Ex: SP" maxlength="2" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="ong-sobre">Sobre a ONG / Descrição</label>
+                        <textarea id="ong-sobre" rows="4" placeholder="Conte um pouco sobre o trabalho e a missão da sua ONG..."></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-salvar">
+                    💾 Salvar Alterações
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            carregarDadosIniciais();
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        function carregarDadosIniciais() {
+            const nomeLogado = localStorage.getItem("nomeUsuario") || "Minha ONG";
+            const emailLogado = localStorage.getItem("emailUsuario") || "contato@ong.com";
+
+            document.getElementById("ong-nome").value = nomeLogado;
+            document.getElementById("ong-nome-titulo").innerText = nomeLogado;
+            document.getElementById("ong-email").value = emailLogado;
+
+            const dadosSalvos = JSON.parse(localStorage.getItem("dadosPerfilOng"));
+            if (dadosSalvos) {
+                document.getElementById("ong-telefone").value = dadosSalvos.telefone || "";
+                document.getElementById("ong-cep").value = dadosSalvos.cep || "";
+                document.getElementById("ong-endereco").value = dadosSalvos.endereco || "";
+                document.getElementById("ong-cidade").value = dadosSalvos.cidade || "";
+                document.getElementById("ong-estado").value = dadosSalvos.estado || "";
+                document.getElementById("ong-sobre").value = dadosSalvos.sobre || "";
+            }
+        }
+
+        async function buscarCep() {
+            const cep = document.getElementById("ong-cep").value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                try {
+                    const response = await fetch(`https://viacep.com.br{cep}/json/`);
+                    const data = await response.json();
+                    if (!data.erro) {
+                        document.getElementById("ong-endereco").value = `${data.logradouro} - ${data.bairro}`;
+                        document.getElementById("ong-cidade").value = data.localidade;
+                        document.getElementById("ong-estado").value = data.uf;
+                    }
+                } catch (error) {
+                    console.error("Erro ao buscar CEP:", error);
+                }
+            }
+        }
+
+        function salvarDadosOng(event) {
+            event.preventDefault();
+
+            const dadosPerfilOng = {
+                telefone: document.getElementById("ong-telefone").value,
+                cep: document.getElementById("ong-cep").value,
+                endereco: document.getElementById("ong-endereco").value,
+                cidade: document.getElementById("ong-cidade").value,
+                estado: document.getElementById("ong-estado").value,
+                sobre: document.getElementById("ong-sobre").value
+            };
+
+            localStorage.setItem("dadosPerfilOng", JSON.stringify(dadosPerfilOng));
+alert("Informações da ONG updated com sucesso!");}

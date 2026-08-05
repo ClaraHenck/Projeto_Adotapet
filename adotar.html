@@ -5,8 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Encontre seu Companheiro</title>
     <link rel="stylesheet" href="../styles.css">
-     <script src="footer.js"></script>
-     
+    <script src="footer.js"></script>
+    <style>
+        /* Estilos rápidos para o Modal funcionar com base no seu padrão */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 30px;
+            border-radius: 16px; max-width: 500px; width: 90%;
+            position: relative;
+        }
+        .btn-submit {
+            background-color: #00C1DE; color: white;
+            border: none; padding: 12px 20px;
+            border-radius: 25px; font-weight: 600;
+            cursor: pointer; margin-top: 15px; width: 100%;
+        }
+        .close-modal {
+            position: absolute; right: 20px; top: 15px;
+            cursor: pointer; font-size: 20px;
+        }
+        /* Estilização para garantir que as fotos fiquem perfeitas nos cards */
+        .pet-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
@@ -25,12 +58,12 @@
                 <span class="profile-pic">👤</span>
                 <span class="meu_perfil.html">MEU PERFIL</span>
             </div>
-            <a href="login.html" class="">Sair</a>
+            <a href="login.html">Sair</a>
         </nav>
     </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
-        <main class="content-wrapper">
+    <main class="content-wrapper">
         <h2 class="page-title">Encontre seu Companheiro</h2>
         <p class="subtitle">Disponíveis para adoção</p>
 
@@ -39,28 +72,39 @@
             <button class="btn-filter">🎛️ Filtros</button>
         </div>
 
-        <!-- O GRID COMEÇA VAZIO E É PREENCHIDO PELO JS -->
         <div class="pet-grid" id="pet-grid"></div>
     </main>
 
-    <!-- O MODAL PERMANECE IGUAL (mantenha a estrutura <div id="adoption-modal"> aqui se desejar) -->
+    <!-- INTERFACE DO MODAL DE ADOÇÃO -->
+    <div id="adoption-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal()">&times;</span>
+            <h2 id="modal-pet-nome">Nome do Animal</h2>
+            <p id="modal-pet-detalhes" style="color: #7A7E85; margin: 10px 0;"></p>
+            <p id="modal-pet-descricao"></p>
+            <button class="btn-submit" onclick="enviarCandidatura()">Confirmar Interesse em Adotar</button>
+        </div>
+    </div>
 
     <script>
         let petSelecionado = {};
 
-        // Lista padrão inicial (caso o banco local esteja completamente vazio)
+        // Lista de animais expandida com imagens reais de alta resolução
         const animaisIniciais = [
-            { id: 1, nome: "Felix", tipo: "Gato", raca: "Maine Coon", idade: "3 anos", descricao: "Muito brincalhão, se dá bem com outros gatos." },
-            { id: 2, nome: "Baruck", tipo: "Cão", raca: "Golden Retriever", idade: "3 anos", descricao: "Dócil, adora correr ao ar livre e buscar bolinhas." }
+            { id: 1, nome: "Felix", tipo: "Gato", raca: "Maine Coon", idade: "3 anos", imagem: "https://unsplash.com", descricao: "Muito brincalhão, super dócil e se dá bem com outros gatos." },
+            { id: 2, nome: "Baruck", tipo: "Cão", raca: "Golden Retriever", idade: "3 anos", imagem: "https://unsplash.com", descricao: "Dócil, muito ativo, adora correr ao ar livre e buscar bolinhas." },
+            { id: 3, nome: "Luna", tipo: "Gato", raca: "Persa", idade: "1 ano", imagem: "https://unsplash.com", descricao: "Muito carinhosa, calma, perfeita para companhia e ama dormir no sofá." },
+            { id: 4, nome: "Pipoca", tipo: "Cão", raca: "Vira-lata", idade: "2 anos", imagem: "https://unsplash.com", descricao: "Super energético, brincalhão, resgatado das ruas e extremamente leal." },
+            { id: 5, nome: "Mel", tipo: "Cão", raca: "Poodle", idade: "4 anos", imagem: "https://unsplash.com", descricao: "De porte pequeno, silenciosa, muito inteligente e ideal para apartamentos." },
+            { id: 6, nome: "Simba", tipo: "Gato", raca: "Siamês", idade: "2 anos", imagem: "https://unsplash.com", descricao: "Muito comunicativo, ativo, adora seguir o dono pela casa inteira." }
         ];
 
-        // Carrega e renderiza os animais salvos
         function renderizarAnimais() {
             const grid = document.getElementById('pet-grid');
             
-            // Busca os animais da ONG. Se não houver nenhum, salva os 2 iniciais para a tela não ficar vazia
+            // Força a atualização do LocalStorage caso os dados antigos com apenas 2 animais ainda existam
             let lista = JSON.parse(localStorage.getItem('animaisDisponiveis'));
-            if (!lista) {
+            if (!lista || lista.length <= 2) {
                 localStorage.setItem('animaisDisponiveis', JSON.stringify(animaisIniciais));
                 lista = animaisIniciais;
             }
@@ -72,19 +116,16 @@
 
             grid.innerHTML = lista.map(pet => `
                 <div class="pet-card" data-nome="${pet.nome.toLowerCase()}" data-raca="${pet.raca.toLowerCase()}">
-                    <div class="card-image-placeholder">
-                        ${pet.tipo === 'Gato' ? '🐱' : '🐶'} ${pet.nome}
-                    </div>
+                    <img src="${pet.imagem || 'https://placeholder.com'}" alt="${pet.nome}">
                     <div class="card-info">
                         <h3>${pet.nome}</h3>
                         <p>${pet.tipo} ${pet.raca} • ${pet.idade}</p>
-                        <button class="btn-adopt" onclick="abrirModal('${pet.nome}', '${pet.raca}', '${pet.idade}', '${pet.descricao}')">Adotar um Animal</button>
+                        <button class="btn-adopt" onclick="abrirModal('${pet.nome}', '${pet.tipo}', '${pet.raca}', '${pet.idade}', '${pet.descricao}')">Adotar um Animal</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Sistema de busca em tempo real adaptado
         function filtrarAnimais() {
             const termoBusca = document.getElementById('search-input').value.toLowerCase();
             const cards = document.querySelectorAll('.pet-card');
@@ -96,12 +137,36 @@
             });
         }
 
-        // Funções do Modal (abrirModal, fecharModal, enviarCandidatura) permanecem EXATAMENTE iguais ao passo anterior.
-        // Certifique-se de chamar renderizarAnimais ao carregar a página:
+        /* FUNÇÕES DO MODAL INTEGRADO */
+        function abrirModal(nome, tipo, raca, idade, descricao) {
+            petSelecionado = { nome, tipo, raca, idade };
+            document.getElementById('modal-pet-nome').innerText = `Adotar ${nome}`;
+            document.getElementById('modal-pet-detalhes').innerText = `${tipo} • ${raca} • ${idade}`;
+            document.getElementById('modal-pet-descricao').innerText = descricao;
+            document.getElementById('adoption-modal').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('adoption-modal').style.display = 'none';
+        }
+
+        function enviarCandidatura() {
+            let listaCandidaturas = JSON.parse(localStorage.getItem('minhasCandidaturas')) || [];
+            
+            listaCandidaturas.push({
+                petNome: petSelecionado.nome,
+                petEspecie: `${petSelecionado.tipo} (${petSelecionado.raca})`,
+                dataEnvio: new Date().toLocaleDateString('pt-BR'),
+                status: "analise"
+            });
+
+            localStorage.setItem('minhasCandidaturas', JSON.stringify(listaCandidaturas));
+            window.location.href = "candidaturas.html";
+        }
+
         window.onload = function() {
             renderizarAnimais();
         };
     </script>
-
 </body>
 </html>

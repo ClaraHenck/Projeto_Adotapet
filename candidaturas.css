@@ -180,3 +180,342 @@ body {
         align-self: flex-start;
     }
 }
+/* ==============================
+   RESET E CONFIGURAÇÕES GERAIS
+============================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+}
+
+body {
+    background: #fff7f5;
+    color: #333;
+}
+
+
+/* ==============================
+   HEADER PADRÃO IGUAL AO INDEX
+============================== */
+
+.navbar {
+    width: 100%;
+    height: 75px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.left-brand-box .logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff4a75;
+}
+
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+
+.menu a {
+    text-decoration: none;
+    color: #555;
+    font-size: 15px;
+    font-weight: bold;
+    transition: .3s;
+}
+
+
+.menu a:hover {
+    color: #ff4a75;
+}
+
+
+.menu a.active {
+    color: #ff4a75;
+    border-bottom: 3px solid #ff4a75;
+    padding-bottom: 8px;
+}
+
+
+/* Perfil */
+
+.perfil-link-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.avatar-nav-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ff4a75;
+    background: #eee;
+}
+
+
+/* ==============================
+   CONTEÚDO PRINCIPAL
+============================== */
+
+
+.content-wrapper {
+
+    width: 90%;
+    max-width: 1100px;
+    margin: 50px auto;
+
+}
+
+
+.page-title {
+
+    font-size: 32px;
+    color: #ff4a75;
+    margin-bottom: 10px;
+
+}
+
+
+.subtitle {
+
+    color: #777;
+    margin-bottom: 35px;
+    font-size: 17px;
+
+}
+
+
+
+/* ==============================
+   LISTA DE CANDIDATURAS
+============================== */
+
+
+.candidaturas-container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+}
+
+
+/* Mensagem vazia */
+
+.no-data {
+
+    background: white;
+    padding: 35px;
+    text-align: center;
+    border-radius: 15px;
+    color: #777;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+
+}
+
+
+
+/* ==============================
+   CARD DA CANDIDATURA
+============================== */
+
+
+.candidatura-card {
+
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    transition: .3s;
+
+}
+
+
+.candidatura-card:hover {
+
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,.12);
+
+}
+
+
+
+/* Cabeçalho do card */
+
+
+.candidatura-header {
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+    padding-bottom:15px;
+    margin-bottom:20px;
+
+}
+
+
+.candidatura-header h3 {
+
+    color:#333;
+    font-size:20px;
+
+}
+
+
+.pet-breed {
+
+    color:#ff4a75;
+    font-size:15px;
+
+}
+
+
+/* Status */
+
+.status-badge {
+
+    background:#fff0f3;
+    color:#ff4a75;
+    padding:7px 15px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+
+}
+
+
+
+/* ==============================
+   CORPO DO CARD
+============================== */
+
+
+.candidatura-body {
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+
+}
+
+
+.info-section {
+
+    background:#fff8fa;
+    padding:20px;
+    border-radius:12px;
+
+}
+
+
+.info-section h4 {
+
+    color:#ff4a75;
+    margin-bottom:15px;
+
+}
+
+
+.info-section p {
+
+    margin-bottom:8px;
+    font-size:14px;
+
+}
+
+
+.info-section strong {
+
+    color:#444;
+
+}
+
+
+
+/* ==============================
+   FOOTER DO CARD
+============================== */
+
+
+.candidatura-footer {
+
+    margin-top:25px;
+    display:flex;
+    justify-content:flex-end;
+
+}
+
+
+
+.btn-cancel {
+
+    background:#ff4d4d;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
+
+}
+
+
+.btn-cancel:hover {
+
+    background:#d93636;
+
+}
+
+
+
+/* ==============================
+   RESPONSIVIDADE
+============================== */
+
+
+@media(max-width:800px){
+
+    .navbar{
+
+        padding:0 20px;
+
+    }
+
+
+    .menu{
+
+        gap:12px;
+
+    }
+
+
+    .candidatura-body{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .page-title{
+
+        font-size:26px;
+
+    }
+
+}

@@ -4,137 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Minhas Candidaturas</title>
-    
     <link rel="stylesheet" href="../styles.css">
-    <!-- Corrigido: adicionada a aspa que faltava antes do caminho do CSS -->
-    <link rel="stylesheet" href="candidaturas.css">
+    <style>
+        /* Classes adicionais específicas para organizar os cards de candidaturas */
+        .candidaturas-container {
+            max-width: 800px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .candidatura-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+        }
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-analise {
+            background-color: #FFF4E5;
+            color: #FF9800;
+        }
+        .status-aprovado {
+            background-color: #E6F9F3;
+            color: #00B67A;
+        }
+        .no-data {
+            text-align: center;
+            color: #7A7E85;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- CABEÇALHO PADRÃO PADRONIZADO -->
-    <header class="navbar">
-      <div class="left-brand-box">
-        <div class="logo">🐾 AdotaPet</div>
-      </div>
-
-      <nav class="menu" id="menu-navegacao">
-        <a href="index.html">Início</a>
-        <a href="adotar.html" id="link-adotar">Adotar</a>
-        <a href="mapa.html">Mapa</a> 
-        <!-- Mudado a classe active para cá -->
-        <a href="candidaturas.html" class="active" id="link-candidaturas">Candidaturas</a>
-
-        <!-- LINK DIRETO PARA A PAGINA DE PERFIL -->
-        <a href="meu_perfil.html" id="link-perfil-dinamico" class="perfil-link-container">
-          <img id="nav-foto-perfil" src="https://flaticon.com" alt="Foto" class="avatar-nav-mini" />
-          <span id="texto-link-perfil">MEU PERFIL</span>
-        </a>
-
-        <!-- Link de sair padronizado -->
-        <a href="#" onclick="logout()" style="color: #ff4d4d">Sair</a>
-      </nav>
+    <!-- CABEÇALHO IDÊNTICO E INTEGRADO -->
+    <header class="main-header">
+        <div class="logo">
+            <span class="paw-icon">🐾</span>
+            <h1>AdotaPet</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Início</a>
+            <a href="adotar.html">Adotar</a>
+            <a href="mapa.html">Mapa</a>
+            <a href="candidaturas.html" class="active">Candidaturas</a>
+            
+            <div class="profile-section">
+                <span class="profile-pic">👤</span>
+                <span class="meu_perfil.html">MEU PERFIL</span>
+            </div>
+            <a href="login.html">Sair</a>
+        </nav>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- LISTAGEM DE SOLICITAÇÕES -->
     <main class="content-wrapper">
         <h2 class="page-title">Minhas Candidaturas</h2>
-        <p class="subtitle">Acompanhe suas solicitações de adoção enviadas</p>
+        <p class="subtitle">Acompanhe abaixo o status dos seus pedidos enviados às ONGs.</p>
 
-        <!-- CONTAINER ONDE OS DADOS VÃO APARECER DINAMICAMENTE -->
-        <div id="lista-candidaturas" class="candidaturas-container">
-            <!-- Preenchido via JavaScript -->
+        <div class="candidaturas-container" id="lista-candidaturas">
+            <!-- Inserido dinamicamente via JS -->
         </div>
     </main>
 
-    <!-- LOGICA JAVASCRIPT FUNCIONAL -->
     <script>
-        // Executa assim que a página carrega completamente
-        window.onload = function() {
-            renderizarCandidaturas();
-            carregarHeader();
-        };
-
-        // Função para manter a lógica de sessão
-        function logout() {
-            localStorage.clear();
-            window.location.href = "login.html";
-        }
-
-        // Altera dinamicamente o texto do perfil baseado no tipo do usuário logado
-        function carregarHeader() {
-            const tipoUsuario = localStorage.getItem("tipoUsuario"); // 'ong' ou 'pessoal'
-            const textoLink = document.getElementById("texto-link-perfil");
-            
-            if (textoLink) {
-                if (tipoUsuario === "ong") {
-                    textoLink.innerText = "MINHA ONG";
-                } else {
-                    textoLink.innerText = "MEU PERFIL";
-                }
-            }
-        }
-
-        function renderizarCandidaturas() {
+        function carregarCandidaturas() {
             const container = document.getElementById('lista-candidaturas');
-            // Busca a lista salva no navegador ou retorna um array vazio se não existir
-            const lista = JSON.parse(localStorage.getItem('candidaturas')) || [];
+            
+            // Lê as candidaturas que foram salvas ao clicar no botão "Adotar"
+            const candidaturas = JSON.parse(localStorage.getItem('minhasCandidaturas')) || [];
 
-            // Se não houver dados, exibe a mensagem de lista vazia estruturada no CSS
-            if (lista.length === 0) {
-                container.innerHTML = '<p class="no-data">Nenhuma candidatura enviada até o momento.</p>';
+            if (candidaturas.length === 0) {
+                container.innerHTML = '<p class="no-data">Você ainda não enviou nenhuma candidatura de adoção.</p>';
                 return;
             }
 
-            // Mapeia o array e constrói o HTML funcional com duas colunas de dados
-            container.innerHTML = lista.map((item, index) => `
-                <div class="candidatura-card">
-                    <div class="candidatura-header">
-                        <h3>Interesse em: ${item.pet} <span class="pet-breed">(${item.raca})</span></h3>
-                        <span class="status-badge">Em Análise</span>
-                    </div>
-                    
-                    <div class="candidatura-body">
-                        <!-- Coluna 1: Dados Cadastrais -->
-                        <div class="info-section">
-                            <h4>Dados do Candidato</h4>
-                            <p><strong>Nome:</strong> ${item.usuario}</p>
-                            <p><strong>E-mail:</strong> ${item.email}</p>
-                            <p><strong>Telefone:</strong> ${item.telefone}</p>
-                            <p><strong>Enviado em:</strong> ${item.data}</p>
-                        </div>
+            container.innerHTML = candidaturas.map(cand => {
+                // Alterna o estilo e texto de acordo com a aprovação da ONG
+                const classeStatus = cand.status === 'aprovado' ? 'status-aprovado' : 'status-analise';
+                const textoStatus = cand.status === 'aprovado' ? 'Aprovado pela ONG' : 'Em Análise';
+                const icone = cand.petEspecie.includes('Gato') ? '🐱' : '🐶';
 
-                        <!-- Coluna 2: Respostas do Questionário Guardado -->
-                        <div class="info-section">
-                            <h4>Respostas do Questionário</h4>
-                            <p><strong>Residência:</strong> ${item.respostas?.residencia || 'Não informado'}</p>
-                            <p><strong>Tempo sozinho:</strong> ${item.respostas?.tempoSozinho || 'Não informado'}</p>
-                            <p><strong>Já teve animais:</strong> ${item.respostas?.jaTeveAnimais || 'Não informado'}</p>
+                return `
+                    <div class="candidatura-card">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="font-size: 30px;">${icone}</div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 18px;">${cand.petNome}</h3>
+                                <p style="margin: 2px 0 0 0; color: #7A7E85; font-size: 14px;">${cand.petEspecie} • Enviado em ${cand.dataEnvio}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge ${classeStatus}">${textoStatus}</span>
                         </div>
                     </div>
-
-                    <!-- Rodapé do Card com Ações Funcionais -->
-                    <div class="candidatura-footer">
-                        <button class="btn-cancel" onclick="removerCandidatura(${index})">Cancelar Solicitação</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Função funcional para deletar um item específico do localStorage
-        function removerCandidatura(index) {
-            if (confirm("Tem certeza que deseja cancelar esta candidatura de adoção?")) {
-                let lista = JSON.parse(localStorage.getItem('candidaturas')) || [];
-                
-                // Remove o item selecionado pelo índice
-                lista.splice(index, 1);
-                
-                // Salva a nova lista atualizada de volta no navegador
-                localStorage.setItem('candidaturas', JSON.stringify(lista));
-                
-                // Atualiza a tela imediatamente
-                renderizarCandidaturas();
-            }
-        }
+        // Executa a busca assim que a página abre
+        window.onload = carregarCandidaturas;
     </script>
 </body>
 </html>
