@@ -1,3 +1,84 @@
+<?php
+// 1. INICIALIZAÇÃO E AUTENTICAÇÃO
+require_once __DIR__ . "/config/auth.php";
+require_once __DIR__ . "/config/db.php";
+
+// Recupera o ID do adotante armazenado na sessão
+$adotante_id = $_SESSION['adotante_id'] ?? $_SESSION['usuario_id'];
+
+// ==========================================================================
+// 2. BUSCA RESPOSTAS ANTERIORES (SE EXISTIREM) PARA PREENCHER A TELA
+// ==========================================================================
+$stmtFetch = $pdo->prepare("SELECT * FROM questionarios WHERE adotante_id = ?");
+$stmtFetch->execute([$adotante_id]);
+$respostasAtuais = $stmtFetch->fetch(PDO::FETCH_ASSOC) ?: [];
+
+// ==========================================================================
+// 3. PROCESSAMENTO DO FORMULÁRIO (POST)
+// ==========================================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Coleta e trata as respostas do formulário
+    $ondeMora               = $_POST['ondeMora'] ?? 'apartamento';
+    $temAreaExterna         = (isset($_POST['temAreaExterna']) && $_POST['temAreaExterna'] === '1') ? 1 : 0;
+    $horasForaCasa          = intval($_POST['horasFora'] ?? 8);
+    $experiencia            = $_POST['experiencia'] ?? 'primeira_vez';
+    $temCriancas            = (isset($_POST['temCriancas']) && $_POST['temCriancas'] === '1') ? 1 : 0;
+    $temOutrosAnimais       = (isset($_POST['temOutrosAnimais']) && $_POST['temOutrosAnimais'] === '1') ? 1 : 0;
+    $nivelAtividadeFisica   = $_POST['atividade'] ?? 'moderado';
+
+    // Verifica se o adotante já possui um questionário no banco
+    $stmtCheck = $pdo->prepare("SELECT id FROM questionarios WHERE adotante_id = ?");
+    $stmtCheck->execute([$adotante_id]);
+    $questionarioExistente = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if ($questionarioExistente) {
+        // ATUALIZA (REESCREVE) OS DADOS EXISTENTES
+        $sql = "UPDATE questionarios SET 
+                    onde_mora = ?, 
+                    tem_area_externa = ?, 
+                    horas_fora_casa = ?, 
+                    experiencia = ?, 
+                    tem_criancas = ?, 
+                    tem_outros_animais = ?, 
+                    nivel_atividade_fisica = ?, 
+                    data_resposta = NOW() 
+                WHERE adotante_id = ?";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            $ondeMora,
+            $temAreaExterna,
+            $horasForaCasa,
+            $experiencia,
+            $temCriancas,
+            $temOutrosAnimais,
+            $nivelAtividadeFisica,
+            $adotante_id
+        ]);
+    } else {
+        // INSERE PELA PRIMEIRA VEZ
+        $sql = "INSERT INTO questionarios 
+                (adotante_id, onde_mora, tem_area_externa, horas_fora_casa, experiencia, tem_criancas, tem_outros_animais, nivel_atividade_fisica, data_resposta) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            $adotante_id,
+            $ondeMora,
+            $temAreaExterna,
+            $horasForaCasa,
+            $experiencia,
+            $temCriancas,
+            $temOutrosAnimais,
+            $nivelAtividadeFisica
+        ]);
+    }
+
+    // Redireciona para o perfil após salvar
+    header("Location: adotar.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +86,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Questionário de Adoção</title>
     <style>
-        /* --- ESTILIZAÇÃO GERAL (IGUAL AOS PRINTS) --- */
+        /* --- ESTILIZAÇÃO GERAL --- */
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
@@ -28,10 +109,10 @@
             width: 100%; 
             max-width: 480px; 
             position: relative;
-            z-index: 10; /* Garante que o card fique na frente das patinhas */
+            z-index: 10;
         }
 
-        /* --- ADICIONAL: PATINHAS FLUTUANTES --- */
+        /* --- PATINHAS FLUTUANTES --- */
         .fundo-patinhas {
             position: fixed;
             top: 0;
@@ -39,8 +120,8 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            z-index: 1; /* Fica atrás do container */
-            pointer-events: none; /* Ignora cliques para não atrapalhar a tela */
+            z-index: 1;
+            pointer-events: none;
         }
 
         .patinha {
@@ -50,22 +131,11 @@
             animation: flutuar 15s linear infinite;
         }
 
-        /* Efeito de subir e girar levemente */
         @keyframes flutuar {
-            0% {
-                transform: translateY(0) scale(0.8) rotate(0deg);
-                opacity: 10;
-            }
-            10% {
-                opacity: 0.12; /* Deixa a patinha bem sutil no fundo */
-            }
-            90% {
-                opacity: 0.12;
-            }
-            100% {
-                transform: translateY(-120vh) scale(1.2) rotate(45deg);
-                opacity: 10;
-            }
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 1; }
+            10% { opacity: 0.12; }
+            90% { opacity: 0.12; }
+            100% { transform: translateY(-120vh) scale(1.2) rotate(45deg); opacity: 1; }
         }
 
         /* --- PROGRESSO --- */
@@ -105,7 +175,7 @@
             font-weight: 700;
         }
 
-        /* --- CARDS DE SELEÇÃO (Estilo Radio) --- */
+        /* --- CARDS DE SELEÇÃO --- */
         .opcao-card {
             display: flex;
             align-items: center;
@@ -151,7 +221,7 @@
         .emoji { font-size: 20px; margin-right: 12px; }
         .texto-opcao { font-weight: 600; color: #4b5563; font-size: 15px; }
 
-        /* --- INTERRUPTOR (Toggle Sim/Não) --- */
+        /* --- TOGGLE --- */
         .toggle-container {
             display: flex;
             justify-content: space-between;
@@ -184,7 +254,7 @@
         .toggle-container.ativo .toggle-switch { background-color: #2bc4b6; }
         .toggle-container.ativo .toggle-switch .pino { transform: translateX(24px); }
 
-        /* --- SLIDER (Range) --- */
+        /* --- SLIDER --- */
         .range-container { text-align: center; }
         .contador-horas { font-size: 48px; font-weight: 700; color: #2bc4b6; margin-bottom: 16px; }
         .contador-horas span { font-size: 18px; color: #9ca3af; font-weight: 400; }
@@ -197,7 +267,7 @@
         }
         .range-labels { display: flex; justify-content: space-between; color: #9ca3af; font-size: 12px; font-weight: 600; }
 
-        /* --- BOTÕES INFERIORES --- */
+        /* --- BOTÕES --- */
         .botoes-navegacao {
             margin-top: 32px;
             display: flex;
@@ -246,8 +316,17 @@
         <div class="patinha" style="left: 88%; animation-delay: 6s; animation-duration: 13s; font-size: 40px;">🐾</div>
     </div>
 
-    <div class="container">
-        <button class="btn-voltar" id="btn-voltar" onclick="mudarPasso(-1)" style="display: none;">← Voltar</button>
+    <form id="form-questionario" method="POST" action="questionario.php" class="container">
+        <!-- Campos Ocultos com valores pré-carregados se existirem -->
+        <input type="hidden" name="ondeMora" id="inp_ondeMora" value="<?= htmlspecialchars($respostasAtuais['onde_mora'] ?? '') ?>">
+        <input type="hidden" name="temAreaExterna" id="inp_temAreaExterna" value="<?= !empty($respostasAtuais['tem_area_externa']) ? '1' : '0' ?>">
+        <input type="hidden" name="horasFora" id="inp_horasFora" value="<?= intval($respostasAtuais['horas_fora_casa'] ?? 8) ?>">
+        <input type="hidden" name="experiencia" id="inp_experiencia" value="<?= htmlspecialchars($respostasAtuais['experiencia'] ?? '') ?>">
+        <input type="hidden" name="temCriancas" id="inp_temCriancas" value="<?= !empty($respostasAtuais['tem_criancas']) ? '1' : '0' ?>">
+        <input type="hidden" name="temOutrosAnimais" id="inp_temOutrosAnimais" value="<?= !empty($respostasAtuais['tem_outros_animais']) ? '1' : '0' ?>">
+        <input type="hidden" name="atividade" id="inp_atividade" value="<?= htmlspecialchars($respostasAtuais['nivel_atividade_fisica'] ?? '') ?>">
+
+        <button type="button" class="btn-voltar" id="btn-voltar" onclick="mudarPasso(-1)" style="display: none;">← Voltar</button>
 
         <div class="topo-progresso">
             <span id="txt-passo">Passo 1 de 7</span>
@@ -257,30 +336,32 @@
             <div class="barra-preenchimento" id="barra"></div>
         </div>
 
+        <!-- PASSO 1 -->
         <div class="passo ativo" id="p1">
             <h2>Onde você mora?</h2>
-            <div class="opcao-card" onclick="selecionarOpcao('ondeMora', 'apartamento', this)">
+            <div class="opcao-card" data-val="apartamento" onclick="selecionarOpcao('ondeMora', 'apartamento', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🏢</span>
                 <span class="texto-opcao">Apartamento</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('ondeMora', 'casa_sem_quintal', this)">
+            <div class="opcao-card" data-val="casa_sem_quintal" onclick="selecionarOpcao('ondeMora', 'casa_sem_quintal', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🏠</span>
                 <span class="texto-opcao">Casa sem quintal</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('ondeMora', 'casa_com_quintal', this)">
+            <div class="opcao-card" data-val="casa_com_quintal" onclick="selecionarOpcao('ondeMora', 'casa_com_quintal', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🏠</span>
                 <span class="texto-opcao">Casa com quintal</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('ondeMora', 'sitio', this)">
+            <div class="opcao-card" data-val="sitio" onclick="selecionarOpcao('ondeMora', 'sitio', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🌲</span>
                 <span class="texto-opcao">Sítio/Chácara</span>
             </div>
         </div>
 
+        <!-- PASSO 2 -->
         <div class="passo" id="p2">
             <h2>Tem área externa?</h2>
             <div class="toggle-container" id="container-externa" onclick="alternarToggle('temAreaExterna', 'container-externa', 'txt-externa')">
@@ -289,34 +370,37 @@
             </div>
         </div>
 
+        <!-- PASSO 3 -->
         <div class="passo" id="p3">
             <h2>Quantas horas por dia fica fora de casa?</h2>
             <div class="range-container">
-                <div class="contador-horas"><span id="txt-horas">8</span> <span>horas</span></div>
-                <input type="range" min="0" max="16" value="8" oninput="atualizarHoras(this.value)">
+                <div class="contador-horas"><span id="txt-horas"><?= intval($respostasAtuais['horas_fora_casa'] ?? 8) ?></span> <span>horas</span></div>
+                <input type="range" id="input-range-horas" min="0" max="16" value="<?= intval($respostasAtuais['horas_fora_casa'] ?? 8) ?>" oninput="atualizarHoras(this.value)">
                 <div class="range-labels"><span>0 h</span><span>16 h</span></div>
             </div>
         </div>
 
+        <!-- PASSO 4 -->
         <div class="passo" id="p4">
             <h2>Experiência com animais?</h2>
-            <div class="opcao-card" onclick="selecionarOpcao('experiencia', 'primeira_vez', this)">
+            <div class="opcao-card" data-val="primeira_vez" onclick="selecionarOpcao('experiencia', 'primeira_vez', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🐾</span>
                 <span class="texto-opcao">Primeira vez</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('experiencia', 'ja_teve', this)">
+            <div class="opcao-card" data-val="ja_teve" onclick="selecionarOpcao('experiencia', 'ja_teve', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🐾</span>
                 <span class="texto-opcao">Já tive animais</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('experiencia', 'experiente', this)">
+            <div class="opcao-card" data-val="experiente" onclick="selecionarOpcao('experiencia', 'experiente', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🏆</span>
                 <span class="texto-opcao">Experiente</span>
             </div>
         </div>
 
+        <!-- PASSO 5 -->
         <div class="passo" id="p5">
             <h2>Tem crianças em casa?</h2>
             <div class="toggle-container" id="container-criancas" onclick="alternarToggle('temCriancas', 'container-criancas', 'txt-criancas')">
@@ -325,6 +409,7 @@
             </div>
         </div>
 
+        <!-- PASSO 6 -->
         <div class="passo" id="p6">
             <h2>Tem outros animais?</h2>
             <div class="toggle-container" id="container-outros" onclick="alternarToggle('temOutrosAnimais', 'container-outros', 'txt-outros')">
@@ -333,19 +418,20 @@
             </div>
         </div>
 
+        <!-- PASSO 7 -->
         <div class="passo" id="p7">
             <h2>Qual seu nível de atividade física?</h2>
-            <div class="opcao-card" onclick="selecionarOpcao('atividade', 'sedentario', this)">
+            <div class="opcao-card" data-val="sedentario" onclick="selecionarOpcao('atividade', 'sedentario', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🛋️</span>
                 <span class="texto-opcao">Sedentário</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('atividade', 'moderado', this)">
+            <div class="opcao-card" data-val="moderado" onclick="selecionarOpcao('atividade', 'moderado', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🚶</span>
                 <span class="texto-opcao">Moderado</span>
             </div>
-            <div class="opcao-card" onclick="selecionarOpcao('atividade', 'ativo', this)">
+            <div class="opcao-card" data-val="ativo" onclick="selecionarOpcao('atividade', 'ativo', this)">
                 <div class="bola-radio"></div>
                 <span class="emoji">🏃</span>
                 <span class="texto-opcao">Ativo</span>
@@ -353,23 +439,52 @@
         </div>
 
         <div class="botoes-navegacao">
-            <button class="btn-proximo" id="btn-proximo" onclick="mudarPasso(1)">Próximo →</button>
+            <button type="button" class="btn-proximo" id="btn-proximo" onclick="mudarPasso(1)">Próximo →</button>
         </div>
-    </div>
+    </form>
 
     <script>
         let passoAtual = 1;
         const totalPassos = 7;
 
+        // Recupera valores salvos previamente do PHP
         const dadosFormulario = {
-            ondeMora: '',
-            temAreaExterna: false,
-            horasFora: 8,
-            experiencia: '',
-            temCriancas: false,
-            temOutrosAnimais: false,
-            atividade: ''
+            ondeMora: document.getElementById('inp_ondeMora').value,
+            temAreaExterna: document.getElementById('inp_temAreaExterna').value === '1',
+            horasFora: parseInt(document.getElementById('inp_horasFora').value),
+            experiencia: document.getElementById('inp_experiencia').value,
+            temCriancas: document.getElementById('inp_temCriancas').value === '1',
+            temOutrosAnimais: document.getElementById('inp_temOutrosAnimais').value === '1',
+            atividade: document.getElementById('inp_atividade').value
         };
+
+        // Preenche visualmente a tela ao carregar caso o usuário já tenha respostas salvas
+        window.addEventListener('DOMContentLoaded', () => {
+            if (dadosFormulario.ondeMora) {
+                const el = document.querySelector(`#p1 .opcao-card[data-val="${dadosFormulario.ondeMora}"]`);
+                if (el) el.classList.add('selecionado');
+            }
+            if (dadosFormulario.experiencia) {
+                const el = document.querySelector(`#p4 .opcao-card[data-val="${dadosFormulario.experiencia}"]`);
+                if (el) el.classList.add('selecionado');
+            }
+            if (dadosFormulario.atividade) {
+                const el = document.querySelector(`#p7 .opcao-card[data-val="${dadosFormulario.atividade}"]`);
+                if (el) el.classList.add('selecionado');
+            }
+            if (dadosFormulario.temAreaExterna) {
+                document.getElementById('container-externa').classList.add('ativo');
+                document.getElementById('txt-externa').innerText = 'Sim';
+            }
+            if (dadosFormulario.temCriancas) {
+                document.getElementById('container-criancas').classList.add('ativo');
+                document.getElementById('txt-criancas').innerText = 'Sim';
+            }
+            if (dadosFormulario.temOutrosAnimais) {
+                document.getElementById('container-outros').classList.add('ativo');
+                document.getElementById('txt-outros').innerText = 'Sim';
+            }
+        });
 
         function mudarPasso(direcao) {
             if (direcao === 1) {
@@ -403,11 +518,12 @@
             document.getElementById('barra').style.width = `${porcentagem}%`;
 
             document.getElementById('btn-voltar').style.display = (passoAtual > 1) ? 'block' : 'none';
-            document.getElementById('btn-proximo').innerText = (passoAtual === totalPassos) ? 'Finalizar' : 'Próximo →';
+            document.getElementById('btn-proximo').innerText = (passoAtual === totalPassos) ? 'Atualizar Perfil' : 'Próximo →';
         }
 
         function selecionarOpcao(campo, valor, elemento) {
             dadosFormulario[campo] = valor;
+            document.getElementById('inp_' + campo).value = valor;
 
             const pai = elemento.parentElement;
             pai.querySelectorAll('.opcao-card').forEach(card => card.classList.remove('selecionado'));
@@ -417,6 +533,7 @@
 
         function alternarToggle(campo, idContainer, idTexto) {
             dadosFormulario[campo] = !dadosFormulario[campo];
+            document.getElementById('inp_' + campo).value = dadosFormulario[campo] ? "1" : "0";
             
             const container = document.getElementById(idContainer);
             const texto = document.getElementById(idTexto);
@@ -432,15 +549,13 @@
 
         function atualizarHoras(valor) {
             dadosFormulario.horasFora = parseInt(valor);
+            document.getElementById('inp_horasFora').value = valor;
             document.getElementById('txt-horas').innerText = valor;
         }
 
         function finalizarFormulario() {
-            console.log("Enviando estes dados para o Banco:", dadosFormulario);
-            alert("Formulário finalizado com sucesso! Veja os dados estruturados no console.");
-            
+            document.getElementById('form-questionario').submit();
         }
-        
     </script>
 </body>
-</html>
+</html

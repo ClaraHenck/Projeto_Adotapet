@@ -4,250 +4,275 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Meu Perfil</title>
-    <link rel="stylesheet" href="perfil.css">
-    <script src="header.js"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="footer.js"></script>
     <style>
-        /* Estilo da mensagem de sucesso na tela */
-        .toast-sucesso {
-            display: none;
-            background-color: #28a745;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
-            animation: surgir 0.3s ease-in-out;
+        /* Estilos adicionais e específicos para a página de perfil */
+        .profile-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
         }
 
-        @keyframes surgir {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .avatar-upload-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .avatar-preview-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .avatar-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #E2E8F0;
+            border: 3px solid #00C1DE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #7A7E85;
+            overflow: hidden;
+        }
+
+        .btn-upload-label {
+            background-color: #00C1DE;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-upload-label:hover {
+            background-color: #00A9C4;
+        }
+
+        #avatar-input {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #00C1DE;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .btn-save-profile {
+            background-color: #00C1DE;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-save-profile:hover {
+            background-color: #00A9C4;
+        }
+
+        .success-message {
+            display: none;
+            background-color: #E6F9F3;
+            color: #00B67A;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
+    <!-- CABEÇALHO PADRÃO IDENTICO -->
+    <header class="main-header">
+        <div class="logo">
+            <span class="paw-icon">🐾</span>
+            <h1>AdotaPet</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Início</a>
+            <a href="adotar.html">Adotar</a>
+            <a href="mapa.html">Mapa</a>
+            <a href="candidaturas.html">Candidaturas</a>
+            <div class="profile-section">
+                <span class="profile-pic" id="header-avatar-mini">👤</span>
+                <!-- Corrigido para link <a> real redirecionando para este arquivo -->
+                <a href="meu_perfil.html" class="active" style="text-decoration: none; color: inherit; font-weight: 600;">MEU PERFIL</a>
+            </div>
+            <a href="login.html">Sair</a>
+        </nav>
     </header>
 
+    <!-- FORMULÁRIO DE PERFIL -->
+    <main class="content-wrapper">
+        <h2 class="page-title" style="text-align: center;">Meu Perfil</h2>
+        <p class="subtitle" style="text-align: center;">Mantenha suas informações atualizadas para os processos de adoção.</p>
 
-    <!-- Conteúdo Principal -->
-    <main class="container">
-        
-        <div class="header-titulo">
-            <h1>Meu Perfil</h1>
-            <p>Quanto mais completo, melhor o match com os animais!</p>
+        <div class="profile-container">
+            <div id="success-alert" class="success-message">Alterações salvas com sucesso!</div>
+
+            <!-- Upload da Foto de Perfil -->
+            <div class="avatar-upload-wrapper">
+                <div class="avatar-preview-container">
+                    <div id="avatar-preview" class="avatar-preview">👤</div>
+                </div>
+                <label for="avatar-input" class="btn-upload-label">Alterar Foto</label>
+                <input type="file" id="avatar-input" accept="image/*" onchange="previewEsalvarFoto(event)">
+            </div>
+
+            <!-- Dados Pessoais -->
+            <form id="profile-form" onsubmit="salvarPerfil(event)">
+                <div class="form-group">
+                    <label for="user-name">Nome Completo</label>
+                    <input type="text" id="user-name" required placeholder="Digite seu nome completo">
+                </div>
+
+                <div class="form-group">
+                    <label for="user-email">E-mail de Contato</label>
+                    <input type="email" id="user-email" required placeholder="seu.email@exemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="user-phone">Telefone / WhatsApp</label>
+                    <input type="tel" id="user-phone" required placeholder="(00) 99999-9999">
+                </div>
+
+                <div class="form-group">
+                    <label for="user-bio">Sobre Mim (Biografia)</label>
+                    <textarea id="user-bio" placeholder="Conte um pouco sobre sua rotina, sua casa e por que deseja adotar um companheiro..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-save-profile">Salvar Alterações</button>
+            </form>
         </div>
-
-        <!-- Mensagem de feedback na tela -->
-        <div id="mensagemSucesso" class="toast-sucesso">
-            🐾 Alterações salvas com sucesso! Redirecionando...
-        </div>
-
-        <!-- Adicionado ID e onsubmit para salvar com JavaScript -->
-        <form class="form-perfil" id="formPerfil" onsubmit="salvarDados(event)">
-            
-            <!-- SELEÇÃO DO TIPO DE PERFIL -->
-            
-
-            <!-- BLOCO LOCALIZAÇÃO E CONTATO (Comum para ambos) -->
-            <div class="secao-bloco">
-                <h2>📍 Localização e Contato</h2>
-                <div class="form-grid">
-                    <div class="campo-grupo">
-                        <label>Telefone / WhatsApp</label>
-                        <input type="text" id="telContato" value="19984228373" placeholder="Digite o telefone">
-                    </div>
-                    <div class="campo-grupo">
-                        <label>Cidade</label>
-                        <input type="text" id="cidadeContato" value="Santa Rita Do Passa Quatro" placeholder="Sua cidade">
-                    </div>
-                    <div class="campo-grupo">
-                        <label>Estado</label>
-                        <input type="text" id="estadoContato" value="SP" placeholder="UF">
-                    </div>
-                </div>
-            </div>
-
-            <!-- BLOCO EXCLUSIVO: PERFIL PESSOAL -->
-            <div id="blocoPessoal" style="display: none;">
-                <div class="secao-bloco">
-                    <h2>👤 Informações Pessoais</h2>
-                    <div class="form-grid">
-                        <div class="campo-grupo">
-                            <label>Nome Completo</label>
-                            <input type="text" id="nomePessoal" value="ANA LAURA PUPPO" placeholder="Digite seu nome">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="secao-bloco">
-                    <h2>🏠 Perfil de Adoção e Algoritmo de Compatibilidade</h2>
-                    <div class="form-grid">
-                        <div class="campo-grupo">
-                            <label>Tipo de Moradia</label>
-                            <select id="moradiaPessoal">
-                                <option selected>🏡 Casa com quintal</option>
-                                <option>🏢 Apartamento</option>
-                                <option>🏡 Casa sem quintal</option>
-                            </select>
-                        </div>
-                        <div class="campo-grupo">
-                            <label>Experiência com animais</label>
-                            <select id="experienciaPessoal">
-                                <option selected>🐾 Já tive animais</option>
-                                <option>❌ Nunca tive animais</option>
-                            </select>
-                        </div>
-                        <div class="campo-grupo">
-                            <label>Nível de atividade</label>
-                            <select id="atividadePessoal">
-                                <option selected>🏃 Moderado</option>
-                                <option>🛋️ Baixo</option>
-                                <option>⚡ Alto</option>
-                            </select>
-                        </div>
-                        <div class="campo-grupo">
-                            <label>Porte preferido</label>
-                            <select id="portePessoal">
-                                <option selected>🤷 Sem preferência</option>
-                                <option>🐕 Pequeno</option>
-                                <option>🦮 Médio</option>
-                                <option>🐕‍🦺 Grande</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="campo-grupo" style="margin-top: 15px;">
-                        <label>Horas fora de casa por dia: <strong>8h</strong></label>
-                        <input type="range" id="horasForaPessoal" min="0" max="24" value="8" style="width: 100%; margin-top: 5px;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- BLOCO EXCLUSIVO: PERFIL ONG -->
-            <div id="blocoONG">
-                <div class="secao-bloco">
-                    <h2>🏢 Informações da Instituição</h2>
-                    <div class="form-grid">
-                        <div class="campo-grupo">
-                            <label>Razão Social / Nome da ONG</label>
-                            <input type="text" id="nomeONG" placeholder="Ex: Associação Anjos de Patas">
-                        </div>
-                        <div class="campo-grupo">
-                            <label>CNPJ (opcional)</label>
-                            <input type="text" id="cnpjONG" placeholder="00.000.000/0001-00">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="secao-bloco">
-                    <h2>🐾 Capacidade e Foco de Atuação</h2>
-                    <div class="form-grid">
-                        <div class="campo-grupo">
-                            <label>Foco Principal de Resgate</label>
-                            <select id="focoONG">
-                                <option>🐶 Cachorros</option>
-                                <option>🐱 Gatos</option>
-                                <option selected>🐾 Ambos (Cães e Gatos)</option>
-                            </select>
-                        </div>
-                        <div class="campo-grupo">
-                            <label>Capacidade Total do Abrigo</label>
-                            <select id="capacidadeONG">
-                                <option>Até 20 animais</option>
-                                <option selected>De 20 a 50 animais</option>
-                                <option>Mais de 50 animais</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-salvar">Salvar Alterações</button>
-
-        </form>
     </main>
 
-    <!-- Script de Alternância, Carregamento e Persistência de Dados -->
     <script>
-        function alternarPerfil() {
-            const tipo = document.getElementById('tipoPerfil').value;
-            const blocoPessoal = document.getElementById('blocoPessoal');
-            const blocoONG = document.getElementById('blocoONG');
+        // Função para carregar os dados salvos do LocalStorage assim que abrir a página
+        function carregarDadosPerfil() {
+            const perfilSalvo = JSON.parse(localStorage.getItem('perfilAdotante'));
 
-            if (tipo === 'pessoal') {
-                blocoPessoal.style.display = 'block';
-                blocoONG.style.display = 'none';
-            } else {
-                blocoPessoal.style.display = 'none';
-                blocoONG.style.display = 'block';
+            if (perfilSalvo) {
+                if (perfilSalvo.nome) document.getElementById('user-name').value = perfilSalvo.nome;
+                if (perfilSalvo.email) document.getElementById('user-email').value = perfilSalvo.email;
+                if (perfilSalvo.telefone) document.getElementById('user-phone').value = perfilSalvo.telefone;
+                if (perfilSalvo.bio) document.getElementById('user-bio').value = perfilSalvo.bio;
+                
+                // Se houver uma foto salva em string Base64, carrega nos previews
+                if (perfilSalvo.foto) {
+                    atualizarPreviewsFoto(perfilSalvo.foto);
+                }
             }
         }
 
-        // Executa ao carregar para alinhar os blocos e aplicar regras de visibilidade no menu superior
-        window.onload = function() {
-            const perfilTipo = localStorage.getItem('perfilTipo');
-            
-            const linkPerfil = document.getElementById('link-perfil-pessoal');
-            const linkOng = document.getElementById('link-minha-ong');
-            
-            // Controle do menu baseado no login efetuado
-            if (!perfilTipo) {
-                if (linkPerfil) linkPerfil.style.display = 'none';
-                if (linkOng) linkOng.style.display = 'none';
-            } else if (perfilTipo === 'ong') {
-                document.getElementById('tipoPerfil').value = 'ong';
-                if (linkPerfil) linkPerfil.style.display = 'none';
-                if (linkOng) linkOng.style.display = 'inline-block';
-            } else if (perfilTipo === 'pessoal') {
-                document.getElementById('tipoPerfil').value = 'pessoal';
-                if (linkPerfil) linkPerfil.style.display = 'inline-block';
-                if (linkOng) linkOng.style.display = 'none';
+        // Processa o arquivo de imagem e transforma em string Base64 para salvar localmente
+        function previewEsalvarFoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    atualizarPreviewsFoto(base64Image);
+                    
+                    // Salva temporariamente a foto na estrutura do perfil
+                    salvarFotoNoStorage(base64Image);
+                };
+                reader.readAsDataURL(file);
             }
+        }
 
-            alternarPerfil();
-        };
+        function atualizarPreviewsFoto(imagemBase64) {
+            // Atualiza a foto grande do perfil
+            const preview = document.getElementById('avatar-preview');
+            preview.innerHTML = `<img src="${imagemBase64}" style="width:100%; height:100%; object-fit:cover;">`;
 
-        // Salva os dados no localStorage, atualiza visibilidade e redireciona
-        function salvarDados(event) {
+            // Opcional: Atualiza o ícone do avatar pequenininho do Header
+            const miniPreview = document.getElementById('header-avatar-mini');
+            if (miniPreview) {
+                miniPreview.innerHTML = `<img src="${imagemBase64}" style="width:24px; height:24px; border-radius:50%; object-fit:cover; display:inline-block;">`;
+            }
+        }
+
+        function salvarFotoNoStorage(base64Image) {
+            let perfil = JSON.parse(localStorage.getItem('perfilAdotante')) || {};
+            perfil.foto = base64Image;
+            localStorage.setItem('perfilAdotante', JSON.stringify(perfil));
+        }
+
+        // Salva os inputs de texto no LocalStorage
+        function salvarPerfil(event) {
             event.preventDefault();
 
-            const tipo = document.getElementById('tipoPerfil').value;
+            let perfil = JSON.parse(localStorage.getItem('perfilAdotante')) || {};
+            
+            perfil.nome = document.getElementById('user-name').value;
+            perfil.email = document.getElementById('user-email').value;
+            perfil.telefone = document.getElementById('user-phone').value;
+            perfil.bio = document.getElementById('user-bio').value;
 
-            // Salva o tipo principal de login
-            localStorage.setItem('perfilTipo', tipo);
+            localStorage.setItem('perfilAdotante', JSON.stringify(perfil));
 
-            // Salva dados comuns
-            localStorage.setItem('user_telefone', document.getElementById('telContato').value);
-            localStorage.setItem('user_cidade', document.getElementById('cidadeContato').value);
-            localStorage.setItem('user_estado', document.getElementById('estadoContato').value);
-
-            // Salva dados baseados na conta escolhida
-            if (tipo === 'pessoal') {
-                localStorage.setItem('pes_nome', document.getElementById('nomePessoal').value);
-                localStorage.setItem('pes_moradia', document.getElementById('moradiaPessoal').value);
-                localStorage.setItem('pes_experiencia', document.getElementById('experienciaPessoal').value);
-                localStorage.setItem('pes_atividade', document.getElementById('atividadePessoal').value);
-                localStorage.setItem('pes_porte', document.getElementById('portePessoal').value);
-                localStorage.setItem('pes_horas_fora', document.getElementById('horasForaPessoal').value);
-            } else {
-                localStorage.setItem('ong_nome', document.getElementById('nomeONG').value);
-                localStorage.setItem('ong_cnpj', document.getElementById('cnpjONG').value);
-                localStorage.setItem('ong_foco', document.getElementById('focoONG').value);
-                localStorage.setItem('ong_capacidade', document.getElementById('capacidadeONG').value);
-            }
-
-            // Mostra o Toast na tela
-            const toast = document.getElementById('mensagemSucesso');
-            toast.style.display = 'block';
-
-            // Redireciona após 2 segundos
-            setTimeout(function() {
-                window.location.href = 'index.html';
-            }, 2000);
+            // Exibe a mensagem de sucesso na tela temporariamente
+            const alerta = document.getElementById('success-alert');
+            alerta.style.display = 'block';
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 3000);
         }
-    </script>
 
+        // Inicializa os dados na tela ao carregar a página
+        window.onload = function() {
+            carregarDadosPerfil();
+        };
+    </script>
 </body>
 </html>

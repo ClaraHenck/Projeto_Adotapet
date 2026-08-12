@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informações de Adoção - AdotaPet</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f9fafb; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card-info { background: white; padding: 32px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); width: 100%; max-width: 440px; text-align: center; border: 1px solid #f3f4f6; }
+        .logo { font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 20px; }
+        .badge-status { background-color: #d1fae5; color: #059669; padding: 6px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; display: inline-block; margin-bottom: 24px; }
+        h2 { font-size: 22px; color: #1f2937; margin: 0 0 8px 0; }
+        .pet-nome { color: #ff4a75; font-weight: bold; }
+        .bloco-dados { background-color: #f9fafb; border-radius: 16px; padding: 20px; margin: 24px 0; text-align: left; border: 1px solid #e5e7eb; }
+        .bloco-dados h3 { margin: 0 0 12px 0; font-size: 15px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bloco-dados p { margin: 8px 0; font-size: 15px; color: #1f2937; line-height: 1.5; }
+        .aviso { color: #f87171; font-size: 13px; font-weight: 600; line-height: 1.4; margin: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="card-info">
+        <div class="logo">🐾 AdotaPet</div>
+        <div class="badge-status">CANDIDATURA APROVADA</div>
+        
+        <h2>Parabéns, <span id="nome-adotante">Adotante</span>!</h2>
+        <p style="color: #6b7280; margin: 4px 0 0 0;">Sua solicitação para adotar <span id="nome-pet" class="pet-nome">o animal</span> foi aceita.</p>
+
+        <div class="bloco-dados">
+            <h3>📍 Informações para Visitação</h3>
+            <p><strong>ONG responsável:</strong> <span id="ong-nome">ONG Amigos de Quatro Patas</span></p>
+            <p><strong>Endereço:</strong> <span id="ong-endereco">Av. das Nações Unidas, 1420 - Centro</span></p>
+            <p><strong>Horários:</strong> Segunda a Sábado, das 09:00 às 16:00</p>
+            <p><strong>Telefone:</strong> (11) 99999-8888</p>
+        </div>
+
+        <div class="bloco-dados" style="border-color: #fca5a5; background-color: #fff5f5;">
+            <p class="aviso">⚠️ Lembre-se de levar seu documento oficial com foto, comprovante de residência atualizado e uma caixinha de transporte segura.</p>
+        </div>
+    </div>
+
+    <script>
+        // Captura os dados dinâmicos passados pela URL gerada no QR Code
+        const urlParams = new URLSearchParams(window.location.search);
+        const nome = urlParams.get('nome') || 'Adotante';
+        const pet = urlParams.get('pet') || 'seu novo amigo';
+
+        // Injeta os dados nos elementos de texto da página
+        document.getElementById('nome-adotante').innerText = nome;
+        document.getElementById('nome-pet').innerText = pet;
+
+        // Busca dados reais de cadastro da ONG se houver no LocalStorage
+        if(localStorage.getItem("ong_nome")) document.getElementById("ong-nome").innerText = localStorage.getItem("ong_nome");
+        if(localStorage.getItem("ong_endereco")) document.getElementById("ong-endereco").innerText = localStorage.getItem("ong_endereco");
+    </script>
+</body>
+</html>

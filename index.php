@@ -36,7 +36,7 @@ if ($logado) {
 
         <?php if ($logado): ?>
           <a href="mapa.html" id="link-mapa">Mapa</a> 
-          <a href="candidaturas.html" id="link-candidaturas">
+          <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
         <?php endif; ?>
@@ -95,7 +95,7 @@ if ($logado) {
           </div>
 
           <?php if ($tipoUsuario === "adotante"): ?>
-            <a href="questionario.html" id="btn-questionario" class="btn-secondary" style="text-decoration: none; text-align: center; background-color: #ff6070ce; color: white; border: none; padding: 10px 20px; border-radius: 10px; width: fit-content; font-weight: bold;">
+            <a href="questionario.php" id="btn-questionario" class="btn-secondary" style="text-decoration: none; text-align: center; background-color: #ff6070ce; color: white; border: none; padding: 10px 20px; border-radius: 10px; width: fit-content; font-weight: bold;">
               📝 Responder Questionário de Adoção
             </a>
           <?php endif; ?>

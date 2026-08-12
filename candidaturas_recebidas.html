@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdotaPet - Candidaturas Recebidas</title>
+    <!-- Mantidos apenas para a estilização global do seu header -->
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="candidaturas_recebidas.css" />
+    <style>
+      /* --- ISOLAMENTO COMPLETO CONTRA BUGS DO CSS EXTERNO --- */
+      html, body {
+        overflow-y: auto !important; /* Força a tela a rolar verticalmente sempre */
+        height: auto !important;
+        background-color: #FFF9F6;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container-painel-ong {
+        max-width: 1000px !important;
+        margin: 40px auto !important;
+        padding: 0 20px !important;
+        display: block !important; /* Evita quebras de flexbox externa */
+      }
+
+      .cabecalho-secao {
+        margin-bottom: 30px;
+      }
+
+      .cabecalho-secao h1 {
+        font-size: 28px;
+        color: #22252A;
+        margin-bottom: 5px;
+      }
+
+      .cabecalho-secao p {
+        color: #7A7E85;
+        font-size: 15px;
+      }
+
+      /* --- ESTRUTURA DOS CARDS RECONSTRUÍDA --- */
+      .lista-cards-ong {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+      }
+
+      .card-candidato-novo {
+        background: #ffffff !important;
+        border-radius: 16px !important;
+        padding: 24px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+        border: 1px solid #F1F5F9 !important;
+        flex-wrap: wrap !important; /* Garante adaptação em telas menores */
+        gap: 20px;
+      }
+
+      .bloco-infos-esquerda {
+        display: flex !important;
+        align-items: center !important;
+        gap: 20px !important;
+        flex: 1;
+        min-width: 280px;
+      }
+
+      /* Organização para a foto/avatar nunca ficar por baixo do texto */
+      .avatar-circulo-ong {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 50% !important;
+        background-color: #00C1DE !important;
+        color: white !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        flex-shrink: 0 !important; /* Impede a foto de amassar ou diminuir */
+      }
+
+      .textos-candidato {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+      }
+
+      .textos-candidato h3 {
+        margin: 0 !important;
+        font-size: 18px !important;
+        color: #22252A !important;
+      }
+
+      .textos-candidato p {
+        margin: 0 !important;
+        font-size: 14px !important;
+        color: #7A7E85 !important;
+      }
+
+      .tag-pet-escolhido {
+        display: inline-block !important;
+        background-color: #F8FAFC !important;
+        color: #475569 !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        border: 1px solid #E2E8F0 !important;
+        margin-top: 4px;
+        width: fit-content;
+      }
+
+      .bloco-acoes-direita {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 12px !important;
+        min-width: 220px;
+      }
+
+      /* --- BOTÕES LADO A LADO --- */
+      .grupo-botoes-fluxo {
+        display: flex !important;
+        gap: 10px !important;
+      }
+
+      .btn-fluxo {
+        padding: 10px 18px !important;
+        border: none !important;
+        border-radius: 20px !important;
+        font-weight: 600 !important;
+        font-size: 13px !important;
+        cursor: pointer !important;
+        transition: transform 0.1s, opacity 0.2s;
+      }
+
+      .btn-fluxo:hover {
+        opacity: 0.9;
+      }
+
+      .btn-fluxo:active {
+        transform: scale(0.96);
+      }
+
+      .btn-fluxo-aprovar {
+        background-color: #00B67A !important;
+        color: white !important;
+      }
+
+      .btn-fluxo-rejeitar {
+        background-color: #FF4D4D !important;
+        color: white !important;
+      }
+
+      /* --- TAGS DE RESULTADO --- */
+      .status-tag-nova {
+        padding: 6px 14px !important;
+        border-radius: 20px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+      }
+
+      .status-tag-nova.pendente { background-color: #FFF4E5 !important; color: #FF9800 !important; }
+      .status-tag-nova.aprovado { background-color: #E6F9F3 !important; color: #00B67A !important; }
+      .status-tag-nova.recusado { background-color: #FFEAEA !important; color: #FF4D4D !important; }
+    </style>
+  </head>
+  <body>
+    
+    <!-- HEADER MANTIDO PADRÃO -->
+    <header class="navbar">
+      <div class="left-brand-box">
+        <div class="logo">🐾 AdotaPet</div>
+      </div>
+      <nav class="menu" id="menu-navegacao">
+        <a href="index.html">Início</a>
+        <a href="candidaturas_recebidas.html" class="active" id="link-candidaturas">Candidaturas recebidas</a>
+        <a href="minha_ong.html" id="link-perfil-dinamico" class="perfil-link-container">
+          <img id="nav-foto-perfil" src="https://flaticon.com" alt="Foto" class="avatar-nav-mini" />
+          <span id="texto-link-perfil">MINHA ONG</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- CONTAINER ISOLADO E COM ROLAGEM CORRIGIDA -->
+    <main class="container-painel-ong">
+      <div class="cabecalho-secao">
+        <h1>Candidaturas Recebidas</h1>
+        <p>Utilize as duas opções de botões abaixo para aprovar ou rejeitar os adotantes da lista.</p>
+      </div>
+
+      <div class="lista-cards-ong" id="lista-novos-cards-container">
+        <!-- Injetado dinamicamente via JS livre de bugs -->
+      </div>
+    </main>
+
+    <script>
+      // Garante dados de simulação locais estáveis
+      if (!localStorage.getItem("solicitacoes_adocao")) {
+        const adocoesIniciais = [
+          { id: "1", nome: "Ana Silva", email: "ana.silva@email.com", petInteresse: "Pipoca (Golden Retriever)", status: "pendente" },
+          { id: "2", nome: "Carlos Souza", email: "carlos.s@email.com", petInteresse: "Luna (Frajola)", status: "aprovado" },
+          { id: "3", nome: "Mariana Costa", email: "mari.costa@email.com", petInteresse: "Bidu (Poodle)", status: "pendente" }
+        ];
+        localStorage.setItem("solicitacoes_adocao", JSON.stringify(adocoesIniciais));
+      }
+
+      // Sincronização do topo
+      const emailLogado = localStorage.getItem("usuarioLogadoEmail") || "ong@email.com";
+      const elementoFoto = document.getElementById("nav-foto-perfil");
+      const fotoPerfilSalva = localStorage.getItem("foto_perfil_" + emailLogado);
+      if (fotoPerfilSalva && elementoFoto) elementoFoto.src = fotoPerfilSalva;
+
+      // Injeta os elementos na tela usando a nova estrutura protegida contra bugs
+      function renderizarCandidaturas() {
+        const container = document.getElementById("lista-novos-cards-container");
+        const listaSolicitacoes = JSON.parse(localStorage.getItem("solicitacoes_adocao")) || [];
+
+        if (listaSolicitacoes.length === 0) {
+          container.innerHTML = `<h3>Nenhuma solicitação encontrada</h3>`;
+          return;
+        }
+
+        container.innerHTML = "";
+
+        listaSolicitacoes.forEach((candidato, index) => {
+          const card = document.createElement("div");
+          card.className = "card-candidato-novo";
+
+          const iniciais = candidato.nome.split(" ").slice(0, 2).map(n => n || '').join("").toUpperCase();
+          const statusAtual = candidato.status || "pendente";
+
+          // Montagem limpa das duas opções de botões (Sempre visíveis)
+          const botoesAcaoHTML = `
+            <div class="grupo-botoes-fluxo">
+              <button class="btn-fluxo btn-fluxo-aprovar" onclick="alterarStatusCandidato(${index}, 'aprovado')">Aprovar</button>
+              <button class="btn-fluxo btn-fluxo-rejeitar" onclick="alterarStatusCandidato(${index}, 'recusado')">Rejeitar</button>
+            </div>
+          `;
+
+          card.innerHTML = `
+            <div class="bloco-infos-esquerda">
+              <div class="avatar-circulo-ong">${iniciais}</div>
+              <div class="textos-candidato">
+                <h3>${candidato.nome}</h3>
+                <p>Contato: ${candidato.email}</p>
+                <div class="tag-pet-escolhido">🐾 Quer adotar: ${candidato.petInteresse}</div>
+              </div>
+            </div>
+            <div class="bloco-acoes-direita">
+              <span class="status-tag-nova ${statusAtual}">${statusAtual}</span>
+              ${botoesAcaoHTML}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      function alterarStatusCandidato(index, novoStatus) {
+        const listaSolicitacoes = JSON.parse(localStorage.getItem("solicitacoes_adocao"));
+        listaSolicitacoes[index].status = novoStatus;
+        localStorage.setItem("solicitacoes_adocao", JSON.stringify(listaSolicitacoes));
+        
+        // Atualiza os estados e cores dinamicamente
+        renderizarCandidaturas();
+      }
+
+      window.onload = renderizarCandidaturas;
+    </script>
+  </body>
+</html>
