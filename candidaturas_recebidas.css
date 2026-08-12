@@ -1,210 +1,181 @@
-.perfil-link-container {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 13px;
-  transition: opacity 0.2s;
+/* ==========================================================================
+   ESTILIZAÇÃO DO CARD COMPLEMENTAR E INTERAÇÃO
+   ========================================================================== */
+
+/* Transforma o nome do candidato em um link visual sutil */
+.nome-clicavel {
+  cursor: pointer;
+  color: #22252A;
+  display: inline-block;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
-.avatar-nav-mini {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ff4a75;
-  background-color: #eee;
+.nome-clicavel:hover {
+  color: #00C1DE;
+  text-decoration: underline;
 }
 
-.conteudo-candidaturas {
-  max-width: 1000px;
-  margin: 120px auto 40px auto;
-  padding: 0 20px;
-}
+/* ==========================================================================
+   ESTRUTURA E ANIMAÇÃO DO MODAL (FLUTUANTE)
+   ========================================================================== */
 
-.titulo-pagina h1 {
-  font-size: 32px;
-  color: #1f2937;
-  margin: 0 0 8px 0;
-  font-weight: 800;
-}
-
-.titulo-pagina p {
-  color: #6b7280;
-  margin: 0 0 32px 0;
-  font-size: 16px;
-}
-
-.lista-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.card-solicitante {
-  background: white;
-  border: 1px solid #f3f4f6;
-  border-radius: 20px;
-  padding: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-}
-
-.info-esquerda {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.avatar-placeholder {
-  width: 48px;
-  height: 48px;
-  background-color: #f0fdfa;
-  color: #2bc4b6;
-  border-radius: 50%;
-  display: flex;
+/* Fundo escurecido que cobre toda a tela */
+.modal-fundo {
+  display: none; /* Controlado dinamicamente pelo JS (flex) */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(34, 37, 42, 0.6); /* Tom escuro suave combinando com o app */
+  backdrop-filter: blur(4px); /* Leve efeito de desfoque ao fundo */
+  z-index: 2000;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  border: 1px solid #e0f2fe;
 }
 
-.detalhes-texto h3 {
-  margin: 0 0 6px 0;
-  font-size: 18px;
-  color: #1f2937;
+/* Caixa branca centralizada do conteúdo */
+.modal-conteudo {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 580px;
+  max-height: 85vh; /* Impede que o modal saia da tela em monitores menores */
+  overflow-y: auto; /* Cria barra de rolagem interna se o questionário for longo */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  position: relative;
+  box-sizing: border-box;
+  animation: surgimentoModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.detalhes-texto p {
-  margin: 0 0 8px 0;
-  color: #6b7280;
-  font-size: 14px;
+/* Animação suave de entrada (escala + opacidade) */
+@keyframes surgimentoModal {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.badge-pet {
-  display: inline-block;
-  background-color: #ffe4e6;
-  color: #ff4a75;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
+/* Botão de fechar (X) no canto superior direito */
+.modal-fechar {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  color: #A0A5B0;
+  border: none;
+  background: none;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.modal-fechar:hover {
+  color: #FF4D4D; /* Fica vermelho ao passar o mouse */
+}
+
+/* Título principal do modal */
+.modal-conteudo h2 {
+  margin: 0 0 24px 0;
+  color: #22252A;
+  font-size: 26px;
   font-weight: 700;
 }
 
-.info-direita {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.status-tag {
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
+/* Títulos das divisões (Cadastro vs Questionário) */
+.modal-secao-titulo {
+  font-size: 13px;
+  color: #00C1DE;
+  margin: 24px 0 12px 0;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
-.status-tag.pendente { background-color: #fef3c7; color: #d97706; }
-.status-tag.aprovado { background-color: #d1fae5; color: #059669; }
-.status-tag.rejeitado { background-color: #fee2e2; color: #dc2626; }
-
-.btn-acao {
-  border: none;
-  padding: 12px 18px;
+/* ==========================================================================
+   SEÇÃO 1: GRID DE INFORMAÇÕES CADASTRAIS
+   ========================================================================== */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Divide em duas colunas perfeitas */
+  gap: 16px;
+  background: #F8FAFC;
+  padding: 16px;
   border-radius: 12px;
-  font-weight: bold;
+  border: 1px solid #E2E8F0;
+}
+
+.info-linha {
   font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s;
-  text-decoration: none;
-  display: inline-block;
+  color: #475569;
+  line-height: 1.5;
 }
 
-.btn-analisar { background-color: #e5e7eb; color: #4b5563; }
-.btn-analisar:hover { background-color: #d1d5db; }
-
-.btn-qrcode {
-  background-color: #2bc4b6;
-  color: white;
-  box-shadow: 0 4px 12px rgba(43, 196, 182, 0.15);
-}
-.btn-qrcode:hover { background-color: #24a89c; }
-
-/* --- CONTROLES DO MODAL POPUP --- */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.3s ease;
+.info-linha strong {
+  color: #22252A;
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
 }
 
-.modal-overlay.ativo {
-  visibility: visible;
-  opacity: 1;
-}
-
-.modal-box {
-  background: white;
-  padding: 32px;
-  border-radius: 24px;
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-.modal-box h2 { margin: 0 0 8px 0; color: #1f2937; }
-.modal-box p { color: #6b7280; font-size: 14px; margin: 0 0 20px 0; }
-
-#qrcode-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-#qrcode-real {
-  border: 1px solid #e5e7eb;
-  padding: 10px;
-  border-radius: 16px;
-  background: white;
-  width: 200px;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.botoes-modal-container {
+/* ==========================================================================
+   SEÇÃO 2: CAIXA DO QUESTIONÁRIO DE ADOÇÃO
+   ========================================================================== */
+.questionario-box {
+  background: #FFF9F6; /* Tom quente combinando com o background global */
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #FFE4D6;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 16px;
 }
 
-.btn-enviar-link {
-  background-color: #2bc4b6;
-  color: white;
-  width: 100%;
+.pergunta-item {
+  font-size: 14px;
+  border-bottom: 1px dashed #E2E8F0;
+  padding-bottom: 12px;
 }
-.btn-enviar-link:hover { background-color: #24a89c; }
 
-.btn-fechar-modal {
-  background-color: #f3f4f6;
-  color: #4b5563;
-  width: 100%;
+.pergunta-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
-.btn-fechar-modal:hover { background-color: #e5e7eb; }
 
-.lista-vazia { text-align: center; padding: 60px 20px; color: #9ca3af; }
+.pergunta-texto {
+  font-weight: 600;
+  color: #22252A;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.resposta-texto {
+  color: #64748B;
+  line-height: 1.5;
+  background-color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #F1F5F9;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (TELAS CELULAR)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .info-grid {
+    grid-template-columns: 1fr; /* Transforma o grid em uma única coluna */
+  }
+  
+  .modal-conteudo {
+    padding: 20px;
+    width: 95%;
+  }
+}

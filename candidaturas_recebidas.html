@@ -6,22 +6,36 @@
     <title>AdotaPet - Candidaturas Recebidas</title>
     <!-- Mantidos apenas para a estilização global do seu header -->
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="./candidaturas_recebidas.css" />
+    
+  </head>
+  <style>
+   <!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdotaPet - Candidaturas Recebidas</title>
+    <!-- Mantidos apenas para a estilização global do seu header se os arquivos existirem -->
+    <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="candidaturas_recebidas.css" />
+    
     <style>
       /* --- ISOLAMENTO COMPLETO CONTRA BUGS DO CSS EXTERNO --- */
       html, body {
-        overflow-y: auto !important; /* Força a tela a rolar verticalmente sempre */
+        overflow-y: auto !important;
         height: auto !important;
         background-color: #FFF9F6;
         margin: 0;
         padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       }
 
       .container-painel-ong {
         max-width: 1000px !important;
         margin: 40px auto !important;
         padding: 0 20px !important;
-        display: block !important; /* Evita quebras de flexbox externa */
+        display: block !important;
       }
 
       .cabecalho-secao {
@@ -55,7 +69,7 @@
         align-items: center !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
         border: 1px solid #F1F5F9 !important;
-        flex-wrap: wrap !important; /* Garante adaptação em telas menores */
+        flex-wrap: wrap !important;
         gap: 20px;
       }
 
@@ -67,7 +81,6 @@
         min-width: 280px;
       }
 
-      /* Organização para a foto/avatar nunca ficar por baixo do texto */
       .avatar-circulo-ong {
         width: 60px !important;
         height: 60px !important;
@@ -79,7 +92,7 @@
         justify-content: center !important;
         font-weight: 700 !important;
         font-size: 18px !important;
-        flex-shrink: 0 !important; /* Impede a foto de amassar ou diminuir */
+        flex-shrink: 0 !important;
       }
 
       .textos-candidato {
@@ -121,7 +134,6 @@
         min-width: 220px;
       }
 
-      /* --- BOTÕES LADO A LADO --- */
       .grupo-botoes-fluxo {
         display: flex !important;
         gap: 10px !important;
@@ -137,25 +149,11 @@
         transition: transform 0.1s, opacity 0.2s;
       }
 
-      .btn-fluxo:hover {
-        opacity: 0.9;
-      }
+      .btn-fluxo:hover { opacity: 0.9; }
+      .btn-fluxo:active { transform: scale(0.96); }
+      .btn-fluxo-aprovar { background-color: #00B67A !important; color: white !important; }
+      .btn-fluxo-rejeitar { background-color: #FF4D4D !important; color: white !important; }
 
-      .btn-fluxo:active {
-        transform: scale(0.96);
-      }
-
-      .btn-fluxo-aprovar {
-        background-color: #00B67A !important;
-        color: white !important;
-      }
-
-      .btn-fluxo-rejeitar {
-        background-color: #FF4D4D !important;
-        color: white !important;
-      }
-
-      /* --- TAGS DE RESULTADO --- */
       .status-tag-nova {
         padding: 6px 14px !important;
         border-radius: 20px !important;
@@ -164,14 +162,157 @@
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
       }
-
       .status-tag-nova.pendente { background-color: #FFF4E5 !important; color: #FF9800 !important; }
       .status-tag-nova.aprovado { background-color: #E6F9F3 !important; color: #00B67A !important; }
       .status-tag-nova.recusado { background-color: #FFEAEA !important; color: #FF4D4D !important; }
+
+      /* --- ESTILO DO NOME CLICÁVEL --- */
+      .nome-clicavel {
+        cursor: pointer !important;
+        color: #22252A !important;
+        display: inline-block !important;
+        transition: color 0.2s ease, text-decoration 0.2s ease !important;
+      }
+      .nome-clicavel:hover {
+        color: #00C1DE !important;
+        text-decoration: underline !important;
+      }
+
+      /* --- NOVO DESIGN DO MODAL DE DETALHES --- */
+      .modal-fundo {
+        display: none; 
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(34, 37, 42, 0.6) !important; 
+        backdrop-filter: blur(4px) !important; 
+        z-index: 9999 !important; /* Fica por cima de qualquer elemento */
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .modal-conteudo {
+        background-color: #ffffff !important;
+        padding: 32px !important;
+        border-radius: 20px !important;
+        width: 90% !important;
+        max-width: 580px !important;
+        max-height: 85vh !important; 
+        overflow-y: auto !important; 
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+        position: relative !important;
+        box-sizing: border-box !important;
+        animation: surgimentoModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      @keyframes surgimentoModal {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .modal-fechar {
+        position: absolute !important;
+        top: 20px !important;
+        right: 24px !important;
+        font-size: 32px !important;
+        line-height: 1 !important;
+        cursor: pointer !important;
+        color: #A0A5B0 !important;
+        border: none !important;
+        background: none !important;
+        padding: 0 !important;
+        transition: color 0.2s !important;
+      }
+      .modal-fechar:hover { color: #FF4D4D !important; }
+
+      .modal-conteudo h2 {
+        margin: 0 0 24px 0 !important;
+        color: #22252A !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+      }
+
+      .modal-secao-titulo {
+        font-size: 13px !important;
+        color: #00C1DE !important;
+        margin: 24px 0 12px 0 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+      }
+
+      .info-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 16px !important;
+        background: #F8FAFC !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+        border: 1px solid #E2E8F0 !important;
+      }
+
+      .info-linha {
+        font-size: 14px !important;
+        color: #475569 !important;
+        line-height: 1.5 !important;
+      }
+
+      .info-linha strong {
+        color: #22252A !important;
+        display: block !important;
+        font-size: 12px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+        margin-bottom: 4px !important;
+      }
+
+      .questionario-box {
+        background: #FFF9F6 !important; 
+        padding: 20px !important;
+        border-radius: 12px !important;
+        border: 1px solid #FFE4D6 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+      }
+
+      .pergunta-item {
+        font-size: 14px !important;
+        border-bottom: 1px dashed #E2E8F0 !important;
+        padding-bottom: 12px !important;
+      }
+      .pergunta-item:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+      }
+
+      .pergunta-texto {
+        font-weight: 600 !important;
+        color: #22252A !important;
+        margin-bottom: 6px !important;
+        line-height: 1.4 !important;
+      }
+
+      .resposta-texto {
+        color: #64748B !important;
+        line-height: 1.5 !important;
+        background-color: #ffffff !important;
+        padding: 8px 12px !important;
+        border-radius: 6px !important;
+        border: 1px solid #F1F5F9 !important;
+      }
+
+      @media (max-width: 480px) {
+        .info-grid { grid-template-columns: 1fr !important; }
+        .modal-conteudo { padding: 20px !important; width: 95% !important; }
+      }
     </style>
   </head>
   <body>
     
+
     <!-- HEADER MANTIDO PADRÃO -->
     <header class="navbar">
       <div class="left-brand-box">
@@ -191,7 +332,7 @@
     <main class="container-painel-ong">
       <div class="cabecalho-secao">
         <h1>Candidaturas Recebidas</h1>
-        <p>Utilize as duas opções de botões abaixo para aprovar ou rejeitar os adotantes da lista.</p>
+        <p>Clique no **nome do adotante** para visualizar o perfil completo e as respostas do questionário.</p>
       </div>
 
       <div class="lista-cards-ong" id="lista-novos-cards-container">
@@ -199,13 +340,93 @@
       </div>
     </main>
 
+    <!-- CONTAINER DO MODAL DE PERFIL COMPLETO -->
+    <div id="modalPerfil" class="modal-fundo" onclick="fecharModalExterno(event)">
+      <div class="modal-conteudo">
+        <button class="modal-fechar" onclick="fecharModal()">&times;</button>
+        <h2>Ficha do Adotante</h2>
+        
+        <!-- Dados do Cadastro do Usuário -->
+        <div class="modal-secao-titulo">👤 Informações de Cadastro</div>
+        <div class="info-grid">
+          <div class="info-linha"><strong>Nome Completo:</strong> <span id="perfNome"></span></div>
+          <div class="info-linha"><strong>E-mail:</strong> <span id="perfEmail"></span></div>
+          <div class="info-linha"><strong>Telefone:</strong> <span id="perfTelefone"></span></div>
+          <div class="info-linha"><strong>Cidade/UF:</strong> <span id="perfCidade"></span></div>
+        </div>
+
+        <!-- Respostas do Questionário -->
+        <div class="modal-secao-titulo">📋 Respostas do Questionário</div>
+        <div class="questionario-box">
+          <div class="pergunta-item">
+            <div class="pergunta-texto">1. Já possui outros animais em casa?</div>
+            <div class="resposta-texto" id="perfQ1"></div>
+          </div>
+          <div class="pergunta-item">
+            <div class="pergunta-texto">2. Tipo de residência (Casa, Apartamento...)?</div>
+            <div class="resposta-texto" id="perfQ2"></div>
+          </div>
+          <div class="pergunta-item">
+            <div class="pergunta-texto">3. Todos na casa estão de acordo com a adoção?</div>
+            <div class="resposta-texto" id="perfQ3"></div>
+          </div>
+          <div class="pergunta-item">
+            <div class="pergunta-texto">4. Quanto tempo o pet passará sozinho por dia?</div>
+            <div class="resposta-texto" id="perfQ4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
-      // Garante dados de simulação locais estáveis
+      // Atualizado para conter os campos de perfil e as respostas do questionário
       if (!localStorage.getItem("solicitacoes_adocao")) {
         const adocoesIniciais = [
-          { id: "1", nome: "Ana Silva", email: "ana.silva@email.com", petInteresse: "Pipoca (Golden Retriever)", status: "pendente" },
-          { id: "2", nome: "Carlos Souza", email: "carlos.s@email.com", petInteresse: "Luna (Frajola)", status: "aprovado" },
-          { id: "3", nome: "Mariana Costa", email: "mari.costa@email.com", petInteresse: "Bidu (Poodle)", status: "pendente" }
+          { 
+            id: "1", 
+            nome: "Ana Silva", 
+            email: "ana.silva@email.com", 
+            petInteresse: "Pipoca (Golden Retriever)", 
+            status: "pendente",
+            telefone: "(11) 98765-4321",
+            cidade: "São Paulo - SP",
+            questionario: {
+              q1: "Sim, tenho um gato de 3 anos muito sociável.",
+              q2: "Casa ampla com quintal totalmente telado e seguro.",
+              q3: "Sim, moro com meu marido e ambos queremos muito.",
+              q4: "No máximo 3 horas, pois trabalho em formato híbrido."
+            }
+          },
+          { 
+            id: "2", 
+            nome: "Carlos Souza", 
+            email: "carlos.s@email.com", 
+            petInteresse: "Luna (Frajola)", 
+            status: "aprovado",
+            telefone: "(21) 99888-7766",
+            cidade: "Rio de Janeiro - RJ",
+            questionario: {
+              q1: "Não, este será o meu primeiro animalzinho.",
+              q2: "Apartamento de 70m² com redes de proteção nas janelas.",
+              q3: "Sim, moro sozinho e assumo total responsabilidade.",
+              q4: "Cerca de 6 horas, mas conto com suporte de um cuidador."
+            }
+          },
+          { 
+            id: "3", 
+            nome: "Mariana Costa", 
+            email: "mari.costa@email.com", 
+            petInteresse: "Bidu (Poodle)", 
+            status: "pendente",
+            telefone: "(31) 99123-5544",
+            cidade: "Belo Horizonte - MG",
+            questionario: {
+              q1: "Não possui no momento, mas já tive cães na infância.",
+              q2: "Casa geminada com portão fechado.",
+              q3: "Sim, toda a família está ansiosa pela chegada.",
+              q4: "Fica sozinho das 08h às 12h durante o período matutino."
+            }
+          }
         ];
         localStorage.setItem("solicitacoes_adocao", JSON.stringify(adocoesIniciais));
       }
@@ -216,7 +437,7 @@
       const fotoPerfilSalva = localStorage.getItem("foto_perfil_" + emailLogado);
       if (fotoPerfilSalva && elementoFoto) elementoFoto.src = fotoPerfilSalva;
 
-      // Injeta os elementos na tela usando a nova estrutura protegida contra bugs
+      // Injeta os elementos na tela
       function renderizarCandidaturas() {
         const container = document.getElementById("lista-novos-cards-container");
         const listaSolicitacoes = JSON.parse(localStorage.getItem("solicitacoes_adocao")) || [];
@@ -235,7 +456,6 @@
           const iniciais = candidato.nome.split(" ").slice(0, 2).map(n => n || '').join("").toUpperCase();
           const statusAtual = candidato.status || "pendente";
 
-          // Montagem limpa das duas opções de botões (Sempre visíveis)
           const botoesAcaoHTML = `
             <div class="grupo-botoes-fluxo">
               <button class="btn-fluxo btn-fluxo-aprovar" onclick="alterarStatusCandidato(${index}, 'aprovado')">Aprovar</button>
@@ -243,34 +463,13 @@
             </div>
           `;
 
+          // Aplicado a classe 'nome-clicavel' e o evento onclick exclusivamente na tag h3 do nome
           card.innerHTML = `
             <div class="bloco-infos-esquerda">
               <div class="avatar-circulo-ong">${iniciais}</div>
               <div class="textos-candidato">
-                <h3>${candidato.nome}</h3>
-                <p>Contato: ${candidato.email}</p>
-                <div class="tag-pet-escolhido">🐾 Quer adotar: ${candidato.petInteresse}</div>
-              </div>
-            </div>
-            <div class="bloco-acoes-direita">
-              <span class="status-tag-nova ${statusAtual}">${statusAtual}</span>
-              ${botoesAcaoHTML}
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      }
-
-      function alterarStatusCandidato(index, novoStatus) {
-        const listaSolicitacoes = JSON.parse(localStorage.getItem("solicitacoes_adocao"));
-        listaSolicitacoes[index].status = novoStatus;
-        localStorage.setItem("solicitacoes_adocao", JSON.stringify(listaSolicitacoes));
-        
-        // Atualiza os estados e cores dinamicamente
-        renderizarCandidaturas();
-      }
-
-      window.onload = renderizarCandidaturas;
-    </script>
-  </body>
-</html>
+                ${candidato.nome}Contato: ${candidato.email}🐾 Quer adotar: ${candidato.petInteresse}
+                ${statusAtual}${botoesAcaoHTML}`;container.appendChild(card);});}function alterarStatusCandidato(index, novoStatus) {const listaSolicitacoes = JSON.parse(localStorage.getItem("solicitacoes_adocao"));listaSolicitacoes[index].status = novoStatus;localStorage.setItem("solicitacoes_adocao", JSON.stringify(listaSolicitacoes));renderizarCandidaturas();}
+                // --- GERENCIAMENTO DO MODAL DE PERFIL ---function mostrarPerfilAdotante(index) {const listaSolicitacoes = JSON.parse(localStorage.getItem("solicitacoes_adocao")) || [];const pessoa = listaSolicitacoes[index];if (!pessoa) return;// Preenche os dados cadastrais coletadosdocument.getElementById("perfNome").innerText = pessoa.nome;document.getElementById("perfEmail").innerText = pessoa.email;document.getElementById("perfTelefone").innerText = pessoa.telefone || "Não informado";document.getElementById("perfCidade").innerText = pessoa.cidade || "Não informada";
+                // Preenche as respostas do questionário internodocument.getElementById("perfQ1").innerText = pessoa.questionario?.q1 || "Sem resposta.";document.getElementById("perfQ2").innerText = pessoa.questionario?.q2 || "Sem resposta.";document.getElementById("perfQ3").innerText = pessoa.questionario?.q3 || "Sem resposta.";document.getElementById("perfQ4").innerText = pessoa.questionario?.q4 || "Sem resposta.";// Abre a janela flutuantedocument.getElementById("modalPerfil").style.display = "flex";}function fecharModal() {document.getElementById("modalPerfil").style.display = "none";}
+                function fecharModalExterno(event) {if (event.target.id === "modalPerfil") {fecharModal();}}window.onload = renderizarCandidaturas;
