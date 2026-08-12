@@ -1,1 +1,0 @@
-SELECT * FROM adotapet_db.animais;

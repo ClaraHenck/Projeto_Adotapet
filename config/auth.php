@@ -4,7 +4,7 @@ session_start();
 
 // Verifica se o usuário não está logado
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../login.php"); // Redireciona para o login
+    header("Location: ../Projeto_Adotapet/login/login.php"); // Redireciona para o login
     exit;
 }
 
