@@ -2,7 +2,7 @@
 // config/db.php
 
 $host = "localhost";
-$banco = "adotapet";
+$banco = "adotapet_db";
 $usuario = "root";
 $senha = "12345678";
 

@@ -85,7 +85,7 @@ if ($logado) {
                 🔍 Encontrar um Animal
               </a>
             <?php else: ?>
-              <a href="cadastrarAnimal.php" class="btn-primary" style="text-decoration: none; display: inline-block; text-align: center; background-color: #2196F3; border-radius: 10px;">
+              <a href="cadastrar_animal.php" class="btn-primary" style="text-decoration: none; display: inline-block; text-align: center; background-color: #2196F3; border-radius: 10px;">
                 ➕ Cadastrar Novo Animal
               </a>
               <a href="meus_animais.php" class="btn-secondary" style="text-decoration: none; display: inline-block; text-align: center; border-radius: 10px;">

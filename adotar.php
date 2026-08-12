@@ -63,7 +63,7 @@ $total = count($animais);
         
         <?php if ($logado): ?>
           <a href="mapa.html" id="link-mapa">Mapa</a> 
-          <a href="candidaturas.html" id="link-candidaturas">
+          <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
         <?php endif; ?>
@@ -74,7 +74,7 @@ $total = count($animais);
                 <a href="../login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
-                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.html" : "meu_perfil.html";
+                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.";
                     $textoPerfil = ($tipoUsuario === "ong") ? "MINHA ONG" : "MEU PERFIL";
                 ?>
                 <a href="<?php echo $linkHref; ?>" class="perfil-link-container">
