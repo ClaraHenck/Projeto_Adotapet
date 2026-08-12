@@ -1,6 +1,6 @@
--- Criação do banco de dados (Opcional, mude o nome se preferir)
-CREATE DATABASE IF NOT EXISTS adotapet;
-USE adotapet;
+
+CREATE DATABASE IF NOT EXISTS adotapet_db;
+USE adotapet_db;
 
 -- ==========================================
 -- 1. TABELA: ONGs
@@ -84,3 +84,29 @@ CREATE TABLE candidaturas (
     FOREIGN KEY (animal_id) REFERENCES animais(id) ON DELETE CASCADE,
     FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE
 );
+
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 2. Apaga a tabela antiga de 'usuarios' que não é mais usada
+DROP TABLE IF EXISTS usuarios;
+
+-- 3. Recria a tabela 'candidaturas' limpa e sem a coluna 'usuario_id'
+DROP TABLE IF EXISTS candidaturas;
+
+CREATE TABLE candidaturas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    adotante_id INT NOT NULL,
+    animal_id INT NOT NULL,
+    questionario_id INT NOT NULL,
+    status_candidatura VARCHAR(50) DEFAULT 'Pendente',
+    compatibilidade VARCHAR(10) DEFAULT '70%',
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_candidaturas_adotante FOREIGN KEY (adotante_id) REFERENCES adotantes(id) ON DELETE CASCADE,
+    CONSTRAINT fk_candidaturas_animal FOREIGN KEY (animal_id) REFERENCES animais(id) ON DELETE CASCADE,
+    CONSTRAINT fk_candidaturas_questionario FOREIGN KEY (questionario_id) REFERENCES questionarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 4. Reativa a checagem de chaves estrangeiras
+SET FOREIGN_KEY_CHECKS = 1;
