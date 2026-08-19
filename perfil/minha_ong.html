@@ -295,9 +295,18 @@
           </div>
 
           <!-- BOTÕES DE AÇÃO -->
-          <div class="acoes-container">
-            <a href="index.html" class="btn-voltar">Voltar ao Painel</a>
-            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+          <div class="acoes-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <div>
+              <a href="index.html" class="btn-voltar">Voltar ao Painel</a>
+              <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            </div>
+            
+            <!-- NOVA OPÇÃO: DELETAR PERFIL (ZONA DE PERIGO) -->
+            <div>
+              <button type="button" onclick="deletarPerfil()" class="btn-deletar" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                Excluir Conta
+              </button>
+            </div>
           </div>
 
         </form>
@@ -325,6 +334,18 @@
       function salvarDadosOng(event) {
         event.preventDefault();
         alert('Alterações salvas com sucesso!');
+      }
+
+      // NOVA FUNÇÃO: DELETAR PERFIL
+      function deletarPerfil() {
+        const confirmacao = confirm("⚠️ ATENÇÃO: Tem certeza que deseja deletar o perfil da sua ONG? Esta ação é irreversível e apagará todos os seus dados e candidaturas.");
+        
+        if (confirmacao) {
+          // Aqui você fará a chamada para o seu backend PHP no futuro ex: window.location.href = 'deletar_ong.php';
+          alert('Conta excluída com sucesso.');
+          localStorage.clear();
+          window.location.href = "login.html";
+        }
       }
     </script>
   </body>

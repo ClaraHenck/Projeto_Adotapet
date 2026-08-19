@@ -129,7 +129,7 @@
             margin-bottom: 20px;
         }
     </style>
-</head>
+    </head>
 <body>
 
     <!-- CABEÇALHO PADRÃO IDENTICO -->
@@ -192,6 +192,9 @@
                 </div>
 
                 <button type="submit" class="btn-save-profile">Salvar Alterações</button>
+                
+                <!-- NOVO: Botão de Deletar Perfil -->
+                <button type="button" onclick="deletarPerfil()" class="btn-delete-profile" style="background-color: #dc3545; color: white; width: 100%; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: background 0.2s;">Excluir Meu Perfil</button>
             </form>
         </div>
     </main>
@@ -267,6 +270,21 @@
             setTimeout(() => {
                 alerta.style.display = 'none';
             }, 3000);
+        }
+
+        // NOVA FUNÇÃO: Exclui os dados e redireciona o usuário
+        function deletarPerfil() {
+            const confirmacao = confirm("Tem certeza de que deseja deletar seu perfil? Esta ação não pode ser desfeita.");
+            
+            if (confirmacao) {
+                // Remove a chave do perfil do LocalStorage
+                localStorage.removeItem('perfilAdotante');
+                
+                alert("Perfil deletado com sucesso!");
+                
+                // Redireciona o usuário para a tela de login ou index após deletar
+                window.location.href = "login.html"; 
+            }
         }
 
         // Inicializa os dados na tela ao carregar a página
