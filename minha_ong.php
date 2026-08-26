@@ -390,6 +390,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Botão Salvar -->
             <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            <!-- Botão Salvar -->
 
         </form>
 
