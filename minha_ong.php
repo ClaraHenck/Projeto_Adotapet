@@ -1,38 +1,49 @@
 <?php
-// Configurações de Autenticação e Conexão com o Banco de Dados
-require_once 'config/auth.php';
-require_once 'config/db.php';
+// 1. Carrega as configurações primeiro (o auth.php já inicia a sessão)
+require_once __DIR__ . '/config/auth.php';
+require_once __DIR__ . '/config/db.php';
 
-$usuario_id = $_SESSION['usuario_id'];
+// Garante que a sessão está ativa sem duplicar o session_start()
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 2. Busca o ID com verificação segura contra 'Undefined array key'
+$id = $_SESSION['id'] ?? $_SESSION['ong_id'] ?? $_SESSION['usuario_id'] ?? null;
+
+// Redireciona para o login caso a sessão não exista ou não contenha um ID válido
+if (!$id) {
+    header("Location: login/login.php");
+    exit;
+}
+
 $mensagem = '';
 $erro = '';
 
-// Buscar informações atuais da ONG / Usuário
+// Buscar informações atuais da ONG
 try {
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ?");
-    $stmt->execute([$usuario_id]);
+    $stmt = $pdo->prepare("SELECT * FROM ongs WHERE id = ?");
+    $stmt->execute([$id]);
     $ong = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $erro = "Erro ao carregar dados: " . $e->getMessage();
 }
 
-// Processar atualização do perfil ao enviar o formulário
+// Processar atualização de perfil ao enviar o formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome        = $_POST['nome'] ?? '';
-    $email       = $_POST['email'] ?? '';
-    $telefone    = $_POST['telefone'] ?? '';
-    $cep         = $_POST['cep'] ?? '';
-    $cnpj        = $_POST['cnpj'] ?? '';
+    $nome = $_POST['nome'] ?? '';
+    $cnpj = $_POST['cnpj'] ?? '';
+    $telefone = $_POST['telefone'] ?? '';
     $responsavel = $_POST['responsavel'] ?? '';
-    $capacidade  = !empty($_POST['capacidade']) ? (int)$_POST['capacidade'] : null;
-    $instagram   = $_POST['instagram'] ?? '';
-    $descricao   = $_POST['descricao'] ?? '';
+    $capacidade = !empty($_POST['capacidade']) ? (int)$_POST['capacidade'] : null;
+    $instagram = $_POST['instagram'] ?? '';
+    $descricao = $_POST['descricao'] ?? '';
 
     // Processamento da Foto / Logo
     $foto_path = $ong['foto'] ?? '';
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
         $extensao = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-        $novo_nome = 'ong_' . $usuario_id . '_' . time() . '.' . $extensao;
+        $novo_nome = 'ong_' . $id . '_' . time() . '.' . $extensao;
         $diretorio = 'uploads/';
         
         if (!is_dir($diretorio)) {
@@ -45,14 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Atualização dos dados no banco de dados
+    // Atualização dos dados no MySQL
     try {
-        $sql = "UPDATE usuarios SET 
+        $sql = "UPDATE ongs SET 
                     nome = :nome, 
-                    email = :email, 
-                    telefone = :telefone, 
-                    cep = :cep, 
                     cnpj = :cnpj, 
+                    telefone = :telefone, 
                     responsavel = :responsavel, 
                     capacidade = :capacidade, 
                     instagram = :instagram, 
@@ -62,23 +71,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmtUpdate = $pdo->prepare($sql);
         $stmtUpdate->execute([
-            ':nome'        => $nome,
-            ':email'       => $email,
-            ':telefone'    => $telefone,
-            ':cep'         => $cep,
-            ':cnpj'        => $cnpj,
+            ':nome' => $nome,
+            ':cnpj' => $cnpj,
+            ':telefone' => $telefone,
             ':responsavel' => $responsavel,
-            ':capacidade'  => $capacidade,
-            ':instagram'   => $instagram,
-            ':descricao'   => $descricao,
-            ':foto'        => $foto_path,
-            ':id'          => $usuario_id
+            ':capacidade' => $capacidade,
+            ':instagram' => $instagram,
+            ':descricao' => $descricao,
+            ':foto' => $foto_path,
+            ':id' => $id
         ]);
 
         $mensagem = "Alterações salvas com sucesso!";
 
-        // Recarrega os dados atualizados para exibir no formulário
-        $stmt->execute([$usuario_id]);
+        // Recarrega os dados atualizados
+        $stmt->execute([$id]);
         $ong = $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         $erro = "Erro ao salvar alterações: " . $e->getMessage();
@@ -127,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: bold;
         }
 
-        /* Container Principal */
+        /* Container de Conteúdo */
         .container {
             max-width: 800px;
             margin: 40px auto;
@@ -145,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 15px;
         }
 
-        /* Quadros em Blocos Brancos */
+        /* BLOCOS EM QUADROS BRANCOS */
         .secao-bloco {
             background-color: #ffffff;
             border-radius: 14px;
@@ -155,56 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #f0f0f0;
         }
 
-        /* Cabeçalho do Perfil (Com Foto e Nome do Tipo de Conta) */
-        .perfil-cabecalho {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #f5f5f5;
-            margin-bottom: 25px;
-        }
-
-        .preview-foto {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #00b4d8;
-            background-color: #f1f5f9;
-        }
-
-        .perfil-info h2 {
-            margin: 0;
-            font-size: 20px;
-            color: #222;
-        }
-
-        .perfil-info p {
-            margin: 4px 0 0 0;
-            font-size: 13px;
-            color: #888;
-        }
-
-        .btn-file {
-            display: inline-block;
-            margin-top: 8px;
-            background-color: #f1f5f9;
-            color: #475569;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid #cbd5e1;
-            transition: background 0.2s;
-        }
-
-        .btn-file:hover {
-            background-color: #e2e8f0;
-        }
-
-        .secao-bloco h3 {
+        .secao-bloco h2 {
             font-size: 15px;
             color: #444;
             margin-top: 0;
@@ -212,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 600;
         }
 
-        /* Grid de Campos */
+        /* Grid do Formulário */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -231,32 +189,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .campo-grupo label {
             font-size: 13px;
-            color: #444;
-            font-weight: 600;
+            color: #666;
+            font-weight: 500;
         }
 
-        /* Inputs e Textareas Totalmente Editáveis */
+        /* Inputs e Textarea */
         .campo-grupo input[type="text"],
-        .campo-grupo input[type="email"],
         .campo-grupo input[type="number"],
         .campo-grupo input[type="url"],
+        .campo-grupo select,
         .campo-grupo textarea {
             padding: 12px 15px;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
             font-size: 14px;
-            background-color: #ffffff; /* Fundo branco para indicar editável */
-            color: #333333;
+            background-color: #ffffff;
+            color: #333;
             outline: none;
             box-sizing: border-box;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s;
             font-family: inherit;
         }
 
         .campo-grupo input:focus,
+        .campo-grupo select:focus,
         .campo-grupo textarea:focus {
             border-color: #00b4d8;
-            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+        }
+
+        /* Área de Preview e Foto */
+        .foto-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .preview-foto {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+            background-color: #f1f5f9;
+        }
+
+        .btn-file {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+            transition: background 0.2s;
+        }
+
+        .btn-file:hover {
+            background-color: #e2e8f0;
         }
 
         /* Alertas de Retorno */
@@ -278,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 14px;
         }
 
-        /* Botão Salvar */
+        /* Botão de Envio */
         .btn-salvar {
             background-color: #00b4d8;
             color: white;
@@ -312,13 +303,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header class="navbar">
         <div class="logo">🐾 AdotaPet</div>
         <nav class="menu">
-            <a href="index.php">Início</a>
+            <a href="adotar.php">Início</a>
             <a href="candidaturas.php">Candidaturas Recebidas</a>
             <a href="minha_ong.php" class="active">MINHA ONG</a>
-            <a href="logout.php" style="color: #e63946;">Sair</a>
+            <a href="login/login.php" style="color: #e63946;">Sair</a>
         </nav>
     </header>
 
+    <!-- Container de Conteúdo -->
     <main class="container">
         
         <div class="header-titulo">
@@ -336,65 +328,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form action="minha_ong.php" method="POST" enctype="multipart/form-data">
             
+            <!-- Bloco 1: Foto / Logo -->
             <div class="secao-bloco">
-                
-                <!-- Cabeçalho do Card (Foto + Nome e Tipo) -->
-                <div class="perfil-cabecalho">
-                    <img id="preview-foto" src="<?php echo !empty($ong['foto']) ? htmlspecialchars($ong['foto']) : 'https://via.placeholder.com/80'; ?>" alt="Logo da ONG" class="preview-foto">
-                    <div class="perfil-info">
-                        <h2><?php echo htmlspecialchars($ong['nome'] ?? 'Nome da ONG'); ?></h2>
-                        <p>Conta do tipo Instituição / ONG</p>
-                        <label for="input-foto" class="btn-file">Alterar Foto</label>
+                <h2>Logo / Foto do Abrigo</h2>
+                <div class="foto-container">
+                    <img id="preview-foto" src="<?php echo !empty($ong['foto']) ? htmlspecialchars($ong['foto']) : 'https://via.placeholder.com/90'; ?>" alt="Logo da ONG" class="preview-foto">
+                    <div>
+                        <label for="input-foto" class="btn-file">Escolher Imagem</label>
                         <input type="file" id="input-foto" name="foto" accept="image/*" style="display: none;" onchange="previewImagem(event)">
+                        <p style="font-size: 12px; color: #888; margin-top: 6px; margin-bottom: 0;">Formatos: JPG, PNG ou WEBP.</p>
                     </div>
                 </div>
+            </div>
 
-                <!-- Formulário de Informações Principais -->
-                <h3>Informações da ONG</h3>
+            <!-- Bloco 2: Dados do Abrigo -->
+            <div class="secao-bloco">
+                <h2>Informações da ONG</h2>
                 <div class="form-grid">
-                    
-                    <!-- Campo Nome da ONG (Liberado) -->
                     <div class="campo-grupo">
-                        <label for="nome">Nome da ONG</label>
-                        <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($ong['nome'] ?? ''); ?>" required placeholder="Digite o nome da ONG">
+                        <label for="nome">Nome da ONG / Abrigo</label>
+                        <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($ong['nome'] ?? ''); ?>" required placeholder="Ex: Instituto Patinhas Felizes">
                     </div>
 
-                    <!-- Campo E-mail de Contato (Liberado) -->
-                    <div class="campo-grupo">
-                        <label for="email">E-mail de Contato</label>
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($ong['email'] ?? ''); ?>" required placeholder="exemplo@email.com">
-                    </div>
-
-                    <!-- Telefone / WhatsApp -->
-                    <div class="campo-grupo">
-                        <label for="telefone">Telefone / WhatsApp</label>
-                        <input type="text" id="telefone" name="telefone" value="<?php echo htmlspecialchars($ong['telefone'] ?? ''); ?>" placeholder="(00) 00000-0000">
-                    </div>
-
-                    <!-- CEP -->
-                    <div class="campo-grupo">
-                        <label for="cep">CEP</label>
-                        <input type="text" id="cep" name="cep" value="<?php echo htmlspecialchars($ong['cep'] ?? ''); ?>" placeholder="00000-000">
-                    </div>
-
-                    <!-- CNPJ -->
                     <div class="campo-grupo">
                         <label for="cnpj">CNPJ</label>
                         <input type="text" id="cnpj" name="cnpj" value="<?php echo htmlspecialchars($ong['cnpj'] ?? ''); ?>" placeholder="00.000.000/0001-00">
                     </div>
 
-                    <!-- Nome do Responsável -->
                     <div class="campo-grupo">
-                        <label for="responsavel">Nome do Responsável</label>
-                        <input type="text" id="responsavel" name="responsavel" value="<?php echo htmlspecialchars($ong['responsavel'] ?? ''); ?>" placeholder="Nome do responsável">
+                        <label for="telefone">Telefone / WhatsApp Comercial</label>
+                        <input type="text" id="telefone" name="telefone" value="<?php echo htmlspecialchars($ong['telefone'] ?? ''); ?>" required placeholder="(00) 00000-0000">
                     </div>
 
+                    <div class="campo-grupo">
+                        <label for="responsavel">Nome do Responsável</label>
+                        <input type="text" id="responsavel" name="responsavel" value="<?php echo htmlspecialchars($ong['responsavel'] ?? ''); ?>" required placeholder="Quem gerencia a conta">
+                    </div>
                 </div>
             </div>
 
-            <!-- Bloco de Informações Adicionais -->
+            <!-- Bloco 3: Informações Adicionais -->
             <div class="secao-bloco">
-                <h3>Informações Adicionais</h3>
+                <h2>Informações Adicionais</h2>
                 <div class="form-grid">
                     <div class="campo-grupo">
                         <label for="capacidade">Capacidade Máxima de Abrigados</label>

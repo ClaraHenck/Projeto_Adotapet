@@ -47,7 +47,7 @@ if ($logado) {
                 <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
-                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.html" : "meu_perfil.html";
+                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
                     $textoPerfil = ($tipoUsuario === "ong") ? "MINHA ONG" : "MEU PERFIL";
                     // Define uma foto padrão caso não tenha no banco
                     $fotoPerfil = "img/avatar-default.png"; 
