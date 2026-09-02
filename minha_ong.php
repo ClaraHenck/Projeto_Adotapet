@@ -2,6 +2,7 @@
 // 1. Carrega as configurações primeiro (o auth.php já inicia a sessão)
 require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
+$stmt = null;
 
 // Garante que a sessão está ativa sem duplicar o session_start()
 if (session_status() === PHP_SESSION_NONE) {
