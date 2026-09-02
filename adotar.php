@@ -48,7 +48,8 @@ $total = count($animais);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Encontre seu Companheiro</title>
-    <link rel="stylesheet" href="adotar.css">
+    <link rel="stylesheet" href="adotar1.css">
+    <link rel="stylesheet" href="navbar.css">
 </head>
 <body>
 
@@ -62,7 +63,7 @@ $total = count($animais);
         <a href="adotar.php" class="active">Adotar</a>
         
         <?php if ($logado): ?>
-          <a href="mapa.html" id="link-mapa">Mapa</a> 
+          <a href="mapa.php" id="link-mapa">Mapa</a> 
           <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
@@ -74,7 +75,7 @@ $total = count($animais);
                 <a href="../login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
-                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.";
+                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
                     $textoPerfil = ($tipoUsuario === "ong") ? "MINHA ONG" : "MEU PERFIL";
                 ?>
                 <a href="<?php echo $linkHref; ?>" class="perfil-link-container">
@@ -112,34 +113,35 @@ $total = count($animais);
             <button type="submit" class="btn-filtrar">Filtrar</button>
         </form>
 
-        <div class="cards">
-            <?php if ($total > 0) { ?>
-                <?php foreach($animais as $pet) { ?>
-                    <div class="card" data-id="<?= $pet['id']; ?>">
-                        <div class="area-imagem-card">
-                            <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= $pet['nome']; ?>">
-                        </div>
-                        <h2><?= $pet['nome']; ?></h2>
-                        <p><?= htmlspecialchars($pet['especie_raca']); ?></p>
-                        <div class="pet-idade-badge"><?= htmlspecialchars($pet['idade_estimada']); ?></div>
+        <div class="cards-grid">
+    <?php if ($total > 0) { ?>
+        <?php foreach($animais as $pet) { ?>
+            <div class="card" data-id="<?= $pet['id']; ?>">
+                <div class="card-img-box">
+                    <span class="badge-disponivel">Disponível</span>
+                    <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
+                </div>
+                
+                <div class="card-info">
+                    <div class="card-header-info">
+                        <h2 class="pet-nome"><?= htmlspecialchars($pet['nome']); ?></h2>
+                        <p class="pet-raca"><?= htmlspecialchars($pet['especie_raca']); ?></p>
                     </div>
-                <?php } ?>
-            <?php } else { ?>
-                <p class="empty-state">Nenhum animal cadastrado com os filtros selecionados.</p>
-            <?php } ?>
-        </div>
+
+                    <!-- Tags Organizadoras de Informação -->
+                    <div class="pet-tags">
+                        <span class="tag-item highlight">🐾 <?= htmlspecialchars($pet['porte'] ?? 'Porte N/I'); ?></span>
+                        <span class="tag-item">🎂 <?= htmlspecialchars($pet['idade_estimada'] ?? 'Idade N/I'); ?></span>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    <?php } else { ?>
+        <p class="no-data">Nenhum animal cadastrado com os filtros selecionados.</p>
+    <?php } ?>
+    </div>
     </main>
 
-    <script>
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                const petId = card.getAttribute('data-id');
-                const petNome = card.querySelector('h2').innerText;
-                
-                localStorage.setItem('petSelecionadoNome', petNome);
-                window.location.href = `detalhes.php?id=${petId}`;
-            });
-        });
-    </script>
+    <script src="filtro.js"></script>
 </body>
 </html>

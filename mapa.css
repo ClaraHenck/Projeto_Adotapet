@@ -1,179 +1,24 @@
-/* --- RESET E ESTILOS GERAIS --- */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
-    background-color: #f6d2b927;
-    color: #2d3748;
-    overflow-x: hidden;
-    position: relative;
-    min-height: 100vh;
-}
-
-
-body::before,
-body::after {
-    content: "🐾";
-    position: fixed;
-    font-size: 38px;
-    
-    opacity: 0.15; 
-    pointer-events: none;
-  
-    z-index: 9999; 
-    bottom: -60px;
-    display: block !important;
-}
-
-
-body::before {
-    left: 4%;
-    animation: flutuarPatinhaEsquerda 18s linear infinite;
-}
-
-
-body::after {
-    right: 6%;
-    animation: flutuarPatinhaDireita 24s linear infinite;
-    animation-delay: 4s;
-}
-
-
-.badge {
-    display: inline-block;
-    background-color: #ffeef0;
-    color: #ff6584;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 24px;
-}
-
-
-@keyframes flutuarPatinhaEsquerda {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 10;
-    }
-    10% {
-        opacity: 0.30;
-    }
-    90% {
-        opacity: 0.30;
-    }
-    100% {
-        transform: translateY(-115vh) translateX(40px) rotate(45deg);
-        opacity: 0;
-    }
-}
-
-
-@keyframes flutuarPatinhaDireita {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 10;
-    }
-    15% {
-        opacity: 0.30;
-    }
-    85% {
-        opacity: 0.30;
-    }
-    100% {
-        transform: translateY(-115vh) translateX(-50px) rotate(-45deg);
-        opacity: 0;
-    }
-}
-
-body {
-    /* Define a mesma cor de fundo clara e suave da sua imagem */
-    background-color: #FAF8F6; 
-    font-family: 'Arial', sans-serif; /* Ajuste para a fonte do seu projeto */
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 8%;
-    background-color: #f6d2b911;;
-    border-bottom: 1px solid #f0eef1;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: 800;
-    color: #1a202c;
-    letter-spacing: -0.5px;
-}
-
-.menu {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.menu a {
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: #718096;
-    transition: color 0.2s ease;
-}
-
-.menu a:hover {
-    color: #00bcd4;
-}
-
-.menu a.active {
-    color: #ffffff;
-    background-color: #00bcd4;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-
-.hero-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 60px 8%;
-    max-width: 1400px;
-    margin: 0 auto;
-    gap: 40px;
-}
-
-.hero-text {
-    flex: 1;
-    max-width: 540px;
-}
-
-
-body {
-    font-family: 'Inter', Arial, sans-serif;
-    background-color: #f6d2b927; /* Fundo do index */
+    background-color: #f8fafc;
     color: #1e293b;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
 }
 
-/* --- ANIMAÇÃO DAS PATINHAS (Fundo) --- */
+/* Animação suave de fundo (Patinhas) */
 body::before, body::after {
     content: "🐾";
     position: fixed;
     font-size: 38px;
-    opacity: 0.15;
+    opacity: 0.08;
     pointer-events: none;
     z-index: 9999;
     bottom: -60px;
@@ -183,75 +28,154 @@ body::after { right: 6%; animation: flutuarPatinhaDireita 24s linear infinite; a
 
 @keyframes flutuarPatinhaEsquerda {
     0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    50% { opacity: 0.15; }
+    50% { opacity: 0.08; }
     100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
 }
 @keyframes flutuarPatinhaDireita {
     0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    50% { opacity: 0.15; }
+    50% { opacity: 0.08; }
     100% { transform: translateY(-110vh) rotate(-360deg); opacity: 0; }
 }
 
-/* --- HEADER PADRONIZADO --- */
-.navbar {
-    width: 100%;
-    background: #ffffff;
+
+/* Estrutura Principal */
+.container { max-width: 1280px; margin: auto; padding: 32px 20px; }
+.header { margin-bottom: 24px; }
+.header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #0f172a; }
+.header p { color: #64748b; font-size: 15px; }
+
+/* Contêiner que alinha o Select de Estados e o Campo de Busca lado a lado */
+.filter-select-container {
     display: flex;
-    justify-content: space-between;
+    gap: 12px;
     align-items: center;
-    padding: 15px 50px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    margin-bottom: 24px;
+    width: 100%;
 }
 
-.left-brand-box { display: flex; align-items: center; gap: 10px; }
-.logo { font-size: 24px; font-weight: bold; color: #131212; }
-
-.menu { display: flex; align-items: center; gap: 25px; list-style: none; }
-.menu a { text-decoration: none; color: #64748b; font-weight: 500; transition: 0.3s; }
-.menu a:hover { color: #00bcd4; }
-.menu a.active {  text-decoration: none;
+/* Estilização Moderna e Fixa do Select de Estados */
+.select-estado {
+    flex: 0 0 220px;
+    height: 50px;
+    padding: 0 38px 0 16px;
     font-size: 14px;
-    font-weight: 500;
-    color: #718096;
-    transition: color 0.2s ease;}
-.menu a[onclick*="logout"] { color: #ed1a1a; font-weight: bold; }
+    font-weight: 600;
+    color: #334155;
+    background-color: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s ease;
+    
+    /* Seta customizada rosa */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6584' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+}
 
+.select-estado:hover {
+    border-color: #ff6584;
+}
 
+.select-estado:focus {
+    border-color: #ff6584;
+    box-shadow: 0 0 0 4px rgba(255, 101, 132, 0.15);
+}
 
-/* --- CONTEÚDO PRINCIPAL --- */
-.container { max-width: 1300px; margin: auto; padding: 40px 20px; }
+/* Faz a div de busca ocupar o espaço restante ao lado do select */
+.filter-select-container .search-container {
+    flex: 1;
+    margin-bottom: 0 !important;
+}
 
-.header { margin-bottom: 25px; }
-.header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; color: #ff6584; }
-.header p { color: #1d191a; font-size: 16px; }
+/* Input de Busca de Texto */
+.search-input { 
+    width: 100%; 
+    height: 50px; 
+    border: 1.5px solid #e2e8f0; 
+    border-radius: 12px; 
+    padding: 0 18px; 
+    font-size: 15px;
+    color: #1e293b;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+}
 
-.content { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+.search-input:hover { border-color: #cbd5e1; }
+.search-input:focus { 
+    border-color: #ff6584; 
+    box-shadow: 0 0 0 4px rgba(255, 101, 132, 0.15); 
+}
 
-/* --- MAPA E SIDEBAR --- */
+/* Grid do Mapa e Sidebar */
+.content { 
+    display: grid; 
+    grid-template-columns: 1fr 360px; 
+    gap: 24px; 
+}
+
 .map-wrapper, .sidebar {
-    background: white;
-    border-radius: 18px;
+    background: #ffffff;
+    border-radius: 16px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 20px rgba(0,0,0,.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
 }
 
-#map { width: 100%; height: 500px; border-radius: 18px; }
-.sidebar { padding: 15px; height: 500px; overflow-y: auto; }
+#map { width: 100%; height: 540px; border-radius: 16px; z-index: 1; }
+.sidebar { padding: 16px; height: 540px; overflow-y: auto; }
 
-.ong-card { border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 15px; transition: .3s; cursor: pointer; }
-.ong-card:hover { border-color: #ff6584; transform: translateY(-2px); }
+/* Cards de ONGs na Sidebar */
+.ong-card { 
+    border: 1px solid #f1f5f9; 
+    background: #ffffff;
+    border-radius: 12px; 
+    padding: 16px; 
+    margin-bottom: 12px; 
+    transition: all 0.2s ease; 
+    cursor: pointer; 
+}
 
-/* --- BOTÕES E BUSCA --- */
-.search-input { width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 14px; padding: 0 18px; margin-bottom: 15px; }
-.btn-cadastrar { background: #ff6584; color: white; border: none; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+.ong-card:hover { 
+    border-color: #ff6584; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 16px rgba(255, 101, 132, 0.12);
+}
 
-/* --- RESPONSIVIDADE --- */
-@media(max-width:1000px) {
+.ong-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.ong-card p {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+/* Responsividade */
+@media (max-width: 960px) {
     .content { grid-template-columns: 1fr; }
-    .sidebar { height: 350px; }
-    #map { height: 400px; }
+    .sidebar { height: 320px; }
+    #map { height: 380px; }
 }
 
+@media (max-width: 640px) {
+    .filter-select-container {
+        flex-direction: column;
+    }
+    .select-estado {
+        flex: 1;
+        width: 100%;
+    }
+}

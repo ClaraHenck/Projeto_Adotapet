@@ -65,6 +65,7 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Minhas Candidaturas</title>
+    <link rel="stylesheet" href="navbar.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="candidaturas.css?v=<?= time(); ?>">
 </head>
 <body>

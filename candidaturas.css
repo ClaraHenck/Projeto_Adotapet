@@ -17,15 +17,7 @@ body {
 /* ==========================================================================
    HEADER / NAVBAR
    ========================================================================== */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #FFFFFF;
-    padding: 14px 48px;
-    border-bottom: 1px solid #F1F5F9;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-}
+
 
 .logo {
     display: flex;
@@ -46,55 +38,6 @@ body {
     color: #00BCD4; /* Azul Turquesa da palavra Pet */
 }
 
-.menu {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    color: #64748B;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 20px;
-    transition: all 0.2s ease;
-}
-
-.nav-item:hover {
-    color: #00BCD4;
-}
-
-.nav-icon {
-    width: 16px;
-    height: 16px;
-}
-
-/* Destaque da aba ativa "Candidaturas" */
-.nav-item.active-pill {
-    background-color: #00BCD4;
-    color: #FFFFFF;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-.nav-item.active-pill .nav-icon {
-    stroke: #FFFFFF;
-}
-
-.nav-logout {
-    color: #94A3B8;
-    padding-left: 10px;
-}
-
-.nav-logout:hover {
-    color: #EF4444;
-}
 
 /* ==========================================================================
    ESTRUTURA DA PÁGINA

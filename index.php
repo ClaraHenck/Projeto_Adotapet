@@ -1,13 +1,13 @@
 <?php
-// Inicia a sessão para ler os dados do usuário logado
+
 session_start();
 
-// Verifica o estado de login através das sessões criadas no login.php
+
 $logado = isset($_SESSION["usuario_id"]);
 $usuario_nome = $_SESSION["usuario_nome"] ?? "";
 $pode_cadastrar = $_SESSION["pode_cadastrar"] ?? 0;
 
-// Define o tipo de usuário baseado na permissão (1 para ONG, 0 para Adotante comum)
+
 $tipoUsuario = "";
 if ($logado) {
     $tipoUsuario = ($pode_cadastrar == 1) ? "ong" : "adotante";
@@ -19,6 +19,7 @@ if ($logado) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AdotaPet - Plataforma de Adoção</title>
+    <link rel="stylesheet" href="navbar.css" />
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
@@ -35,7 +36,7 @@ if ($logado) {
         <?php endif; ?>
 
         <?php if ($logado): ?>
-          <a href="mapa.html" id="link-mapa">Mapa</a> 
+          <a href="mapa.php" id="link-mapa">Mapa</a> 
           <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
@@ -47,7 +48,7 @@ if ($logado) {
                 <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
-                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.html" : "meu_perfil.html";
+                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
                     $textoPerfil = ($tipoUsuario === "ong") ? "MINHA ONG" : "MEU PERFIL";
                     // Define uma foto padrão caso não tenha no banco
                     $fotoPerfil = "img/avatar-default.png"; 
