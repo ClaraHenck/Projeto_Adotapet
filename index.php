@@ -35,12 +35,23 @@ if ($logado) {
           <a href="adotar.php" id="link-adotar">Adotar</a>
         <?php endif; ?>
 
-        <?php if ($logado): ?>
+        <!-- <?php if ($logado): ?>
           <a href="mapa.php" id="link-mapa">Mapa</a> 
           <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
-        <?php endif; ?>
+        <?php endif; ?> -->
+
+<?php if ($logado): ?>
+  <?php if ($tipoUsuario !== 'ong'): ?>
+    <a href="mapa.php" id="link-mapa">Mapa</a>
+  <?php endif; ?>
+
+  <a href="<?= ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
+    <?= ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
+  </a>
+<?php endif; ?>
+
 
         <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
             <?php if (!$logado): ?>

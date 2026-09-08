@@ -5,14 +5,19 @@ let todasOngs = [];
 document.addEventListener('DOMContentLoaded', initMap);
 
 function initMap() {
-    // Inicializa o mapa Leaflet
+    // Inicializa o mapa centralizado no Brasil
     map = L.map('map').setView([-23.55052, -46.633308], 11);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
+    // Servidor de mapas estável (CartoDB Voyager)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd',
+        attribution: '&copy; OpenStreetMap &copy; CARTO'
     }).addTo(map);
 
-    // Escuta a digitação no campo de busca por texto
+    // Garante que o Leaflet calcule o tamanho exato da div #map
+    setTimeout(() => { map.invalidateSize(); }, 300);
+
     const inputBusca = document.getElementById('input-busca');
     if (inputBusca) {
         inputBusca.addEventListener('input', aplicarFiltrosCombinados);
@@ -21,7 +26,6 @@ function initMap() {
     carregarOngsDoBanco();
 }
 
-// Busca os dados via backend PHP
 async function carregarOngsDoBanco() {
     try {
         const resposta = await fetch('api_ongs.php');
@@ -41,18 +45,16 @@ async function carregarOngsDoBanco() {
     }
 }
 
-// Atualiza o mapa e a lista lateral
 function renderizarInterface(ongs) {
     const containerSidebar = document.getElementById('lista-ongs');
     containerSidebar.innerHTML = '';
 
-    // Limpa marcadores existentes
     marcadores.forEach(m => map.removeLayer(m));
     marcadores = [];
 
     if (ongs.length === 0) {
         containerSidebar.innerHTML = 
-            '<p style="text-align:center; color:#64748b; padding: 20px;">Nenhuma ONG encontrada com esses filtros.</p>';
+            '<p style="text-align:center; color:#64748b; padding: 20px;">Nenhuma ONG encontrada.</p>';
         return;
     }
 
@@ -60,18 +62,18 @@ function renderizarInterface(ongs) {
         const lat = parseFloat(ong.latitude);
         const lng = parseFloat(ong.longitude);
 
-        // Pino no mapa
+        if (isNaN(lat) || isNaN(lng)) return;
+
         const marker = L.marker([lat, lng]).addTo(map);
         marker.bindPopup(`
             <div style="font-family: sans-serif;">
-                <h3 style="color: #ff6584; font-size: 15px; margin-bottom: 4px;">${ong.nome}</h3>
+                <h3 style="color: #00C1DE; font-size: 15px; margin-bottom: 4px;">${ong.nome}</h3>
                 <p style="margin: 0; font-size: 13px; color: #475569;">📍 ${ong.logradouro || ''}, ${ong.numero || ''} - ${ong.cidade}/${ong.estado}</p>
                 <p style="margin-top: 4px; font-size: 13px;">📞 ${ong.telefone}</p>
             </div>
         `);
         marcadores.push(marker);
 
-        // Card na barra lateral
         const card = document.createElement('div');
         card.className = 'ong-card';
         card.innerHTML = `
@@ -89,21 +91,16 @@ function renderizarInterface(ongs) {
     });
 }
 
-// Função invocada pelo 'onchange' do select
-function filtrarPorSelect(siglaEstado) {
+function filtrarPorSelect() {
     aplicarFiltrosCombinados();
 }
 
-// Aplica filtro do SELECT e do INPUT juntos sem conflitos
 function aplicarFiltrosCombinados() {
     const estadoSelecionado = document.getElementById('select-estado').value.toUpperCase();
     const textoBusca = document.getElementById('input-busca').value.toLowerCase().trim();
 
     const filtradas = todasOngs.filter(ong => {
-        // Verifica o estado selecionado
         const bateEstado = !estadoSelecionado || (ong.estado && ong.estado.toUpperCase() === estadoSelecionado);
-
-        // Verifica o texto digitado
         const bateTexto = !textoBusca ||
             (ong.nome && ong.nome.toLowerCase().includes(textoBusca)) ||
             (ong.cidade && ong.cidade.toLowerCase().includes(textoBusca)) ||

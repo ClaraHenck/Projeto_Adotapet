@@ -1,181 +1,168 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
-    background-color: #f8fafc;
-    color: #1e293b;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
+    background-color: #FAF6F2;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #2D3748;
 }
 
-/* Animação suave de fundo (Patinhas) */
-body::before, body::after {
-    content: "🐾";
-    position: fixed;
-    font-size: 38px;
-    opacity: 0.08;
-    pointer-events: none;
-    z-index: 9999;
-    bottom: -60px;
-}
-body::before { left: 4%; animation: flutuarPatinhaEsquerda 18s linear infinite; }
-body::after { right: 6%; animation: flutuarPatinhaDireita 24s linear infinite; animation-delay: 4s; }
-
-@keyframes flutuarPatinhaEsquerda {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    50% { opacity: 0.08; }
-    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
-}
-@keyframes flutuarPatinhaDireita {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    50% { opacity: 0.08; }
-    100% { transform: translateY(-110vh) rotate(-360deg); opacity: 0; }
+/* Container Principal do Mapa */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
 }
 
+/* Cabeçalho do Conteúdo (Isolado do Navbar) */
+.container .header {
+    margin-bottom: 20px;
+}
 
-/* Estrutura Principal */
-.container { max-width: 1280px; margin: auto; padding: 32px 20px; }
-.header { margin-bottom: 24px; }
-.header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #0f172a; }
-.header p { color: #64748b; font-size: 15px; }
+.container .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1A202C;
+    margin-bottom: 4px;
+}
 
-/* Contêiner que alinha o Select de Estados e o Campo de Busca lado a lado */
-.filter-select-container {
+.container .header p {
+    font-size: 15px;
+    color: #718096;
+}
+
+/* Barra de Filtro e Pesquisa */
+.filters-row {
     display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 20px;
     width: 100%;
 }
 
-/* Estilização Moderna e Fixa do Select de Estados */
-.select-estado {
-    flex: 0 0 220px;
-    height: 50px;
-    padding: 0 38px 0 16px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #334155;
-    background-color: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
+.select-estado,
+.search-input {
+    padding: 12px 20px;
+    border: 1px solid #E2E8F0;
+    border-radius: 50px;
     outline: none;
-    cursor: pointer;
+    background-color: #FFFFFF;
+    font-size: 14px;
+    color: #2D3748;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     transition: all 0.2s ease;
-    
-    /* Seta customizada rosa */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6584' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    background-size: 16px;
 }
 
-.select-estado:hover {
-    border-color: #ff6584;
+.select-estado:focus,
+.search-input:focus {
+    border-color: #00C1DE;
+    box-shadow: 0 0 0 3px rgba(0, 193, 222, 0.15);
 }
 
-.select-estado:focus {
-    border-color: #ff6584;
-    box-shadow: 0 0 0 4px rgba(255, 101, 132, 0.15);
+.select-estado {
+    width: 220px;
+    cursor: pointer;
 }
 
-/* Faz a div de busca ocupar o espaço restante ao lado do select */
-.filter-select-container .search-container {
+.search-input {
     flex: 1;
-    margin-bottom: 0 !important;
 }
 
-/* Input de Busca de Texto */
-.search-input { 
-    width: 100%; 
-    height: 50px; 
-    border: 1.5px solid #e2e8f0; 
-    border-radius: 12px; 
-    padding: 0 18px; 
-    font-size: 15px;
-    color: #1e293b;
-    background: #ffffff;
-    outline: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    transition: all 0.2s ease;
+/* Layout Mapa + Sidebar */
+.content {
+    display: flex;
+    gap: 20px;
+    height: 540px;
 }
 
-.search-input:hover { border-color: #cbd5e1; }
-.search-input:focus { 
-    border-color: #ff6584; 
-    box-shadow: 0 0 0 4px rgba(255, 101, 132, 0.15); 
-}
-
-/* Grid do Mapa e Sidebar */
-.content { 
-    display: grid; 
-    grid-template-columns: 1fr 360px; 
-    gap: 24px; 
-}
-
-.map-wrapper, .sidebar {
-    background: #ffffff;
+.map-wrapper {
+    flex: 1;
+    background: #FFFFFF;
     border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #EDF2F7;
+    height: 100%;
 }
 
-#map { width: 100%; height: 540px; border-radius: 16px; z-index: 1; }
-.sidebar { padding: 16px; height: 540px; overflow-y: auto; }
-
-/* Cards de ONGs na Sidebar */
-.ong-card { 
-    border: 1px solid #f1f5f9; 
-    background: #ffffff;
-    border-radius: 12px; 
-    padding: 16px; 
-    margin-bottom: 12px; 
-    transition: all 0.2s ease; 
-    cursor: pointer; 
+#map {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    z-index: 1;
 }
 
-.ong-card:hover { 
-    border-color: #ff6584; 
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 16px rgba(255, 101, 132, 0.12);
+.sidebar {
+    width: 340px;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 4px;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #CBD5E0;
+    border-radius: 10px;
+}
+
+/* Cards das ONGs */
+.ong-card {
+    background: #FFFFFF;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #EDF2F7;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ong-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    border-color: #00C1DE;
 }
 
 .ong-card h3 {
     font-size: 15px;
     font-weight: 700;
-    color: #0f172a;
+    color: #1A202C;
     margin-bottom: 6px;
 }
 
 .ong-card p {
     font-size: 13px;
-    color: #64748b;
-    margin-bottom: 4px;
+    color: #718096;
+    margin: 3px 0;
 }
 
-/* Responsividade */
-@media (max-width: 960px) {
-    .content { grid-template-columns: 1fr; }
-    .sidebar { height: 320px; }
-    #map { height: 380px; }
-}
+@media (max-width: 850px) {
+    .content {
+        flex-direction: column;
+        height: auto;
+    }
 
-@media (max-width: 640px) {
-    .filter-select-container {
+    .map-wrapper {
+        height: 380px;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: 400px;
+    }
+
+    .filters-row {
         flex-direction: column;
     }
+
     .select-estado {
-        flex: 1;
         width: 100%;
     }
 }

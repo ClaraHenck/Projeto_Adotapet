@@ -1,3 +1,17 @@
+:root {
+    --primary: #00C1DE;
+    --primary-hover: #00A8C2;
+    --surface: #FFFFFF;
+    --text-main: #1A202C;
+    --text-muted: #718096;
+    --text-body: #4A5568;
+    --border-light: #EDF2F7;
+    --border: #E2E8F0;
+    --radius-pill: 50px;
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --danger: #FF4D4D;
+}
 
 .main-header, .navbar {
     background-color: var(--surface);
@@ -10,7 +24,8 @@
     width: 100%;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -18,12 +33,16 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
 }
 
 .logo h1 {
     font-size: 22px;
     color: var(--text-main);
     font-weight: 800;
+    margin: 0;
 }
 
 .paw-icon {
@@ -33,7 +52,7 @@
 .nav-links, .menu {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
 }
 
 .nav-links a, .menu a {
