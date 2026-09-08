@@ -27,15 +27,44 @@ body {
     text-align: center;
 }
 
-/* Avatar redondo no topo */
+/* Isso controla a caixinha redonda que fica em volta da imagem */
+/* Isso controla a caixinha redonda que fica em volta da imagem (Aumentada para 120px) */
 .avatar-placeholder {
-    width: 110px;
-    height: 110px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    margin: 0 auto 20px auto;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    width: 120px;           /* Aumentamos o tamanho de 100px para 120px */
+    height: 120px;          /* Aumentamos o tamanho de 100px para 120px */
+    border-radius: 50%;     /* Deixa a caixinha redonda */
+    overflow: hidden;       /* Corta tudo o que tentar passar do limite do círculo */
+    margin: 0 auto 20px;    /* Centraliza na tela e empurra o texto para baixo */
+    background-color: #eee; /* Cor de fundo caso esteja sem foto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;        /* Faz o mouse virar a "mãozinha" de clique */
+    transition: all 0.3s ease; /* Faz os efeitos de passar o mouse ficarem suaves */
+    border: 3px solid #cbd5e1; /* Adiciona uma bordinha cinza charmosa */
 }
+
+/* Isso controla a imagem que está dentro da caixinha */
+.avatar-placeholder img {
+    width: 100%;            /* Obriga a imagem a usar toda a largura da caixinha */
+    height: 100%;           /* Obriga a imagem a usar toda a altura da caixinha */
+    object-fit: cover;      /* Ajusta o seu print sem distorcer ou esticar */
+    transition: transform 0.3s ease; /* Deixa o efeito de zoom suave */
+}
+
+/* ==========================================
+   Efeito HOVER (Quando passa o mouse ou clica)
+   ========================================== */
+.avatar-placeholder:hover {
+    border-color: #3ab0c3; /* Muda a bordinha para a cor do seu botão principal */
+    box-shadow: 0 0 15px rgba(58, 176, 195, 0.5); /* Cria um brilho azul em volta */
+}
+
+.avatar-placeholder:hover img {
+    transform: scale(1.1); /* Dá um leve zoom na imagem interna ao passar o mouse */
+}
+
+
 
 h2 {
     color: #1e293b;

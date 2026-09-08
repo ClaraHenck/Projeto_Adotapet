@@ -67,13 +67,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Criar Conta</title>
     
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="cadastrar.css">
+    <!-- Vincula o arquivo CSS buscando uma pasta acima -->
+    <link rel="stylesheet" href="../cadastrar.css">
 </head>
 <body>
 
     <div class="cadastro-box">
-        <div class="avatar-placeholder"></div>
+        <!-- Container estruturado para a logo da aplicação -->
+        <div class="logo-container">
+            <img src="../logo.ADOTAPET.jpg" alt="Logo AdotaPet" class="logo-img">
+        </div>
 
         <h2>Criar Nova Conta</h2>
         <p class="subtitulo">Preencha todas as suas informações abaixo.</p>
