@@ -72,17 +72,15 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
 
     <!-- NAVBAR -->
     <header class="navbar">
-      <div class="logo" onclick="window.location.href='index.php'" style="cursor: pointer;">
-        🐾 <span>Adota<span class="logo-highlight">Pet</span></span>
-      </div>
+      <a href="index.php" class="logo">🐾 AdotaPet</a>
 
       <nav class="menu" id="menu-navegacao">
-        <a href="index.php" class="nav-item">Início</a>
-        <a href="adotar.php" class="nav-item">Adotar</a>
-        <a href="mapa.php" class="nav-item">Mapa</a> 
-        <a href="candidaturas.php" class="nav-item active-pill">Candidaturas</a>
-        <a href="meu_perfil.php" class="nav-item"><?= htmlspecialchars($labelPerfil) ?></a>
-        <a href="logout.php" class="nav-item nav-logout" title="Sair">Sair</a>
+        <a href="index.php">Início</a>
+        <a href="adotar.php">Adotar</a>
+        <a href="mapa.php">Mapa</a> 
+        <a href="candidaturas.php" class="active">Candidaturas</a>
+        <a href="meu_perfil.php"><?= htmlspecialchars($labelPerfil) ?></a>
+        <a href="logout.php" class="btn-logout" title="Sair">Sair</a>
       </nav>
     </header>
 

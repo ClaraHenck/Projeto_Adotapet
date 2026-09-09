@@ -72,14 +72,27 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([':ong_id' => $ong_id]);
 $candidaturas = $stmt->fetchAll();
 ?>
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AdotaPet - Candidaturas Recebidas</title>
-  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="navbar.css" />
   <link rel="stylesheet" href="candidaturas_recebidas.css" />
+</head>
+<body>
+
+  <!-- NAVBAR PADRONIZADA -->
+  <header class="navbar">
+    <a href="index.php" class="logo">🐾 AdotaPet</a>
+    <nav class="menu">
+      <a href="index.php">Início</a>
+      <a href="meus_animais.php">Meus Animais</a>
+      <a href="candidaturas_recebidas.php" class="active">Candidaturas Recebidas</a>
+      <a href="minha_ong.php">MINHA ONG</a>
+      <a href="login/login.php" class="btn-logout">Sair</a>
+    </nav>
+  </header>
   
   <style>
     html, body {
@@ -370,19 +383,7 @@ $candidaturas = $stmt->fetchAll();
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="left-brand-box">
-      <div class="logo">🐾 AdotaPet</div>
-    </div>
-    <nav class="menu" id="menu-navegacao">
-      <a href="index.php">Início</a>
-      <a href="candidaturas_recebidas.php" class="active">Candidaturas recebidas</a>
-      <a href="minha_ong.php" class="perfil-link-container">
-        <span>MINHA ONG</span>
-      </a>
-    </nav>
-  </header>
+
 
   <!-- CONTEÚDO PRINCIPAL -->
   <main class="container-painel-ong">

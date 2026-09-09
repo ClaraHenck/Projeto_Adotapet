@@ -2,11 +2,9 @@
 
 session_start();
 
-
 $logado = isset($_SESSION["usuario_id"]);
 $usuario_nome = $_SESSION["usuario_nome"] ?? "";
 $pode_cadastrar = $_SESSION["pode_cadastrar"] ?? 0;
-
 
 $tipoUsuario = "";
 if ($logado) {
@@ -25,33 +23,29 @@ if ($logado) {
   <body>
     <header class="navbar">
       <div class="left-brand-box">
-        <div class="logo">🐾 AdotaPet</div>
+        <a href="index.php" class="logo" style="text-decoration: none;">🐾 AdotaPet</a>
       </div>
 
       <nav class="menu" id="menu-navegacao">
         <a href="index.php" class="active">Início</a>
         
+        <?php if ($logado && $tipoUsuario === "ong"): ?>
+          <a href="meus_animais.php" id="link-meus-animais">Meus Animais</a>
+        <?php endif; ?>
+
         <?php if (!$logado || $tipoUsuario === "adotante"): ?>
           <a href="adotar.php" id="link-adotar">Adotar</a>
         <?php endif; ?>
 
-        <!-- <?php if ($logado): ?>
-          <a href="mapa.php" id="link-mapa">Mapa</a> 
-          <a href="candidaturas.php" id="link-candidaturas">
-            <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
+        <?php if ($logado): ?>
+          <?php if ($tipoUsuario !== 'ong'): ?>
+            <a href="mapa.php" id="link-mapa">Mapa</a>
+          <?php endif; ?>
+
+          <a href="<?= ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
+            <?= ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
           </a>
-        <?php endif; ?> -->
-
-<?php if ($logado): ?>
-  <?php if ($tipoUsuario !== 'ong'): ?>
-    <a href="mapa.php" id="link-mapa">Mapa</a>
-  <?php endif; ?>
-
-  <a href="<?= ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
-    <?= ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
-  </a>
-<?php endif; ?>
-
+        <?php endif; ?>
 
         <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
             <?php if (!$logado): ?>
@@ -60,12 +54,10 @@ if ($logado) {
             <?php else: ?>
                 <?php 
                     $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
-                    $textoPerfil = ($tipoUsuario === "ong") ? "MINHA ONG" : "MEU PERFIL";
-                    // Define uma foto padrão caso não tenha no banco
-                    $fotoPerfil = "img/avatar-default.png"; 
+                    $textoPerfil = "Meu Perfil";
                 ?>
-                <a href="<?php echo $linkHref; ?>" class="perfil-link-container">
-                    <span style="font-weight: bold; color: #1e293b;"><?php echo $textoPerfil; ?></span>
+                <a href="<?php echo $linkHref; ?>" class="perfil-link-container" style="text-decoration: none;">
+                    <span style="font-weight: 500; color: #718096;"><?php echo $textoPerfil; ?></span>
                 </a>
                 <a href="logout.php" style="color: #ff4d4d; font-weight: 500; text-decoration: none;">Sair</a>
             <?php endif; ?>
@@ -121,7 +113,6 @@ if ($logado) {
     </main>
 
     <script>
-      // Mantém a sincronização com o localStorage para que as outras páginas legadas (.html) saibam quem está logado
       const tipoUsuarioSessao = "<?php echo $tipoUsuario; ?>";
       const usuarioNomeSessao = "<?php echo $usuario_nome; ?>";
 
@@ -134,7 +125,6 @@ if ($logado) {
         localStorage.removeItem("usuarioLogadoNome");
       }
 
-      // Controle de exibição do questionário baseado no preenchimento local (opcional)
       const btnQuest = document.getElementById("btn-questionario");
       if (btnQuest) {
         const jaRespondeu = localStorage.getItem("questionario_respondido_sinc");

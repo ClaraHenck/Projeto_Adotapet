@@ -1,5 +1,5 @@
 /* ==========================================
-   PALETA DE CORES EXTRAÍDA DA REFERÊNCIA
+   PALETA DE CORES E VARIÁVEIS
    ========================================== */
 :root {
     --bg-site: #FAF6F2;           /* Fundo off-white / creme suave */
@@ -38,72 +38,11 @@ body {
     align-items: center;
 }
 
-/* HEADER DA REFERÊNCIA */
-.main-header {
-    width: 100%;
-    max-width: 1200px;
-    padding: 25px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: transparent;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--texto-escuro);
-    text-decoration: none;
-}
-
-.paw-icon {
-    font-size: 22px;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: var(--texto-cinza);
-    font-size: 14px;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 50px;
-    transition: all 0.2s ease;
-}
-
-.nav-links a:hover {
-    color: var(--texto-escuro);
-}
-
-.nav-links a.active {
-    background-color: var(--cor-ciano);
-    color: #FFFFFF !important;
-    font-weight: 700;
-    padding: 8px 22px;
-    box-shadow: 0 4px 12px rgba(0, 193, 222, 0.25);
-}
-
-.btn-sair {
-    color: var(--cor-rosa) !important;
-}
-
-.btn-sair:hover {
-    color: var(--cor-rosa-hover) !important;
-}
-
 /* CARD PRINCIPAL DO PERFIL */
 .content-wrapper {
     width: 100%;
     max-width: 1200px;
-    padding: 10px 20px 50px 20px;
+    padding: 30px 20px 50px 20px;
     display: flex;
     justify-content: center;
 }
@@ -176,7 +115,7 @@ body {
     line-height: 1.5;
 }
 
-/* FORMULÁRIO, INPUTS E TEXTAREA (BIOGRAFIA) */
+/* FORMULÁRIO, INPUTS E TEXTAREA */
 .form-group {
     margin-bottom: 20px;
     display: flex;

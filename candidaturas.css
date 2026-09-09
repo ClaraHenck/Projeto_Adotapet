@@ -9,35 +9,10 @@
 }
 
 body {
-    background-color: #FAF8F6; /* Corrigido de #000000 para o fundo claro idêntico ao design */
+    background-color: #FAF8F6;
     color: #1E293B;
     min-height: 100vh;
 }
-
-/* ==========================================================================
-   HEADER / NAVBAR
-   ========================================================================== */
-
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 20px;
-    font-weight: 800;
-    color: #1E293B;
-}
-
-.logo-icon {
-    width: 24px;
-    height: 24px;
-    fill: #FB7185; /* Rosa/Coral do ícone de pata */
-}
-
-.logo-highlight {
-    color: #00BCD4; /* Azul Turquesa da palavra Pet */
-}
-
 
 /* ==========================================================================
    ESTRUTURA DA PÁGINA
@@ -73,7 +48,7 @@ body {
 }
 
 /* ==========================================================================
-   CARDS DE CANDIDATURA (LAYOUT HORIZONTAL DA IMAGEM)
+   CARDS DE CANDIDATURA
    ========================================================================== */
 .candidaturas-container {
     display: flex;
@@ -103,7 +78,7 @@ body {
     gap: 18px;
 }
 
-/* Badge Verde de Compatibilidade (ex: 90 %) */
+/* Badge Verde de Compatibilidade (ex: 90%) */
 .match-badge {
     background-color: #D1FAE5;
     color: #059669;
@@ -136,18 +111,32 @@ body {
     color: #0F172A;
 }
 
-/* Badge Laranja de Status (ex: Pendente) */
-.status-badge.status-pendente {
-    background-color: #FFEDD5;
-    color: #EA580C;
-    border: 1px solid #FED7AA;
-    padding: 2px 10px;
+/* Badges de Status */
+.status-badge {
+    padding: 4px 12px;
     border-radius: 12px;
     font-size: 12px;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+}
+
+.status-badge.status-pendente {
+    background-color: #FFEDD5;
+    color: #EA580C;
+    border: 1px solid #FED7AA;
+}
+
+.status-badge.status-aprovado {
+    background-color: #D1FAE5;
+    color: #059669;
+    border: 1px solid #A7F3D0;
+}
+
+.status-badge.status-recusado {
+    background-color: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FCA5A5;
 }
 
 .sent-date {
@@ -155,7 +144,7 @@ body {
     color: #94A3B8;
 }
 
-/* Botões Circulares do Lado Direito */
+/* Botões Circulares das Ações */
 .card-actions {
     display: flex;
     align-items: center;
@@ -179,366 +168,10 @@ body {
 
 .btn-circle:hover {
     background-color: #F1F5F9;
-    color: #00BCD4;
+    color: #00C1DE;
     border-color: #CBD5E1;
 }
 
-/* ==========================================================================
-   RESPONSIVIDADE (MOBILE)
-   ========================================================================== */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 12px;
-        padding: 16px;
-    }
-
-    .menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-    }
-}
-/* ==============================
-   RESET E CONFIGURAÇÕES GERAIS
-============================== */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Arial", sans-serif;
-}
-
-body {
-    background: #fff7f5;
-    color: #333;
-}
-
-
-/* ==============================
-   HEADER PADRÃO IGUAL AO INDEX
-============================== */
-
-.navbar {
-    width: 100%;
-    height: 75px;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 50px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
-
-
-.left-brand-box .logo {
-    font-size: 26px;
-    font-weight: bold;
-    color: #ff4a75;
-}
-
-
-.menu {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-
-.menu a {
-    text-decoration: none;
-    color: #555;
-    font-size: 15px;
-    font-weight: bold;
-    transition: .3s;
-}
-
-
-.menu a:hover {
-    color: #ff4a75;
-}
-
-
-.menu a.active {
-    color: #ff4a75;
-    border-bottom: 3px solid #ff4a75;
-    padding-bottom: 8px;
-}
-
-
-/* Perfil */
-
-.perfil-link-container {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-
-.avatar-nav-mini {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ff4a75;
-    background: #eee;
-}
-
-
-/* ==============================
-   CONTEÚDO PRINCIPAL
-============================== */
-
-
-.content-wrapper {
-
-    width: 90%;
-    max-width: 1100px;
-    margin: 50px auto;
-
-}
-
-
-.page-title {
-
-    font-size: 32px;
-    color: #ff4a75;
-    margin-bottom: 10px;
-
-}
-
-
-.subtitle {
-
-    color: #777;
-    margin-bottom: 35px;
-    font-size: 17px;
-
-}
-
-
-
-/* ==============================
-   LISTA DE CANDIDATURAS
-============================== */
-
-
-.candidaturas-container {
-
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-
-}
-
-
-/* Mensagem vazia */
-
-.no-data {
-
-    background: white;
-    padding: 35px;
-    text-align: center;
-    border-radius: 15px;
-    color: #777;
-    box-shadow: 0 5px 15px rgba(0,0,0,.08);
-
-}
-
-
-
-/* ==============================
-   CARD DA CANDIDATURA
-============================== */
-
-
-.candidatura-card {
-
-    background: white;
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
-    transition: .3s;
-
-}
-
-
-.candidatura-card:hover {
-
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,.12);
-
-}
-
-
-
-/* Cabeçalho do card */
-
-
-.candidatura-header {
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #eee;
-    padding-bottom:15px;
-    margin-bottom:20px;
-
-}
-
-
-.candidatura-header h3 {
-
-    color:#333;
-    font-size:20px;
-
-}
-
-
-.pet-breed {
-
-    color:#ff4a75;
-    font-size:15px;
-
-}
-
-
-/* Status */
-
-.status-badge {
-
-    background:#fff0f3;
-    color:#ff4a75;
-    padding:7px 15px;
-    border-radius:20px;
-    font-size:13px;
-    font-weight:bold;
-
-}
-
-
-
-/* ==============================
-   CORPO DO CARD
-============================== */
-
-
-.candidatura-body {
-
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:30px;
-
-}
-
-
-.info-section {
-
-    background:#fff8fa;
-    padding:20px;
-    border-radius:12px;
-
-}
-
-
-.info-section h4 {
-
-    color:#ff4a75;
-    margin-bottom:15px;
-
-}
-
-
-.info-section p {
-
-    margin-bottom:8px;
-    font-size:14px;
-
-}
-
-
-.info-section strong {
-
-    color:#444;
-
-}
-
-
-
-/* ==============================
-   FOOTER DO CARD
-============================== */
-
-
-.candidatura-footer {
-
-    margin-top:25px;
-    display:flex;
-    justify-content:flex-end;
-
-}
-
-
-
-.btn-cancel {
-
-    background:#ff4d4d;
-    color:white;
-    border:none;
-    padding:10px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:.3s;
-
-}
-
-
-.btn-cancel:hover {
-
-    background:#d93636;
-
-}
-
-
-
-/* ==============================
-   RESPONSIVIDADE
-============================== */
-
-
-@media(max-width:800px){
-
-    .navbar{
-
-        padding:0 20px;
-
-    }
-
-
-    .menu{
-
-        gap:12px;
-
-    }
-
-
-    .candidatura-body{
-
-        grid-template-columns:1fr;
-
-    }
-
-
-    .page-title{
-
-        font-size:26px;
-
-    }
-
-
-    .candidatura-card {
-        padding: 16px;
-    }
+.btn-circle.btn-cancelar:hover {
+    color: #FF4D4D;
 }
