@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Busca o ID com verificação segura contra 'Undefined array key'
+// 2. Busca o ID com verificação segura
 $id = $_SESSION['id'] ?? $_SESSION['ong_id'] ?? $_SESSION['usuario_id'] ?? null;
 
 // Redireciona para o login caso a sessão não exista ou não contenha um ID válido
@@ -20,17 +20,42 @@ if (!$id) {
 $mensagem = '';
 $erro = '';
 
-// Buscar informações atuais da ONG
+// 3. Processar exclusão de perfil
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['excluir_perfil'])) {
+    try {
+        $stmtDelete = $pdo->prepare("DELETE FROM ongs WHERE id = ?");
+        $stmtDelete->execute([$id]);
+
+        // Encerra e destrói completamente a sessão do usuário
+        $_SESSION = array();
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        session_destroy();
+
+        header("Location: login/login.php?status=conta_excluida");
+        exit;
+    } catch (PDOException $e) {
+        $erro = "Erro ao excluir conta: " . $e->getMessage();
+    }
+}
+
+// 4. Buscar informações atuais da ONG no banco de dados
 try {
     $stmt = $pdo->prepare("SELECT * FROM ongs WHERE id = ?");
     $stmt->execute([$id]);
-    $ong = $stmt->fetch(PDO::FETCH_ASSOC);
+    $ong = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 } catch (PDOException $e) {
     $erro = "Erro ao carregar dados: " . $e->getMessage();
+    $ong = [];
 }
 
-// Processar atualização de perfil ao enviar o formulário
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// 5. Processar atualização de perfil ao enviar o formulário
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['excluir_perfil'])) {
     $nome = $_POST['nome'] ?? '';
     $cnpj = $_POST['cnpj'] ?? '';
     $telefone = $_POST['telefone'] ?? '';
@@ -86,11 +111,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Recarrega os dados atualizados
         $stmt->execute([$id]);
-        $ong = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ong = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
     } catch (PDOException $e) {
         $erro = "Erro ao salvar alterações: " . $e->getMessage();
     }
 }
+
+// 6. Fallbacks para garantir o resgate dos campos cadastrados no login/sessão ou com nomes alternativos
+$valNome        = $ong['nome'] ?? $ong['nome_ong'] ?? $ong['razao_social'] ?? $_SESSION['nome'] ?? $_SESSION['usuario_nome'] ?? '';
+$valCnpj        = $ong['cnpj'] ?? $_SESSION['cnpj'] ?? '';
+$valTelefone    = $ong['telefone'] ?? $ong['whatsapp'] ?? $_SESSION['telefone'] ?? '';
+$valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['contato'] ?? $_SESSION['responsavel'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -287,6 +318,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #0096b4;
         }
 
+        /* Zona de Perigo */
+        .secao-perigo {
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 14px;
+            padding: 25px;
+            margin-top: 35px;
+        }
+
+        .secao-perigo h2 {
+            color: #e53e3e;
+            font-size: 15px;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .secao-perigo p {
+            font-size: 13px;
+            color: #742a2a;
+            margin: 0 0 15px 0;
+        }
+
+        .btn-excluir {
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-excluir:hover {
+            background-color: #c53030;
+        }
+
         @media (max-width: 600px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -347,22 +417,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-grid">
                     <div class="campo-grupo">
                         <label for="nome">Nome da ONG / Abrigo</label>
-                        <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($ong['nome'] ?? ''); ?>" required placeholder="Ex: Instituto Patinhas Felizes">
+                        <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($valNome); ?>" required placeholder="Ex: Instituto Patinhas Felizes">
                     </div>
 
                     <div class="campo-grupo">
                         <label for="cnpj">CNPJ</label>
-                        <input type="text" id="cnpj" name="cnpj" value="<?php echo htmlspecialchars($ong['cnpj'] ?? ''); ?>" placeholder="00.000.000/0001-00">
+                        <input type="text" id="cnpj" name="cnpj" value="<?php echo htmlspecialchars($valCnpj); ?>" placeholder="00.000.000/0001-00">
                     </div>
 
                     <div class="campo-grupo">
                         <label for="telefone">Telefone / WhatsApp Comercial</label>
-                        <input type="text" id="telefone" name="telefone" value="<?php echo htmlspecialchars($ong['telefone'] ?? ''); ?>" required placeholder="(00) 00000-0000">
+                        <input type="text" id="telefone" name="telefone" value="<?php echo htmlspecialchars($valTelefone); ?>" required placeholder="(00) 00000-0000">
                     </div>
 
                     <div class="campo-grupo">
                         <label for="responsavel">Nome do Responsável</label>
-                        <input type="text" id="responsavel" name="responsavel" value="<?php echo htmlspecialchars($ong['responsavel'] ?? ''); ?>" required placeholder="Quem gerencia a conta">
+                        <input type="text" id="responsavel" name="responsavel" value="<?php echo htmlspecialchars($valResponsavel); ?>" required placeholder="Quem gerencia a conta">
                     </div>
                 </div>
             </div>
@@ -390,9 +460,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Botão Salvar -->
             <button type="submit" class="btn-salvar">Salvar Alterações</button>
-            <!-- Botão Salvar -->
 
         </form>
+
+        <!-- Bloco 4: Zona de Perigo / Exclusão de Perfil -->
+        <div class="secao-perigo">
+            <h2>Zona de Perigo</h2>
+            <p>Ao excluir a conta, todas as informações cadastrais e dados vinculados a esta ONG serão permanentemente removidos. Esta ação não pode ser desfeita.</p>
+            <form action="minha_ong.php" method="POST" onsubmit="return confirm('Tem certeza absoluta de que deseja excluir o perfil da ONG? Todos os dados serão perdidos definitivamente.');">
+                <button type="submit" name="excluir_perfil" value="1" class="btn-excluir">Excluir Perfil da ONG</button>
+            </form>
+        </div>
 
     </main>
 
@@ -410,6 +488,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
-
-<!-- 
-update -->
