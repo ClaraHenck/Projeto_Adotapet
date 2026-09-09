@@ -1,124 +1,414 @@
 /* ==========================================================================
-   7. BOTÃO RETRÁTIL E LISTA DE DETALHES DA COMPATIBILIDADE
+   1. RESET E ESTRUTURA GERAL DA PÁGINA
    ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
-/* Garante que o bloco azul do match organize os itens em coluna */
-.wrapper-match-completo {
+body {
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* ==========================================================================
+   2. FOTO DO PET E COLUNA ESQUERDA
+   ========================================================================== */
+.imagem-container {
+    flex: 1;
+    max-width: 500px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+}
+
+.imagem-container img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    display: block;
+}
+
+/* ==========================================================================
+   3. COLUNA DIREITA - INFORMAÇÕES
+   ========================================================================== */
+.info-container {
+    flex: 1.2;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    gap: 24px;
+}
+
+.cabecalho-pet {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.titulo-pet h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.titulo-pet p {
+    font-size: 16px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.badge-status {
+    background-color: #dcfce7;
+    color: #15803d;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   4. BLOCO DE COMPATIBILIDADE E PROGRESSO CIRCULAR
+   ========================================================================== */
+.alinhamento-compatibilidade {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.container-sem-questionario {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 16px;
 }
 
-/* Container do botão <details> */
-.container-detalhes-botao {
-    width: 100%;
+.texto-sem-questionario h3 {
+    font-size: 16px;
+    color: #0f172a;
+    margin-bottom: 4px;
 }
 
-/* Transforma o <summary> em um botão bonito e limpo */
-.btn-ver-detalhes {
-    background-color: #ffffff;
-    color: #0f172a;
-    border: 1px solid #bae6fd; /* Borda azul suave combinando com o fundo */
-    padding: 12px 18px;
-    border-radius: 12px;
+.texto-sem-questionario p {
     font-size: 13px;
+    color: #64748b;
+}
+
+.btn-fazer-questionario {
+    background-color: #00C1DE;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 50px;
     font-weight: 700;
-    cursor: pointer;
-    list-style: none; /* Esconde a seta preta padrão do HTML no Chrome/Firefox */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    font-size: 13px;
+    white-space: nowrap;
     transition: all 0.2s ease;
 }
 
-/* Esconde a seta preta padrão do HTML no Safari */
-.btn-ver-detalhes::-webkit-details-marker {
-    display: none;
+.btn-fazer-questionario:hover {
+    background-color: #00A8C2;
 }
 
-/* Efeito ao passar o mouse por cima do botão */
-.btn-ver-detalhes:hover {
-    background-color: #f0f9ff;
-    border-color: #7dd3fc;
-}
-
-/* Caixa branca onde ficam os acertos e erros (aparece ao clicar) */
-.detalhes-match-box {
-    margin-top: 14px;
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid #bae6fd;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-    animation: aparecerSuave 0.25s ease-out; /* Efeito visual para não abrir de soco */
-}
-
-/* Título dentro da caixinha */
-.detalhes-match-box h4 {
-    margin-bottom: 14px;
-    color: #0f172a;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-/* Remove os pontos padrões da lista <ul> */
-.lista-match {
-    list-style: none;
-}
-
-/* Cada linha de mensagem da lista */
-.item-match {
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    border-radius: 12px;
-    font-size: 13px;
-    line-height: 1.5;
+.barra-compatibilidade-container {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+
+.progresso-circular {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: conic-gradient(#00C1DE calc(var(--porcentagem) * 1%), #e2e8f0 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.progresso-circular::before {
+    content: '';
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.progresso-circular span {
+    position: relative;
+    font-weight: 800;
+    font-size: 15px;
+    color: #0f172a;
+}
+
+.texto-compatibilidade h3 {
+    font-size: 15px;
+    color: #0f172a;
+    margin-bottom: 2px;
+}
+
+.texto-compatibilidade p {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.btn-ver-detalhes-match {
+    margin-top: 8px;
+    background-color: #ff7a00;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-ver-detalhes-match:hover {
+    background-color: #e06b00;
+}
+
+/* ==========================================================================
+   5. GRID DE CARACTERÍSTICAS
+   ========================================================================== */
+.grid-caracteristicas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
 
-/* Remove o espaço em branco do último item da lista */
-.item-match:last-child {
-    margin-bottom: 0;
+.card-caracteristica {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Estilo para quando der MATCH correto (Caixinha Verde) */
-.item-match.positivo {
-    background-color: #f0fdf4;
-    color: #166534;
-    border-left: 4px solid #10b981; /* Mesmo verde da sua badge-status */
+.icone-caract {
+    font-size: 20px;
 }
 
-/* Estilo para quando precisar de ATENÇÃO na rotina (Caixinha Laranja) */
-.item-match.atencao {
-    background-color: #fff7ed;
-    color: #9a3412;
-    border-left: 4px solid #f97316;
+.textos-caract {
+    display: flex;
+    flex-direction: column;
 }
 
-/* Alinhamento dos emojis de ✅ e ⚠️ */
-.item-match span {
+.textos-caract span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.textos-caract strong {
     font-size: 14px;
-    line-height: 1;
-    user-select: none;
-}
-.detalhes{
-    background-color: #f0f9ff;
-    border-color: #7dd3fc;
+    color: #0f172a;
 }
 
-/* Animação para o conteúdo surgir deslizando de forma suave */
-@keyframes aparecerSuave {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
+/* ==========================================================================
+   6. TAGS, DESCRIÇÃO E BOTÃO ADOTAR
+   ========================================================================== */
+.tags-container {
+    display: flex;
+    gap: 8px;
+}
+
+.tag {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.descricao-pet {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.localizacao {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.btn-adotar {
+    width: 100%;
+    background-color: #00C1DE;
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.1s ease;
+    box-shadow: 0 4px 14px rgba(0, 193, 222, 0.3);
+}
+
+.btn-adotar:hover {
+    background-color: #00A8C2;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   7. ABA DE CONTEÚDO EXTRA
+   ========================================================================== */
+.tabs-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.tabs-header {
+    display: flex;
+    gap: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background-color: #e0f2fe;
+    color: #0284c7;
+    font-weight: 700;
+}
+
+.tab-content {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    margin-top: 16px;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+}
+
+/* ==========================================================================
+   8. ALERTAS E MODAL DE COMPATIBILIDADE
+   ========================================================================== */
+.alerta-erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px 20px;
+    margin: 20px auto 0 auto;
+    max-width: 1200px;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.modal-match-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-match-content {
+    background: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    max-width: 550px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-match-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px; 
+    margin-bottom: 15px;
+}
+
+.btn-fechar-modal {
+    background: none; 
+    border: none; 
+    font-size: 24px; 
+    cursor: pointer; 
+    color: #666;
+}
+
+.lista-fatores-match {
+    list-style: none; 
+    padding: 0; 
+    margin: 0;
+}
+
+.item-fator {
+    display: flex; 
+    align-items: flex-start; 
+    gap: 10px;
+    padding: 10px 12px; 
+    margin-bottom: 8px;
+    border-radius: 8px; 
+    font-size: 14px; 
+    line-height: 1.4;
+}
+
+.item-fator.positivo {
+    background-color: #f0fdf4; 
+    color: #166534; 
+    border-left: 4px solid #10b981;
+}
+
+.item-fator.negativo {
+    background-color: #fef2f2; 
+    color: #991b1b; 
+    border-left: 4px solid #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .main-container {
+        flex-direction: column;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .imagem-container {
+        max-width: 100%;
+    }
+    .imagem-container img {
+        height: 350px;
     }
 }
