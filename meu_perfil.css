@@ -1,0 +1,292 @@
+/* ==========================================
+   PALETA DE CORES EXTRAÍDA DA REFERÊNCIA
+   ========================================== */
+:root {
+    --bg-site: #FAF6F2;           /* Fundo off-white / creme suave */
+    --card-bg: #FFFFFF;           /* Fundo branco dos cards */
+    
+    --cor-ciano: #00C1DE;         /* Ciano/Turquesa principal */
+    --cor-ciano-hover: #00A8C2;   
+    
+    --cor-rosa: #FF6B8B;          /* Rosa Coral */
+    --cor-rosa-hover: #E55877;    
+    --cor-rosa-suave: #FFF0F3;    
+    
+    --cor-perigo: #E53E3E;        /* Vermelho para Excluir Conta */
+    --cor-perigo-hover: #C53030;
+    
+    --texto-escuro: #1E293B;      /* Títulos e textos principais */
+    --texto-cinza: #718096;       /* Subtítulos e links */
+    --borda-suave: #F1F5F9;       
+    --input-fundo: #FAFAFA;       
+}
+
+/* RESET GERAL */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--bg-site);
+    color: var(--texto-escuro);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* HEADER DA REFERÊNCIA */
+.main-header {
+    width: 100%;
+    max-width: 1200px;
+    padding: 25px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--texto-escuro);
+    text-decoration: none;
+}
+
+.paw-icon {
+    font-size: 22px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--texto-cinza);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: var(--texto-escuro);
+}
+
+.nav-links a.active {
+    background-color: var(--cor-ciano);
+    color: #FFFFFF !important;
+    font-weight: 700;
+    padding: 8px 22px;
+    box-shadow: 0 4px 12px rgba(0, 193, 222, 0.25);
+}
+
+.btn-sair {
+    color: var(--cor-rosa) !important;
+}
+
+.btn-sair:hover {
+    color: var(--cor-rosa-hover) !important;
+}
+
+/* CARD PRINCIPAL DO PERFIL */
+.content-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    padding: 10px 20px 50px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-container {
+    width: 100%;
+    max-width: 580px;
+    background: var(--card-bg);
+    padding: 40px 45px;
+    border-radius: 28px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--borda-suave);
+    display: flex;
+    flex-direction: column;
+}
+
+.avatar-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.avatar-preview-container {
+    position: relative;
+    width: 110px;
+    height: 110px;
+}
+
+.avatar-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #F1F5F9;
+    border: 4px solid var(--cor-ciano);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: var(--texto-cinza);
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 193, 222, 0.18);
+}
+
+.user-type-badge {
+    background-color: var(--cor-rosa-suave);
+    color: var(--cor-rosa);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.profile-title {
+    text-align: center;
+    margin-bottom: 6px;
+    color: var(--texto-escuro);
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.profile-subtitle {
+    text-align: center;
+    color: var(--texto-cinza);
+    margin-bottom: 30px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* FORMULÁRIO, INPUTS E TEXTAREA (BIOGRAFIA) */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--texto-escuro);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    font-size: 15px;
+    outline: none;
+    background-color: var(--input-fundo);
+    color: var(--texto-escuro);
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--cor-ciano);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(0, 193, 222, 0.12);
+}
+
+.form-group input:disabled {
+    background-color: #EDF2F7;
+    color: var(--texto-cinza);
+    cursor: not-allowed;
+    border-color: #E2E8F0;
+}
+
+/* BOTÃO SALVAR (CIANO) */
+.btn-save-profile {
+    background-color: var(--cor-ciano);
+    color: #FFFFFF;
+    border: none;
+    padding: 16px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 0 6px 20px rgba(0, 193, 222, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn-save-profile:hover {
+    background-color: var(--cor-ciano-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 193, 222, 0.4);
+}
+
+/* BOTÃO DELETAR PERFIL (VERMELHO PÍLULA) */
+.btn-delete-profile {
+    background-color: var(--cor-perigo) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    padding: 15px !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    margin-top: 14px !important;
+    display: block !important;
+    text-align: center !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-delete-profile:hover {
+    background-color: var(--cor-perigo-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(229, 62, 62, 0.3);
+}
+
+/* ALERTAS DE SUCESSO / ERRO */
+.alert-message {
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.alert-success {
+    background-color: #E6F9F3;
+    color: #00B67A;
+    border: 1px solid #A3E2CE;
+}
+
+.alert-error {
+    background-color: var(--cor-rosa-suave);
+    color: var(--cor-rosa);
+    border: 1px solid #FFC2CE;
+}

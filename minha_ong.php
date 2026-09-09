@@ -4,6 +4,7 @@ require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
 $stmt = null;
 
+
 // Garante que a sessão está ativa sem duplicar o session_start()
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -410,4 +411,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+
+<!-- 
+update -->
+>>>>>>> 0b442a682232944b80db869d3172fc1c9bc1391c

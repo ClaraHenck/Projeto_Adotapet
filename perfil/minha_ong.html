@@ -413,8 +413,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- Botão Salvar -->
             <button type="submit" class="btn-salvar">Salvar Alterações</button>
+=======
+            <div class="grupo-campo">
+              <label for="telefone-ong">Telefone / WhatsApp Comercial</label>
+              <input type="text" id="telefone-ong" required placeholder="(00) 00000-0000" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="responsavel-ong">Nome do Responsável / Presidente</label>
+              <input type="text" id="responsavel-ong" required placeholder="Quem gerencia a conta" />
+            </div>
+
+            <!-- SEÇÃO 3: INFORMAÇÕES ADICIONAIS -->
+            <div class="grupo-campo full-width">
+              <h3 class="titulo-secao" style="margin-top: 20px; font-size: 18px;">✨ Informações Adicionais</h3>
+            </div>
+
+            <div class="grupo-campo">
+              <label for="capacidade-animais">Capacidade Máxima de Abrigados</label>
+              <input type="number" id="capacidade-animais" placeholder="Ex: 50" min="1" />
+            </div>
+
+            <div class="grupo-campo">
+              <label for="instagram-ong">Link do Instagram</label>
+              <input type="url" id="instagram-ong" placeholder="https://instagram.com" />
+            </div>
+
+            <div class="grupo-campo full-width">
+              <label for="descricao-ong">História ou Descrição do Trabalho da ONG</label>
+              <textarea id="descricao-ong" rows="4" placeholder="Conte resumidamente sobre o abrigo, missão e como o trabalho é feito..."></textarea>
+            </div>
+          </div>
+
+          <!-- BOTÕES DE AÇÃO -->
+          <div class="acoes-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <div>
+              <a href="index.html" class="btn-voltar">Voltar ao Painel</a>
+              <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            </div>
+            
+            <!-- NOVA OPÇÃO: DELETAR PERFIL (ZONA DE PERIGO) -->
+            <div>
+              <button type="button" onclick="deletarPerfil()" class="btn-deletar" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                Excluir Conta
+              </button>
+            </div>
+          </div>
+>>>>>>> 0b442a682232944b80db869d3172fc1c9bc1391c
 
         </form>
 
@@ -431,6 +479,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 reader.readAsDataURL(file);
             }
         }
+<<<<<<< HEAD
+=======
+      }
+
+      function salvarDadosOng(event) {
+        event.preventDefault();
+        alert('Alterações salvas com sucesso!');
+      }
+
+      // NOVA FUNÇÃO: DELETAR PERFIL
+      function deletarPerfil() {
+        const confirmacao = confirm("⚠️ ATENÇÃO: Tem certeza que deseja deletar o perfil da sua ONG? Esta ação é irreversível e apagará todos os seus dados e candidaturas.");
+        
+        if (confirmacao) {
+          // Aqui você fará a chamada para o seu backend PHP no futuro ex: window.location.href = 'deletar_ong.php';
+          alert('Conta excluída com sucesso.');
+          localStorage.clear();
+          window.location.href = "login.html";
+        }
+      }
+>>>>>>> 0b442a682232944b80db869d3172fc1c9bc1391c
     </script>
 </body>
 </html>

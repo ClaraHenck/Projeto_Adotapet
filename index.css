@@ -79,18 +79,6 @@ body::after {
 }
 
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 8%;
-    background-color: #f6d2b911;;
-    border-bottom: 1px solid #f0eef1;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
 .logo {
     font-size: 24px;
     font-weight: 800;
@@ -234,11 +222,6 @@ body::after {
 
 
 @media (max-width: 968px) {
-    .navbar {
-        padding: 15px 5%;
-        flex-direction: column;
-        gap: 15px;
-    }
 
     .hero-container {
         flex-direction: column-reverse;

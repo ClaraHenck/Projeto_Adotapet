@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["pode_excluir"] = $pode_excluir;
             
             // Redireciona corretamente para a index principal
-            header("Location: ../index.php");
+            header("Location: ../teste/index.php");
             exit;
         } else {
             $erro = "Ocorreu um erro ao criar a conta.";
@@ -67,12 +67,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Criar Conta</title>
     
+    <link rel="stylesheet" href="navbar.css">
     <link rel="stylesheet" href="cadastrar.css">
 </head>
 <body>
 
     <div class="cadastro-box">
-        <div class="avatar-placeholder"></div>
+     <!-- Procure por isso no seu HTML e mude para: -->
+<div class="avatar-placeholder" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+    <img src="LOGO.png" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+</div>
+
 
         <h2>Criar Nova Conta</h2>
         <p class="subtitulo">Preencha todas as suas informações abaixo.</p>

@@ -1,0 +1,107 @@
+:root {
+    --primary: #00C1DE;
+    --primary-hover: #00A8C2;
+    --surface: #FFFFFF;
+    --text-main: #1A202C;
+    --text-muted: #718096;
+    --text-body: #4A5568;
+    --border-light: #EDF2F7;
+    --border: #E2E8F0;
+    --radius-pill: 50px;
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --danger: #FF4D4D;
+}
+
+.main-header, .navbar {
+    background-color: var(--surface);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 8%;
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--border-light);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.logo h1 {
+    font-size: 22px;
+    color: var(--text-main);
+    font-weight: 800;
+    margin: 0;
+}
+
+.paw-icon {
+    font-size: 22px;
+}
+
+.nav-links, .menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-links a, .menu a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    transition: var(--transition);
+}
+
+.nav-links a:hover:not(.btn-logout), .menu a:hover {
+    color: var(--text-main);
+}
+
+.nav-links a.active, .menu a.active {
+    background-color: var(--primary);
+    color: #FFFFFF !important;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 193, 222, 0.25);
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.profile-pic {
+    background: var(--border);
+    border-radius: 50%;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-body);
+}
+
+.btn-logout {
+    color: var(--danger) !important;
+    font-weight: 700;
+    padding: 8px 12px !important;
+}
+
+.btn-logout:hover {
+    background-color: #FFF5F5;
+}
