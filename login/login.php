@@ -60,7 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="login-container">
-        <img src="img/Captura de tela 2026-05-13 110314.png" alt="AdotaPet Logo" class="logo-destaque" />
+      <div class="avatar-placeholder" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto 20px; background-color: #eee; display: flex; align-items: center; justify-content: center;">
+    <img src="LOGO.png" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+</div>
 
         <h2 id="tela-titulo">Login</h2>
         <p id="tela-subtitulo">Insira suas credenciais para acessar o sistema.</p>
