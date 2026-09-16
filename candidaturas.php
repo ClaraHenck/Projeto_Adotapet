@@ -122,7 +122,7 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
                         </div>
 
                         <div class="card-actions">
-                            <a href="mensagens.php?candidatura_id=<?= $item['id'] ?>" class="btn-circle" title="Mensagens">💬</a>
+                            
 
                             <form method="POST" action="candidaturas.php" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta solicitação?');">
                                 <input type="hidden" name="acao" value="cancelar">
