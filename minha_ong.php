@@ -256,15 +256,5 @@ $valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['conta
         }
     </script>
 </body>
-<<<<<<< HEAD
-<<<<<<< HEAD
-</html>
-=======
-</html>
 
-<!-- 
-update -->
->>>>>>> 0b442a682232944b80db869d3172fc1c9bc1391c
-=======
 </html>
->>>>>>> 7e9d4b5c8a493b810594995d5509ac45ef3da631
