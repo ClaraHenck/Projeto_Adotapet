@@ -74,51 +74,51 @@ if ($tem_questionario) {
     if ($isFilhote) {
         if ($horasFora <= 4) {
             $porcentagem_match += 20;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Jornada de {$horasFora}h fora - Ideal para dar a atenção necessária a um filhote."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Jornada de {$horasFora}h fora - Presença ideal para a criação de um filhote."];
         } elseif ($horasFora <= 6) {
             $porcentagem_match += 10;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Jornada de {$horasFora}h fora - Razoável, mas exige dedicação extra para o filhote."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Jornada de {$horasFora}h fora - Razoável, mas exigirá dedicação extra no tempo livre."];
         } else {
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Jornada de {$horasFora}h fora - Alta para um filhote que requer presença constante."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Jornada de {$horasFora}h fora - Período muito longo para a atenção que um filhote exige."];
         }
     } else {
         if ($horasFora <= 6) {
             $porcentagem_match += 20;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Jornada de {$horasFora}h fora - Excelente presença diária para o animal."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Jornada de {$horasFora}h fora - Excelente tempo de presença diária."];
         } elseif ($horasFora <= 10) {
             $porcentagem_match += 14;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Jornada de {$horasFora}h fora - Compatível com a rotina de um pet adulto."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Jornada de {$horasFora}h fora - Aceitável para cão adulto, mas limita o tempo juntos."];
         } else {
             $porcentagem_match += 6;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Jornada de {$horasFora}h fora - O pet passará longos períodos sozinho."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Jornada de {$horasFora}h fora - O pet passará a maior parte do dia sozinho."];
         }
     }
 
     // 2º: TIPO DE MORADIA (18%)
     if ($isGato || $portePet === 'pequeno') {
         $porcentagem_match += 18;
-        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Moradia (" . ucfirst($ondeMora) . ") - Excelente tamanho para gatos ou porte pequeno."];
+        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Moradia (" . ucfirst($ondeMora) . ") - Excelente espaço para gatos ou porte pequeno."];
     } elseif (in_array($portePet, ['médio', 'medio'])) {
         if (in_array($ondeMora, ['casa_com_quintal', 'sitio'])) {
             $porcentagem_match += 18;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Moradia ampla - Ótima para o porte médio do pet."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Moradia ampla - Ideal para o porte médio."];
         } elseif ($ondeMora === 'casa_sem_quintal') {
             $porcentagem_match += 14;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Casa sem quintal - Adequada, exigindo rotina de passeios."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Casa sem quintal - Adequada, mas exigirá passeios diários para compensar."];
         } else {
             $porcentagem_match += 10;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Apartamento - Pode limitar a movimentação para um pet de porte médio."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Apartamento - Pode restringir o espaço de movimentação de um porte médio."];
         }
     } else {
         if (in_array($ondeMora, ['casa_com_quintal', 'sitio'])) {
             $porcentagem_match += 18;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Espaço amplo - Essencial para o bem-estar de um cão de porte grande."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Espaço amplo - Excelente para o porte grande."];
         } elseif ($ondeMora === 'casa_sem_quintal') {
             $porcentagem_match += 8;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Casa sem quintal - Espaço restrito para um pet de porte grande."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Casa sem quintal - Espaço bastante justo para o tamanho do pet."];
         } else {
             $porcentagem_match += 2;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Apartamento - Não é o espaço mais indicado para um pet grande."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Apartamento - Não é um ambiente adequado para pets de porte grande."];
         }
     }
 
@@ -129,18 +129,18 @@ if ($tem_questionario) {
     } elseif ($portePet === 'grande' || $portePet === 'médio' || $portePet === 'medio') {
         if ($areaExterna === 1) {
             $porcentagem_match += 15;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui área externa - Ótimo para o animal gastar energia."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui área externa - Ótimo espaço para gasto de energia."];
         } else {
             $porcentagem_match += 4;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Sem área externa - Demandará passeios diários frequentes."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Sem área externa - Demandará passeios e estímulo constante."];
         }
     } else {
         if ($areaExterna === 1) {
             $porcentagem_match += 15;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui área externa - Ponto positivo para momentos ao ar livre."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui área externa - Excelente para atividades ao ar livre."];
         } else {
             $porcentagem_match += 10;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem área externa - Adequado para o porte pequeno."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Sem área externa - Funciona para porte pequeno, mas restringe atividades."];
         }
     }
 
@@ -148,28 +148,28 @@ if ($tem_questionario) {
     $petRestritoAnimais = (str_contains($descricaoPet, 'único') || str_contains($descricaoPet, 'nao gosta de caes') || str_contains($descricaoPet, 'não gosta de gatos'));
     if ($temAnimais === 1) {
         if ($petRestritoAnimais) {
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Possui outros animais - Este pet precisa ser animal único segundo o perfil."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Possui outros animais - Este pet precisa ser animal único."];
         } else {
             $porcentagem_match += 12;
             $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui outros animais - Pet sociável para convivência."];
         }
     } else {
         $porcentagem_match += 12;
-        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem outros animais em casa - Sem concorrência por espaço ou atenção."];
+        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem outros animais - Sem disputa por território ou atenção."];
     }
 
     // 5º: CRIANÇAS EM CASA (12%)
     $petAriscoOuBravo = (str_contains($descricaoPet, 'bravo') || str_contains($descricaoPet, 'arisco') || str_contains($descricaoPet, 'não recomendado para crianças'));
     if ($temCriancas === 1) {
         if ($petAriscoOuBravo) {
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Possui crianças - Pet reativo ou receoso, exige cuidados redobrados."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Possui crianças - Pet arisco/reativo, exige supervisão redobrada."];
         } else {
             $porcentagem_match += 12;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui crianças - Pet com perfil amigável para famílias."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui crianças - Perfil amigável para convivência familiar."];
         }
     } else {
         $porcentagem_match += 12;
-        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem crianças pequenas - Ambiente calmo garantido para o pet."];
+        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem crianças pequenas - Ambiente mais calmo e previsível."];
     }
 
     // 6º: NÍVEL DE ATIVIDADE FÍSICA (12%)
@@ -177,21 +177,21 @@ if ($tem_questionario) {
     if ($petAltaEnergia) {
         if ($atividade === 'ativo') {
             $porcentagem_match += 12;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Tutor ativo - Perfeita sintonia com a alta energia do pet."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Tutor ativo - Sintonia perfeita com o ritmo de energia do pet."];
         } elseif ($atividade === 'moderado') {
             $porcentagem_match += 7;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Tutor moderado - Boa compatibilidade com o nível de energia do pet."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Tutor moderado - Pet muito ativo pode exigir um ritmo de exercícios maior."];
         } else {
             $porcentagem_match += 2;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Tutor sedentário - O pet tem alta energia e demandará mais exercícios."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Tutor sedentário - Desalinhamento: o pet demanda bastante exercício físico."];
         }
     } else {
         if ($atividade === 'sedentario' || $atividade === 'moderado') {
             $porcentagem_match += 12;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Perfil tranquilo/moderado - Alinhado ao temperamento calmo do pet."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Perfil tranquilo - Alinhado ao temperamento calmo do pet."];
         } else {
             $porcentagem_match += 9;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Tutor ativo com pet calmo - Boa convivência garantida."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Tutor ativo e pet calmo - Convivência tranquila, sem necessidade de alta intensidade."];
         }
     }
 
@@ -200,14 +200,14 @@ if ($tem_questionario) {
     if ($exigeExperiencia) {
         if ($experiencia === 'experiente' || $experiencia === 'ja_teve') {
             $porcentagem_match += 11;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Experiência prévia - Conhecimento ideal para o manejo do pet."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Experiência prévia - Conhecimento adequado para o manejo do pet."];
         } else {
             $porcentagem_match += 2;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Primeira viagem - Este pet exige um nível maior de experiência no manejo."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Primeira viagem - Este pet possui particularidades que exigem mais bagagem."];
         }
     } else {
         $porcentagem_match += 11;
-        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Manejo simples - Excelente opção para qualquer perfil de tutor."];
+        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Manejo simples - Adaptável para qualquer perfil de tutor."];
     }
 
     $porcentagem_match = min(100, max(0, $porcentagem_match));
@@ -220,7 +220,6 @@ if ($tem_questionario) {
         $mensagem_match = "Atenção. O perfil deste pet possui exigências específicas para o seu formato de rotina.";
     }
 }
-
 // 5. PROCESSAMENTO DO ENVIO DE CANDIDATURA (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
     
@@ -405,9 +404,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
             <ul class="lista-fatores-match">
                 <?php foreach ($relatorio_match as $item): ?>
                     <li class="item-fator <?= $item['tipo'] ?>">
-                        <span class="icone-fator"><?= $item['tipo'] === 'positivo' ? '✔' : '✖' ?></span>
-                        <span class="texto-fator"><?= htmlspecialchars($item['texto']) ?></span>
-                    </li>
+                    <span class="icone-fator">
+                <?php 
+                    if ($item['tipo'] === 'positivo') echo '✔';
+                    elseif ($item['tipo'] === 'alerta') echo '⚠️';
+                    else echo '✖';
+                ?>
+                    </span>
+                    <span class="texto-fator"><?= htmlspecialchars($item['texto']) ?></span>
+                </li>
                 <?php endforeach; ?>
             </ul>
         </div>

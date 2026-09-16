@@ -1,9 +1,8 @@
 <?php
-// 1. Carrega as configurações primeiro (o auth.php já inicia a sessão)
+// 1. Carrega as configurações (o auth.php inicia a sessão)
 require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
 
-// Garante que a sessão está ativa sem duplicar o session_start()
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -11,7 +10,6 @@ if (session_status() === PHP_SESSION_NONE) {
 // 2. Busca o ID com verificação segura
 $id = $_SESSION['id'] ?? $_SESSION['ong_id'] ?? $_SESSION['usuario_id'] ?? null;
 
-// Redireciona para o login caso a sessão não exista ou não contenha um ID válido
 if (!$id) {
     header("Location: login/login.php");
     exit;
@@ -23,10 +21,17 @@ $erro = '';
 // 3. Processar exclusão de perfil
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['excluir_perfil'])) {
     try {
+        $stmtFoto = $pdo->prepare("SELECT foto FROM ongs WHERE id = ?");
+        $stmtFoto->execute([$id]);
+        $fotoAtual = $stmtFoto->fetchColumn();
+
+        if (!empty($fotoAtual) && file_exists(__DIR__ . '/uploads/' . $fotoAtual)) {
+            @unlink(__DIR__ . '/uploads/' . $fotoAtual);
+        }
+
         $stmtDelete = $pdo->prepare("DELETE FROM ongs WHERE id = ?");
         $stmtDelete->execute([$id]);
 
-        // Encerra e destrói completamente a sessão do usuário
         $_SESSION = array();
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
@@ -44,7 +49,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['excluir_perfil'])) {
     }
 }
 
-// 4. Buscar informações atuais da ONG no banco de dados
+// 4. Processar Upload e Salvamento Exclusivo da Foto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_foto'])) {
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $extensao = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+        $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (in_array($extensao, $extensoes_permitidas)) {
+            $diretorio_uploads = __DIR__ . '/uploads/';
+
+            if (!is_dir($diretorio_uploads)) {
+                mkdir($diretorio_uploads, 0755, true);
+            }
+
+            // Busca foto antiga para deletar
+            $stmtFoto = $pdo->prepare("SELECT foto FROM ongs WHERE id = ?");
+            $stmtFoto->execute([$id]);
+            $fotoAntiga = $stmtFoto->fetchColumn();
+
+            $novo_nome_foto = 'ong_' . $id . '_' . time() . '.' . $extensao;
+            $caminho_destino = $diretorio_uploads . $novo_nome_foto;
+
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $caminho_destino)) {
+                if (!empty($fotoAntiga) && file_exists($diretorio_uploads . $fotoAntiga)) {
+                    @unlink($diretorio_uploads . $fotoAntiga);
+                }
+
+                $stmtUpdateFoto = $pdo->prepare("UPDATE ongs SET foto = ? WHERE id = ?");
+                $stmtUpdateFoto->execute([$novo_nome_foto, $id]);
+
+                $mensagem = "Foto de perfil atualizada com sucesso!";
+            } else {
+                $erro = "Falha ao salvar a imagem no servidor.";
+            }
+        } else {
+            $erro = "Formato de arquivo inválido. Escolha uma imagem JPG, PNG ou WEBP.";
+        }
+    } else {
+        $erro = "Selecione uma foto da sua galeria antes de clicar em salvar.";
+    }
+}
+
+// 5. Processar atualização dos Dados Gerais
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
+    $nome_instituicao    = trim($_POST['nome_instituicao'] ?? '');
+    $cnpj                = trim($_POST['cnpj'] ?? '') ?: null;
+    $telefone            = trim($_POST['telefone'] ?? '');
+    $instagram           = trim($_POST['instagram'] ?? '') ?: null;
+    $logradouro          = trim($_POST['logradouro'] ?? '') ?: null;
+    $numero              = trim($_POST['numero'] ?? '') ?: null;
+    $bairro              = trim($_POST['bairro'] ?? '') ?: null;
+    $cidade              = trim($_POST['cidade'] ?? '') ?: null;
+    $estado              = trim($_POST['estado'] ?? '') ?: null;
+    $cep                 = trim($_POST['cep'] ?? '') ?: null;
+    $horario_atendimento = trim($_POST['horario_atendimento'] ?? '') ?: null;
+    $raio_atuacao        = trim($_POST['raio_atuacao'] ?? '') ?: null;
+    $chave_pix           = trim($_POST['chave_pix'] ?? '') ?: null;
+    $capacidade_abrigados= $_POST['capacidade_abrigados'] !== '' ? (int)$_POST['capacidade_abrigados'] : null;
+
+    try {
+        $sql = "UPDATE ongs SET 
+                    nome_instituicao = :nome_instituicao, 
+                    cnpj = :cnpj, 
+                    telefone = :telefone, 
+                    instagram = :instagram,
+                    logradouro = :logradouro, 
+                    numero = :numero, 
+                    bairro = :bairro, 
+                    cidade = :cidade, 
+                    estado = :estado, 
+                    cep = :cep, 
+                    horario_atendimento = :horario_atendimento, 
+                    raio_atuacao = :raio_atuacao, 
+                    chave_pix = :chave_pix, 
+                    capacidade_abrigados = :capacidade_abrigados 
+                WHERE id = :id";
+
+        $stmtUpdate = $pdo->prepare($sql);
+        $stmtUpdate->execute([
+            ':nome_instituicao'    => $nome_instituicao,
+            ':cnpj'                => $cnpj,
+            ':telefone'            => $telefone,
+            ':instagram'           => $instagram,
+            ':logradouro'          => $logradouro,
+            ':numero'              => $numero,
+            ':bairro'              => $bairro,
+            ':cidade'              => $cidade,
+            ':estado'              => $estado,
+            ':cep'                 => $cep,
+            ':horario_atendimento' => $horario_atendimento,
+            ':raio_atuacao'        => $raio_atuacao,
+            ':chave_pix'           => $chave_pix,
+            ':capacidade_abrigados'=> $capacidade_abrigados,
+            ':id'                  => $id
+        ]);
+
+        $mensagem = "Informações atualizadas com sucesso!";
+    } catch (PDOException $e) {
+        $erro = "Erro ao salvar alterações: " . $e->getMessage();
+    }
+}
+
+// 6. Buscar informações atuais da ONG no banco de dados
 try {
     $stmt = $pdo->prepare("SELECT * FROM ongs WHERE id = ?");
     $stmt->execute([$id]);
@@ -53,75 +159,6 @@ try {
     $erro = "Erro ao carregar dados: " . $e->getMessage();
     $ong = [];
 }
-
-// 5. Processar atualização de perfil ao enviar o formulário
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['excluir_perfil'])) {
-    $nome = $_POST['nome'] ?? '';
-    $cnpj = $_POST['cnpj'] ?? '';
-    $telefone = $_POST['telefone'] ?? '';
-    $responsavel = $_POST['responsavel'] ?? '';
-    $capacidade = !empty($_POST['capacidade']) ? (int)$_POST['capacidade'] : null;
-    $instagram = $_POST['instagram'] ?? '';
-    $descricao = $_POST['descricao'] ?? '';
-
-    // Processamento da Foto / Logo
-    $foto_path = $ong['foto'] ?? '';
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $extensao = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-        $novo_nome = 'ong_' . $id . '_' . time() . '.' . $extensao;
-        $diretorio = 'uploads/';
-        
-        if (!is_dir($diretorio)) {
-            mkdir($diretorio, 0777, true);
-        }
-        
-        $destino = $diretorio . $novo_nome;
-        if (move_uploaded_file($_FILES['foto']['tmp_name'], $destino)) {
-            $foto_path = $destino;
-        }
-    }
-
-    // Atualização dos dados no MySQL
-    try {
-        $sql = "UPDATE ongs SET 
-                    nome = :nome, 
-                    cnpj = :cnpj, 
-                    telefone = :telefone, 
-                    responsavel = :responsavel, 
-                    capacidade = :capacidade, 
-                    instagram = :instagram, 
-                    descricao = :descricao, 
-                    foto = :foto 
-                WHERE id = :id";
-
-        $stmtUpdate = $pdo->prepare($sql);
-        $stmtUpdate->execute([
-            ':nome' => $nome,
-            ':cnpj' => $cnpj,
-            ':telefone' => $telefone,
-            ':responsavel' => $responsavel,
-            ':capacidade' => $capacidade,
-            ':instagram' => $instagram,
-            ':descricao' => $descricao,
-            ':foto' => $foto_path,
-            ':id' => $id
-        ]);
-
-        $mensagem = "Alterações salvas com sucesso!";
-
-        // Recarrega os dados atualizados
-        $stmt->execute([$id]);
-        $ong = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-    } catch (PDOException $e) {
-        $erro = "Erro ao salvar alterações: " . $e->getMessage();
-    }
-}
-
-// 6. Fallbacks para garantir o resgate dos campos cadastrados no login/sessão
-$valNome        = $ong['nome'] ?? $ong['nome_ong'] ?? $ong['razao_social'] ?? $_SESSION['nome'] ?? $_SESSION['usuario_nome'] ?? '';
-$valCnpj        = $ong['cnpj'] ?? $_SESSION['cnpj'] ?? '';
-$valTelefone    = $ong['telefone'] ?? $ong['whatsapp'] ?? $_SESSION['telefone'] ?? '';
-$valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['contato'] ?? $_SESSION['responsavel'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -129,7 +166,6 @@ $valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['conta
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Minha ONG</title>
-    <!-- Importação do CSS da Navbar e da Tela Minha ONG -->
     <link rel="stylesheet" href="navbar.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="minha_ong.css?v=<?php echo time(); ?>">
 </head>
@@ -147,12 +183,12 @@ $valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['conta
         </nav>
     </header>
 
-    <!-- Container de Conteúdo -->
+    <!-- CONTAINER PRINCIPAL -->
     <main class="container">
         
         <div class="header-titulo">
             <h1>Perfil da ONG</h1>
-            <p>Gerencie as informações cadastrais e de exibição da sua instituição</p>
+            <p>Gerencie as informações cadastrais e a foto de perfil da sua instituição</p>
         </div>
 
         <?php if (!empty($mensagem)): ?>
@@ -163,74 +199,131 @@ $valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['conta
             <div class="alerta-erro"><?php echo htmlspecialchars($erro); ?></div>
         <?php endif; ?>
 
-        <form action="minha_ong.php" method="POST" enctype="multipart/form-data">
-            
-            <!-- Bloco 1: Foto / Logo -->
-            <div class="secao-bloco">
-                <h2>Logo / Foto do Abrigo</h2>
-                <div class="foto-container">
-                    <img id="preview-foto" src="<?php echo !empty($ong['foto']) ? htmlspecialchars($ong['foto']) : 'https://via.placeholder.com/90'; ?>" alt="Logo da ONG" class="preview-foto">
+        <!-- BLOCO 1: FOTO DE PERFIL (Formulário Próprio) -->
+        <div class="secao-bloco">
+            <h2>Foto de Perfil / Logo</h2>
+            <form action="minha_ong.php" method="POST" enctype="multipart/form-data">
+                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    
+                    <!-- Preview da Foto -->
                     <div>
-                        <label for="input-foto" class="btn-file">Escolher Imagem</label>
-                        <input type="file" id="input-foto" name="foto" accept="image/*" style="display: none;" onchange="previewImagem(event)">
-                        <p style="font-size: 12px; color: #888; margin-top: 6px; margin-bottom: 0;">Formatos: JPG, PNG ou WEBP.</p>
+                        <?php if (!empty($ong['foto']) && file_exists(__DIR__ . '/uploads/' . $ong['foto'])): ?>
+                            <img src="uploads/<?php echo htmlspecialchars($ong['foto']); ?>" alt="Foto da ONG" style="width: 110px; height: 110px; object-fit: cover; border-radius: 50%; border: 3px solid #cbd5e1;">
+                        <?php else: ?>
+                            <div style="width: 110px; height: 110px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px; font-weight: bold;">Sem foto</div>
+                        <?php endif; ?>
                     </div>
-                </div>
-            </div>
 
-            <!-- Bloco 2: Dados do Abrigo -->
+                    <!-- Controles para Seleção e Upload -->
+                    <div style="flex: 1; min-width: 250px;">
+                        <label for="foto" style="display: block; font-weight: 600; margin-bottom: 8px;">Escolher imagem da galeria</label>
+                        <input type="file" id="foto" name="foto" accept="image/png, image/jpeg, image/jpg, image/webp" required style="margin-bottom: 12px;">
+                        <br>
+                        <button type="submit" name="salvar_foto" value="1" class="btn-salvar" style="padding: 10px 20px; width: auto;">Salvar Foto</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <!-- BLOCO 2: INFORMAÇÕES CADASTRAIS DA ONG -->
+        <form action="minha_ong.php" method="POST">
+            
             <div class="secao-bloco">
-                <h2>Informações da ONG</h2>
+                <h2>Informações Institucionais</h2>
                 <div class="form-grid">
+                    <div class="campo-grupo full-width">
+                        <label for="nome_instituicao">Nome da Instituição / ONG *</label>
+                        <input type="text" id="nome_instituicao" name="nome_instituicao" value="<?php echo htmlspecialchars($ong['nome_instituicao'] ?? ''); ?>" required placeholder="Ex: ONG Proteção Animal SP">
+                    </div>
+
                     <div class="campo-grupo">
-                        <label for="nome">Nome da ONG / Abrigo</label>
-                        <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($valNome); ?>" required placeholder="Ex: Instituto Patinhas Felizes">
+                        <label for="email">E-mail de Login (Não alterável)</label>
+                        <input type="text" id="email" value="<?php echo htmlspecialchars($ong['email'] ?? ''); ?>" disabled style="background-color: #f1f5f9; cursor: not-allowed;">
                     </div>
 
                     <div class="campo-grupo">
                         <label for="cnpj">CNPJ</label>
-                        <input type="text" id="cnpj" name="cnpj" value="<?php echo htmlspecialchars($valCnpj); ?>" placeholder="00.000.000/0001-00">
+                        <input type="text" id="cnpj" name="cnpj" value="<?php echo htmlspecialchars($ong['cnpj'] ?? ''); ?>" placeholder="00.000.000/0001-00">
                     </div>
 
                     <div class="campo-grupo">
-                        <label for="telefone">Telefone / WhatsApp Comercial</label>
-                        <input type="text" id="telefone" name="telefone" value="<?php echo htmlspecialchars($valTelefone); ?>" required placeholder="(00) 00000-0000">
+                        <label for="telefone">Telefone / WhatsApp *</label>
+                        <input type="text" id="telefone" name="telefone" value="<?php echo htmlspecialchars($ong['telefone'] ?? ''); ?>" required placeholder="(11) 98888-1111">
                     </div>
 
                     <div class="campo-grupo">
-                        <label for="responsavel">Nome do Responsável</label>
-                        <input type="text" id="responsavel" name="responsavel" value="<?php echo htmlspecialchars($valResponsavel); ?>" required placeholder="Quem gerencia a conta">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bloco 3: Informações Adicionais -->
-            <div class="secao-bloco">
-                <h2>Informações Adicionais</h2>
-                <div class="form-grid">
-                    <div class="campo-grupo">
-                        <label for="capacidade">Capacidade Máxima de Abrigados</label>
-                        <input type="number" id="capacidade" name="capacidade" value="<?php echo htmlspecialchars($ong['capacidade'] ?? ''); ?>" placeholder="Ex: 50" min="1">
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="instagram">Link do Instagram</label>
-                        <input type="url" id="instagram" name="instagram" value="<?php echo htmlspecialchars($ong['instagram'] ?? ''); ?>" placeholder="https://instagram.com/suaong">
+                        <label for="instagram">Instagram</label>
+                        <input type="text" id="instagram" name="instagram" value="<?php echo htmlspecialchars($ong['instagram'] ?? ''); ?>" placeholder="@minhaong ou link">
                     </div>
 
                     <div class="campo-grupo full-width">
-                        <label for="descricao">História ou Descrição do Trabalho</label>
-                        <textarea id="descricao" name="descricao" rows="4" placeholder="Conte resumidamente sobre o abrigo e sua missão..."><?php echo htmlspecialchars($ong['descricao'] ?? ''); ?></textarea>
+                        <label for="chave_pix">Chave PIX para Doações</label>
+                        <input type="text" id="chave_pix" name="chave_pix" value="<?php echo htmlspecialchars($ong['chave_pix'] ?? ''); ?>" placeholder="CNPJ, E-mail, Telefone ou Chave Aleatória">
                     </div>
                 </div>
             </div>
 
-            <!-- Botão Salvar -->
-            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+            <div class="secao-bloco">
+                <h2>Endereço e Sede</h2>
+                <div class="form-grid">
+                    <div class="campo-grupo">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" name="cep" value="<?php echo htmlspecialchars($ong['cep'] ?? ''); ?>" placeholder="00000-000">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="logradouro">Logradouro (Rua / Av.)</label>
+                        <input type="text" id="logradouro" name="logradouro" value="<?php echo htmlspecialchars($ong['logradouro'] ?? ''); ?>" placeholder="Av. Paulista">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="numero">Número</label>
+                        <input type="text" id="numero" name="numero" value="<?php echo htmlspecialchars($ong['numero'] ?? ''); ?>" placeholder="1000">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" id="bairro" name="bairro" value="<?php echo htmlspecialchars($ong['bairro'] ?? ''); ?>" placeholder="Bela Vista">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($ong['cidade'] ?? ''); ?>" placeholder="São Paulo">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="estado">Estado (UF)</label>
+                        <input type="text" id="estado" name="estado" maxlength="2" value="<?php echo htmlspecialchars($ong['estado'] ?? ''); ?>" placeholder="SP" style="text-transform: uppercase;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="secao-bloco">
+                <h2>Funcionamento e Capacidade</h2>
+                <div class="form-grid">
+                    <div class="campo-grupo">
+                        <label for="capacidade_abrigados">Capacidade de Abrigados</label>
+                        <input type="number" id="capacidade_abrigados" name="capacidade_abrigados" value="<?php echo htmlspecialchars($ong['capacidade_abrigados'] ?? ''); ?>" placeholder="Ex: 50" min="0">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="raio_atuacao">Raio de Atuação</label>
+                        <input type="text" id="raio_atuacao" name="raio_atuacao" value="<?php echo htmlspecialchars($ong['raio_atuacao'] ?? ''); ?>" placeholder="Ex: Toda a região metropolitana">
+                    </div>
+
+                    <div class="campo-grupo full-width">
+                        <label for="horario_atendimento">Horário de Atendimento</label>
+                        <input type="text" id="horario_atendimento" name="horario_atendimento" value="<?php echo htmlspecialchars($ong['horario_atendimento'] ?? ''); ?>" placeholder="Ex: Seg a Sex das 08h às 17h, Sáb das 09h às 13h">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" name="salvar_dados" value="1" class="btn-salvar">Salvar Alterações do Perfil</button>
 
         </form>
 
-        <!-- Bloco 4: Zona de Perigo / Exclusão de Perfil -->
+        <!-- BLOCO 3: ZONA DE PERIGO -->
         <div class="secao-perigo">
             <h2>Zona de Perigo</h2>
             <p>Ao excluir a conta, todas as informações cadastrais e dados vinculados a esta ONG serão permanentemente removidos. Esta ação não pode ser desfeita.</p>
@@ -241,17 +334,5 @@ $valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['conta
 
     </main>
 
-    <script>
-        function previewImagem(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview-foto').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
 </body>
 </html>
