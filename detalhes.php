@@ -138,9 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
     <header class="navbar">
         <div class="logo" onclick="window.location.href='adotar.php'">🐾 Adota<span>Pet</span></div>
         <nav class="menu">
-            <a href="index.php">🏠 Início</a>
-            <a href="adotar.php">🔍 Adotar</a>
-            <a href="mapa.php">📍 Mapa</a>
+            <a href="index.php"> Início</a>
+            <a href="adotar.php"> Adotar</a>
+            <a href="mapa.php"> Mapa</a>
             <a href="candidaturas.php">❤️ Candidaturas</a>
         </nav>
     </header>
@@ -239,14 +239,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
         </div>
     </main>
 
-    <section class="tabs-container">
+<section class="tabs-container">
         <div class="tabs-header">
             <button class="tab-btn active">Prontuário de Saúde</button>
             <button class="tab-btn">Carteirinha de Vacinação</button>
             <button class="tab-btn">Sobre a ONG</button>
+            
+            <!-- Link atualizado utilizando a variável $pet['id'] -->
+            <a href="compatibilidade.php?id=<?= $pet['id']; ?>" style="text-decoration: none;">
+                <button type="button" class="tab-btn btn-compatibilidade" style="background-color: #ff7a00; color: white;">
+                    🔍 Detalhes de Compatibilidade
+                </button>
+            </a>
         </div>
-        <div class="tab-content">🩺</div>
+        <div class="tab-content">🩺 Prontuário e histórico de saúde do pet...</div>
     </section>
+    
 
 </body>
 </html>

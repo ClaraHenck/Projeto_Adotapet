@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -14,27 +13,22 @@ body {
     min-height: 100vh;
 }
 
-
 body::before,
 body::after {
     content: "🐾";
     position: fixed;
     font-size: 38px;
-    
     opacity: 0.15; 
     pointer-events: none;
-  
     z-index: 9999; 
     bottom: -60px;
     display: block !important;
 }
 
-
 body::before {
     left: 4%;
     animation: flutuarPatinhaEsquerda 18s linear infinite;
 }
-
 
 body::after {
     right: 6%;
@@ -42,17 +36,16 @@ body::after {
     animation-delay: 4s;
 }
 
-
 @keyframes flutuarPatinhaEsquerda {
     0% {
         transform: translateY(0) rotate(0deg);
-        opacity: 10;
+        opacity: 0.3;
     }
     10% {
-        opacity: 0.30;
+        opacity: 0.3;
     }
     90% {
-        opacity: 0.30;
+        opacity: 0.3;
     }
     100% {
         transform: translateY(-115vh) translateX(40px) rotate(45deg);
@@ -60,17 +53,16 @@ body::after {
     }
 }
 
-
 @keyframes flutuarPatinhaDireita {
     0% {
         transform: translateY(0) rotate(0deg);
-        opacity: 10;
+        opacity: 0.3;
     }
     15% {
-        opacity: 0.30;
+        opacity: 0.3;
     }
     85% {
-        opacity: 0.30;
+        opacity: 0.3;
     }
     100% {
         transform: translateY(-115vh) translateX(-50px) rotate(-45deg);
@@ -78,9 +70,12 @@ body::after {
     }
 }
 
+/* =================================
+   NAVEGAÇÃO / CABEÇALHO
+================================= */
 
 .logo {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 800;
     color: #1a202c;
     letter-spacing: -0.5px;
@@ -89,12 +84,12 @@ body::after {
 .menu {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 28px;
 }
 
 .menu a {
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     color: #718096;
     transition: color 0.2s ease;
@@ -107,45 +102,52 @@ body::after {
 .menu a.active {
     color: #ffffff;
     background-color: #00bcd4;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 20px;
     font-weight: 600;
 }
 
+/* =================================
+   HERO / ÁREA PRINCIPAL (TEXTO MAIOR E À ESQUERDA)
+================================= */
 
 .hero-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 60px 8%;
-    max-width: 1400px;
+    padding: 40px 4% 60px 0; /* Padding esquerdo zerado para encostar à esquerda */
+    max-width: 1440px;
     margin: 0 auto;
-    gap: 40px;
+    gap: 32px;
 }
 
 .hero-text {
-    flex: 1;
-    max-width: 540px;
+    flex: 1.4;
+    max-width: 740px; /* Largura expandida para suportar o texto maior */
+    text-align: left;
+    padding-left: 0;
 }
 
 .badge {
     display: inline-block;
     background-color: #ffeef0;
     color: #ff6584;
-    padding: 6px 16px;
+    padding: 10px 22px;
     border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 16px; /* Aumentado */
+    font-weight: 700;
     margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .hero-text h1 {
-    font-size: 48px;
+    font-size: 68px; /* Título bem maior */
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.08;
     color: #1a202c;
-    margin-bottom: 20px;
-    letter-spacing: -1px;
+    margin-bottom: 24px;
+    letter-spacing: -2px;
 }
 
 .highlight {
@@ -153,26 +155,30 @@ body::after {
 }
 
 .hero-text p {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #718096;
-    margin-bottom: 36px;
+    font-size: 22px; /* Parágrafo maior e mais legível */
+    line-height: 1.5;
+    color: #4a5568;
+    margin-bottom: 40px;
 }
 
+/* =================================
+   BOTÕES DE AÇÃO
+================================= */
 
 .buttons {
     display: flex;
     gap: 16px;
     align-items: center;
+    justify-content: flex-start;
 }
 
 .btn-primary {
     background-color: #00bcd4;
     color: #ffffff !important;
-    padding: 14px 28px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
+    padding: 18px 36px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
@@ -189,44 +195,78 @@ body::after {
 .btn-secondary {
     background-color: transparent;
     color: #4a5568 !important;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-size: 15px;
+    padding: 18px 32px;
+    border-radius: 12px;
+    font-size: 18px;
     font-weight: 600;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #cbd5e0;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-secondary:hover {
-    background-color: #f7fafc;
-    border-color: #cbd5e0;
+    background-color: #ffffff;
+    border-color: #a0aec0;
 }
 
+/* =================================
+   ÁREA DO CARROSSEL
+================================= */
 
 .hero-image-box {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 600px;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 24px;
+    position: relative;
+    background-color: #f5f5f5;
+    box-shadow: 0 16px 40px rgba(0, 188, 212, 0.30);
+}
+
+.carousel {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.7s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
     position: relative;
 }
 
-.main-img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    display: block;
     object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s ease;
 }
 
+/* =================================
+   RESPONSIVIDADE (ADAPTAÇÃO)
+================================= */
 
 @media (max-width: 968px) {
-
     .hero-container {
         flex-direction: column-reverse;
         padding: 40px 5%;
-        text-align: center;
+        text-align: left;
     }
 
     .hero-text {
@@ -234,11 +274,14 @@ body::after {
     }
 
     .hero-text h1 {
-        font-size: 36px;
+        font-size: 44px;
+    }
+
+    .hero-text p {
+        font-size: 18px;
     }
 
     .buttons {
-        justify-content: center;
         flex-direction: column;
         width: 100%;
     }
@@ -246,9 +289,24 @@ body::after {
     .btn-primary, .btn-secondary {
         width: 100%;
     }
+
+    .hero-image-box {
+        max-width: 100%;
+        height: 360px;
+    }
     
-   
     body::before, body::after {
         display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 34px;
+    }
+
+    .hero-image-box {
+        height: 260px;
+        border-radius: 16px;
     }
 }

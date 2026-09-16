@@ -1,196 +1,164 @@
-/* ==========================================================================
-   Estilos para a Página de Cadastro - AdotaPet
-   ========================================================================== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
-    background-color: #2b3245; /* Cor de fundo azul escura das laterais */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 30px 15px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
 }
 
-.cadastro-box {
-    background-color: #fafbfd;
+.compatibilidade-card {
+    background-color: #ffffff;
+    max-width: 700px;
     width: 100%;
-    max-width: 450px;
-    border-radius: 16px;
-    padding: 40px 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.pet-header {
     text-align: center;
+    border-bottom: 1px solid #e1e8ed;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
-/* Isso controla a caixinha redonda que fica em volta da imagem */
-/* Isso controla a caixinha redonda que fica em volta da imagem (Aumentada para 120px) */
-.avatar-placeholder {
-    width: 120px;           /* Aumentamos o tamanho de 100px para 120px */
-    height: 120px;          /* Aumentamos o tamanho de 100px para 120px */
-    border-radius: 50%;     /* Deixa a caixinha redonda */
-    overflow: hidden;       /* Corta tudo o que tentar passar do limite do círculo */
-    margin: 0 auto 20px;    /* Centraliza na tela e empurra o texto para baixo */
-    background-color: #eee; /* Cor de fundo caso esteja sem foto */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;        /* Faz o mouse virar a "mãozinha" de clique */
-    transition: all 0.3s ease; /* Faz os efeitos de passar o mouse ficarem suaves */
-    border: 3px solid #cbd5e1; /* Adiciona uma bordinha cinza charmosa */
+.pet-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ff7a00;
+    margin-bottom: 10px;
 }
 
-/* Isso controla a imagem que está dentro da caixinha */
-.avatar-placeholder img {
-    width: 100%;            /* Obriga a imagem a usar toda a largura da caixinha */
-    height: 100%;           /* Obriga a imagem a usar toda a altura da caixinha */
-    object-fit: cover;      /* Ajusta o seu print sem distorcer ou esticar */
-    transition: transform 0.3s ease; /* Deixa o efeito de zoom suave */
-}
-
-/* ==========================================
-   Efeito HOVER (Quando passa o mouse ou clica)
-   ========================================== */
-.avatar-placeholder:hover {
-    border-color: #3ab0c3; /* Muda a bordinha para a cor do seu botão principal */
-    box-shadow: 0 0 15px rgba(58, 176, 195, 0.5); /* Cria um brilho azul em volta */
-}
-
-.avatar-placeholder:hover img {
-    transform: scale(1.1); /* Dá um leve zoom na imagem interna ao passar o mouse */
-}
-
-
-
-h2 {
-    color: #1e293b;
-    font-size: 24px;
-    font-weight: 800;
-    margin-bottom: 6px;
+.pet-header h2 {
+    margin: 5px 0;
+    color: #333333;
 }
 
 .subtitulo {
-    color: #64748b;
+    color: #666666;
     font-size: 14px;
+    margin: 0;
+}
+
+.score-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
     margin-bottom: 25px;
 }
 
-.erro-mensagem {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    padding: 10px;
-    border-radius: 8px;
+.score-number {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.score-number.alto { color: #2ecc71; }
+.score-number.medio { color: #f39c12; }
+.score-number.baixo { color: #e74c3c; }
+
+.score-label {
     font-size: 14px;
-    font-weight: 600;
+    color: #555555;
+    margin-top: 5px;
+}
+
+.secao-titulo {
+    font-size: 16px;
+    color: #333333;
     margin-bottom: 15px;
-    text-align: center;
 }
 
-form {
-    text-align: left;
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 6px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    background-color: #ffffff;
-    font-size: 14px;
-    color: #334155;
-    outline: none;
-    transition: border-color 0.2s;
-}
-
-.form-group input::placeholder {
-    color: #94a3b8;
-}
-
-.form-group input:focus {
-    border-color: #38bdf8;
-}
-
-/* Botões de Seleção Adotante / ONG */
-.seletor-container {
+.criterios-lista {
     display: flex;
-    gap: 12px;
-    margin: 20px 0;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.btn-opcao {
-    flex: 1;
-    padding: 12px;
-    text-align: center;
+.criterio-card {
+    padding: 15px 18px;
     border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    border-left: 5px solid;
 }
 
-/* Estilo da opção SELECIONADA (Laranja) */
-.btn-opcao.selecionado {
-    background-color: #ffe8d6;
-    border: 1px solid #ff9800;
-    color: #000000;
-    font-weight: 700;
+.criterio-card.sucesso {
+    background-color: #e8f8f0;
+    border-color: #2ecc71;
 }
 
-/* Estilo da opção NÃO SELECIONADA */
-.btn-opcao:not(.selecionado) {
-    background-color: #ffffff;
-    border: 1px solid #3b82f6;
-    color: #1e293b;
-    font-weight: 500;
+.criterio-card.erro {
+    background-color: #fdeaea;
+    border-color: #e74c3c;
 }
 
-/* Botão Final (Ciano/Teal) */
-.btn-submit {
-    width: 100%;
-    background-color: #3ab0c3;
+.criterio-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.criterio-titulo {
+    color: #2c3e50;
+}
+
+.tag-status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
     color: #ffffff;
-    font-weight: 700;
-    font-size: 15px;
-    padding: 14px;
-    border: none;
+}
+
+.sucesso .tag-status { background-color: #2ecc71; }
+.erro .tag-status { background-color: #e74c3c; }
+
+.comparacao-dados {
+    display: flex;
+    gap: 15px;
+    font-size: 13px;
+    color: #555555;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.motivo-texto {
+    margin: 0;
+    font-size: 13.5px;
+    color: #333333;
+}
+
+.alerta-questionario {
+    text-align: center;
+    padding: 20px;
+    background: #fff3cd;
     border-radius: 8px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.2s;
+    color: #856404;
 }
 
-.btn-submit:hover {
-    background-color: #2c90a1;
-}
-
-.footer-text {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #64748b;
-}
-
-.footer-text a {
-    color: #ff9800;
-    font-weight: 700;
+.btn-acao, .btn-voltar {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #ff7a00;
+    color: white;
     text-decoration: none;
-    margin-left: 4px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background 0.2s;
 }
 
-.footer-text a:hover {
-    text-decoration: underline;
+.btn-acao:hover, .btn-voltar:hover {
+    background-color: #e06c00;
+}
+
+.footer-btn {
+    text-align: center;
+    margin-top: 25px;
 }
