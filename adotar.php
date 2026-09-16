@@ -7,15 +7,15 @@ $logado = isset($_SESSION["usuario_id"]);
 $usuario_nome = $_SESSION["usuario_nome"] ?? "";
 $tipoUsuario = "";
 
-// Define o tipo de usuário baseado nas permissões salvas no login
 if ($logado) {
     $tipoUsuario = (isset($_SESSION["pode_cadastrar"]) && $_SESSION["pode_cadastrar"] == 1) ? "ong" : "adotante";
 }
 
-// Captura filtros enviados pelo formulário de busca
+// Captura filtros enviados pelo formulário
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $porte  = isset($_GET['porte']) ? $_GET['porte'] : '';
 $idade  = isset($_GET['idade']) ? $_GET['idade'] : '';
+$ordem  = isset($_GET['ordem']) ? $_GET['ordem'] : '';
 
 // Monta a Query SQL baseada no modelo de tabela 'animais'
 $sql = "SELECT * FROM animais WHERE 1=1";
@@ -40,6 +40,27 @@ if (!empty($idade)) {
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $animais = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Função para obter/calcular a compatibilidade
+function calcularCompatibilidade($pet, $logado) {
+    if (!$logado) return null;
+    
+    // Substitua pelo cálculo/coluna real do seu banco de dados
+    $id = $pet['id'] ?? 1;
+    return ( ($id * 37) % 41 ) + 60; // Retorna um % de exemplo
+}
+
+// 1. Calcula a compatibilidade para todos os animais da lista
+foreach ($animais as &$pet) {
+    $pet['compatibilidade'] = calcularCompatibilidade($pet, $logado);
+}
+unset($pet);
+
+// 2. ORDENAÇÃO DECRESCENTE: Do maior % para o menor % de compatibilidade
+usort($animais, function($a, $b) {
+    return ($b['compatibilidade'] ?? 0) <=> ($a['compatibilidade'] ?? 0);
+});
+
 $total = count($animais);
 ?>
 <!DOCTYPE html>
@@ -110,31 +131,41 @@ $total = count($animais);
                 <option value="Idoso" <?php echo ($idade == 'Idoso') ? 'selected' : ''; ?>>Idoso</option>
             </select>
 
+            <select name="ordem" class="filter-select">
+                <option value="">Ordenar por</option>
+                <option value="compat_desc" <?php echo ($ordem == 'compat_desc') ? 'selected' : ''; ?>>Maior Compatibilidade</option>
+                <option value="compat_asc" <?php echo ($ordem == 'compat_asc') ? 'selected' : ''; ?>>Menor Compatibilidade</option>
+            </select>
+
             <button type="submit" class="btn-filtrar">Filtrar</button>
         </form>
 
         <div class="cards-grid">
     <?php if ($total > 0) { ?>
         <?php foreach($animais as $pet) { ?>
-            <div class="card" data-id="<?= $pet['id']; ?>">
-                <div class="card-img-box">
-                    <span class="badge-disponivel">Disponível</span>
-                    <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
-                </div>
-                
-                <div class="card-info">
-                    <div class="card-header-info">
-                        <h2 class="pet-nome"><?= htmlspecialchars($pet['nome']); ?></h2>
-                        <p class="pet-raca"><?= htmlspecialchars($pet['especie_raca']); ?></p>
-                    </div>
+        <div class="card" data-id="<?= $pet['id']; ?>" data-compatibilidade="<?= $pet['compatibilidade'] ?? 0; ?>">
+    <div class="card-img-box">
+        <span class="badge-disponivel">Disponível</span>
+        
+        <?php if ($pet['compatibilidade'] !== null): ?>
+            <span class="badge-compatibilidade"><?= $pet['compatibilidade']; ?>%</span>
+        <?php endif; ?>
 
-                    <!-- Tags Organizadoras de Informação -->
-                    <div class="pet-tags">
-                        <span class="tag-item highlight">🐾 <?= htmlspecialchars($pet['porte'] ?? 'Porte N/I'); ?></span>
-                        <span class="tag-item">🎂 <?= htmlspecialchars($pet['idade_estimada'] ?? 'Idade N/I'); ?></span>
-                    </div>
-                </div>
-            </div>
+        <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
+    </div>
+    
+    <div class="card-info">
+        <div class="card-header-info">
+            <h2 class="pet-nome"><?= htmlspecialchars($pet['nome']); ?></h2>
+            <p class="pet-raca"><?= htmlspecialchars($pet['especie_raca']); ?></p>
+        </div>
+
+        <div class="pet-tags">
+            <span class="tag-item highlight">🐾 <?= htmlspecialchars($pet['porte'] ?? 'Porte N/I'); ?></span>
+            <span class="tag-item">🎂 <?= htmlspecialchars($pet['idade_estimada'] ?? 'Idade N/I'); ?></span>
+        </div>
+    </div>
+</div>
         <?php } ?>
     <?php } else { ?>
         <p class="no-data">Nenhum animal cadastrado com os filtros selecionados.</p>

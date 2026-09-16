@@ -174,24 +174,22 @@ $biografia_valor = $usuario['biografia'] ?? '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Meu Perfil</title>
-    <!-- Versão com parâmetro dinâmico para evitar cache no navegador -->
+    <!-- Importação do CSS da Navbar e do Perfil -->
+    <link rel="stylesheet" href="navbar.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="meu_perfil.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
-    <!-- HEADER DA PÁGINA -->
-    <header class="main-header">
-        <div class="logo">
-            <span class="paw-icon">🐾</span>
-            <h1>AdotaPet</h1>
-        </div>
-        <nav class="nav-links">
+    <!-- NAVBAR PADRONIZADA -->
+    <header class="navbar">
+        <a href="index.php" class="logo">🐾 AdotaPet</a>
+        <nav class="menu">
             <a href="index.php">Início</a>
             <a href="adotar.php">Adotar</a>
             <a href="mapa.php">Mapa</a>
             <a href="candidaturas.php">Candidaturas</a>
-            <a href="meu_perfil.php" class="active">MEU PERFIL</a>
-            <a href="logout.php" class="btn-sair">Sair</a>
+            <a href="meu_perfil.php" class="active"><?= $e_ong ? 'MINHA ONG' : 'MEU PERFIL' ?></a>
+            <a href="logout.php" class="btn-logout">Sair</a>
         </nav>
     </header>
 

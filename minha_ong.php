@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['excluir_perfil'])) {
     }
 }
 
-// 6. Fallbacks para garantir o resgate dos campos cadastrados no login/sessão ou com nomes alternativos
+// 6. Fallbacks para garantir o resgate dos campos cadastrados no login/sessão
 $valNome        = $ong['nome'] ?? $ong['nome_ong'] ?? $ong['razao_social'] ?? $_SESSION['nome'] ?? $_SESSION['usuario_nome'] ?? '';
 $valCnpj        = $ong['cnpj'] ?? $_SESSION['cnpj'] ?? '';
 $valTelefone    = $ong['telefone'] ?? $ong['whatsapp'] ?? $_SESSION['telefone'] ?? '';
@@ -131,254 +131,21 @@ $valResponsavel = $ong['responsavel'] ?? $ong['nome_responsavel'] ?? $ong['conta
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdotaPet - Minha ONG</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fafbfc;
-            color: #333333;
-        }
-
-        /* Barra de Navegação */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 40px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .logo {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .menu a {
-            text-decoration: none;
-            color: #666;
-            margin-left: 20px;
-            font-size: 14px;
-        }
-
-        .menu a.active {
-            color: #00b4d8;
-            font-weight: bold;
-        }
-
-        /* Container de Conteúdo */
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .header-titulo h1 {
-            font-size: 32px;
-            margin: 0 0 5px 0;
-        }
-
-        .header-titulo p {
-            color: #777;
-            margin: 0 0 30px 0;
-            font-size: 15px;
-        }
-
-        /* BLOCOS EM QUADROS BRANCOS */
-        .secao-bloco {
-            background-color: #ffffff;
-            border-radius: 14px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-            border: 1px solid #f0f0f0;
-        }
-
-        .secao-bloco h2 {
-            font-size: 15px;
-            color: #444;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        /* Grid do Formulário */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .full-width {
-            grid-column: span 2;
-        }
-
-        .campo-grupo {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .campo-grupo label {
-            font-size: 13px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        /* Inputs e Textarea */
-        .campo-grupo input[type="text"],
-        .campo-grupo input[type="number"],
-        .campo-grupo input[type="url"],
-        .campo-grupo select,
-        .campo-grupo textarea {
-            padding: 12px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
-            background-color: #ffffff;
-            color: #333;
-            outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-            font-family: inherit;
-        }
-
-        .campo-grupo input:focus,
-        .campo-grupo select:focus,
-        .campo-grupo textarea:focus {
-            border-color: #00b4d8;
-        }
-
-        /* Área de Preview e Foto */
-        .foto-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .preview-foto {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #e2e8f0;
-            background-color: #f1f5f9;
-        }
-
-        .btn-file {
-            display: inline-block;
-            background-color: #f1f5f9;
-            color: #475569;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid #cbd5e1;
-            transition: background 0.2s;
-        }
-
-        .btn-file:hover {
-            background-color: #e2e8f0;
-        }
-
-        /* Alertas de Retorno */
-        .alerta-sucesso {
-            background-color: #d1fae5;
-            color: #065f46;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .alerta-erro {
-            background-color: #fee2e2;
-            color: #991b1b;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        /* Botão de Envio */
-        .btn-salvar {
-            background-color: #00b4d8;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
-
-        .btn-salvar:hover {
-            background-color: #0096b4;
-        }
-
-        /* Zona de Perigo */
-        .secao-perigo {
-            background-color: #fff5f5;
-            border: 1px solid #fed7d7;
-            border-radius: 14px;
-            padding: 25px;
-            margin-top: 35px;
-        }
-
-        .secao-perigo h2 {
-            color: #e53e3e;
-            font-size: 15px;
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .secao-perigo p {
-            font-size: 13px;
-            color: #742a2a;
-            margin: 0 0 15px 0;
-        }
-
-        .btn-excluir {
-            background-color: #e53e3e;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-excluir:hover {
-            background-color: #c53030;
-        }
-
-        @media (max-width: 600px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .full-width {
-                grid-column: span 1;
-            }
-        }
-    </style>
+    <!-- Importação do CSS da Navbar e da Tela Minha ONG -->
+    <link rel="stylesheet" href="navbar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="minha_ong.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
-    <!-- Barra de Navegação -->
+    <!-- NAVBAR PADRONIZADA -->
     <header class="navbar">
-        <div class="logo">🐾 AdotaPet</div>
+        <a href="index.php" class="logo">🐾 AdotaPet</a>
         <nav class="menu">
-            <a href="adotar.php">Início</a>
-            <a href="candidaturas.php">Candidaturas Recebidas</a>
+            <a href="index.php">Início</a>
+            <a href="meus_animais.php">Meus Animais</a>
+            <a href="candidaturas_recebidas.php">Candidaturas Recebidas</a>
             <a href="minha_ong.php" class="active">MINHA ONG</a>
-            <a href="login/login.php" style="color: #e63946;">Sair</a>
+            <a href="logout.php" class="btn-logout">Sair</a>
         </nav>
     </header>
 

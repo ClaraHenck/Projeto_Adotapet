@@ -124,146 +124,51 @@ if ($logado) {
 
     <header class="navbar">
 
-        <div class="left-brand-box">
+      <div class="left-brand-box">
+        <a href="index.php" class="logo" style="text-decoration: none;">🐾 AdotaPet</a>
+      </div>
 
-            <div class="logo">
-                🐾 AdotaPet
-            </div>
+      <nav class="menu" id="menu-navegacao">
+        <a href="index.php" class="active">Início</a>
+        
+        <?php if ($logado && $tipoUsuario === "ong"): ?>
+          <a href="meus_animais.php" id="link-meus-animais">Meus Animais</a>
+        <?php endif; ?>
+
+        <?php if (!$logado || $tipoUsuario === "adotante"): ?>
+          <a href="adotar.php" id="link-adotar">Adotar</a>
+        <?php endif; ?>
+
+        <?php if ($logado): ?>
+          <?php if ($tipoUsuario !== 'ong'): ?>
+            <a href="mapa.php" id="link-mapa">Mapa</a>
+          <?php endif; ?>
+
+          <a href="<?= ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
+            <?= ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
+          </a>
+        <?php endif; ?>
+
+        <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
+            <?php if (!$logado): ?>
+                <a href="../projeto_adotapet/login/login.php" class="btn-nav-login">Entrar</a>
+                <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
+            <?php else: ?>
+                <?php 
+                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
+                    $textoPerfil = "Meu Perfil";
+                ?>
+                <a href="<?php echo $linkHref; ?>" class="perfil-link-container" style="text-decoration: none;">
+                    <span style="font-weight: 500; color: #718096;"><?php echo $textoPerfil; ?></span>
+                </a>
+                <a href="logout.php" style="color: #ff4d4d; font-weight: 500; text-decoration: none;">Sair</a>
+            <?php endif; ?>
+
 
         </div>
 
 
-        <nav class="menu" id="menu-navegacao">
-
-
-            <a href="index.php" class="active">
-                Início
-            </a>
-
-
-            <?php if (!$logado || $tipoUsuario === "adotante"): ?>
-
-                <a href="adotar.php" id="link-adotar">
-                    Adotar
-                </a>
-
-            <?php endif; ?>
-
-
-            <?php if ($logado): ?>
-
-
-                <?php if ($tipoUsuario !== 'ong'): ?>
-
-                    <a href="mapa.php" id="link-mapa">
-                        Mapa
-                    </a>
-
-                <?php endif; ?>
-
-
-                <a
-                    href="<?= ($tipoUsuario === 'ong')
-                        ? 'candidaturas_recebidas.php'
-                        : 'candidaturas.php'; ?>"
-                    id="link-candidaturas"
-                >
-
-                    <?= ($tipoUsuario === 'ong')
-                        ? 'Candidaturas Recebidas'
-                        : 'Candidaturas'; ?>
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <div
-                id="area-usuario-nav"
-                style="
-                    display: flex;
-                    align-items: center;
-                    gap: 24px;
-                "
-            >
-
-
-                <?php if (!$logado): ?>
-
-
-                    <a
-                        href="../projeto_adotapet/login/login.php"
-                        class="btn-nav-login"
-                    >
-                        Entrar
-                    </a>
-
-
-                    <a
-                        href="../projeto_adotapet/login/cadastrar.php"
-                        class="btn-nav-cadastro"
-                    >
-                        Cadastrar-se
-                    </a>
-
-
-                <?php else: ?>
-
-
-                    <?php
-
-                    $linkHref = ($tipoUsuario === "ong")
-                        ? "minha_ong.php"
-                        : "meu_perfil.php";
-
-                    $textoPerfil = ($tipoUsuario === "ong")
-                        ? "MINHA ONG"
-                        : "MEU PERFIL";
-
-                    ?>
-
-
-                    <a
-                        href="<?php echo $linkHref; ?>"
-                        class="perfil-link-container"
-                    >
-
-                        <span
-                            style="
-                                font-weight: bold;
-                                color: #1e293b;
-                            "
-                        >
-
-                            <?php echo $textoPerfil; ?>
-
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="logout.php"
-                        style="
-                            color: #ff4d4d;
-                            font-weight: 500;
-                            text-decoration: none;
-                        "
-                    >
-
-                        Sair
-
-                    </a>
-
-
-                <?php endif; ?>
-
-
-            </div>
-
-
-        </nav>
+        
 
     </header>
 
@@ -535,8 +440,20 @@ if ($logado) {
 
 
     <script>
+<<<<<<< HEAD
+      const tipoUsuarioSessao = "<?php echo $tipoUsuario; ?>";
+      const usuarioNomeSessao = "<?php echo $usuario_nome; ?>";
+=======
+>>>>>>> 7e9d4b5c8a493b810594995d5509ac45ef3da631
 
 
+<<<<<<< HEAD
+      const btnQuest = document.getElementById("btn-questionario");
+      if (btnQuest) {
+        const jaRespondeu = localStorage.getItem("questionario_respondido_sinc");
+        if (jaRespondeu === "sim") {
+          btnQuest.style.display = "none";
+=======
         /* =================================
            SINCRONIZAÇÃO COM LOCALSTORAGE
         ================================= */
@@ -581,6 +498,7 @@ if ($logado) {
             );
 
 
+>>>>>>> 7e9d4b5c8a493b810594995d5509ac45ef3da631
         }
 
 

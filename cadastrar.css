@@ -8,6 +8,40 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.logo-container {
+    width: 140px;  /* Tamanho aumentado (era 110px) */
+    height: 140px; /* Tamanho aumentado (era 110px) */
+    border-radius: 50%;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Garante que a imagem preencha perfeitamente o círculo */
+.logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Efeito de pulsação ao passar o mouse */
+.logo-container:hover {
+    animation: pulsar 0.8s infinite alternate ease-in-out;
+    cursor: pointer;
+}
+
+@keyframes pulsar {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.08);
+    }
+}
+
 body {
     background-color: #2b3245; /* Cor de fundo azul escura das laterais */
     display: flex;

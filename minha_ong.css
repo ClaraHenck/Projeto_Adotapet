@@ -1,0 +1,223 @@
+/* ==========================================
+   ESTILOS GERAIS DA PÁGINA MINHA ONG
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #FAF6F2;
+    color: #333333;
+    min-height: 100vh;
+}
+
+/* CONTAINER DE CONTEÚDO */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header-titulo h1 {
+    font-size: 32px;
+    margin: 0 0 5px 0;
+    color: #1A202C;
+}
+
+.header-titulo p {
+    color: #718096;
+    margin: 0 0 30px 0;
+    font-size: 15px;
+}
+
+/* BLOCOS EM QUADROS BRANCOS */
+.secao-bloco {
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    border: 1px solid #E2E8F0;
+}
+
+.secao-bloco h2 {
+    font-size: 16px;
+    color: #1A202C;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* GRID DO FORMULÁRIO */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo-grupo label {
+    font-size: 13px;
+    color: #4A5568;
+    font-weight: 600;
+}
+
+/* INPUTS E TEXTAREA */
+.campo-grupo input[type="text"],
+.campo-grupo input[type="number"],
+.campo-grupo input[type="url"],
+.campo-grupo select,
+.campo-grupo textarea {
+    padding: 12px 15px;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #1A202C;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.campo-grupo input:focus,
+.campo-grupo select:focus,
+.campo-grupo textarea:focus {
+    border-color: #00C1DE;
+}
+
+/* ÁREA DE PREVIEW E FOTO */
+.foto-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.preview-foto {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #00C1DE;
+    background-color: #F1F5F9;
+}
+
+.btn-file {
+    display: inline-block;
+    background-color: #F1F5F9;
+    color: #475569;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #CBD5E1;
+    transition: background 0.2s;
+}
+
+.btn-file:hover {
+    background-color: #E2E8F0;
+}
+
+/* ALERTAS DE RETORNO */
+.alerta-sucesso {
+    background-color: #E6F9F3;
+    color: #00B67A;
+    border: 1px solid #A3E2CE;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.alerta-erro {
+    background-color: #FFF0F3;
+    color: #FF6B8B;
+    border: 1px solid #FFC2CE;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* BOTÃO DE ENVIO */
+.btn-salvar {
+    background-color: #00C1DE;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px 30px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(0, 193, 222, 0.3);
+}
+
+.btn-salvar:hover {
+    background-color: #00A8C2;
+    transform: translateY(-1px);
+}
+
+/* ZONA DE PERIGO */
+.secao-perigo {
+    background-color: #FFF5F5;
+    border: 1px solid #FED7D7;
+    border-radius: 14px;
+    padding: 25px;
+    margin-top: 35px;
+}
+
+.secao-perigo h2 {
+    color: #E53E3E;
+    font-size: 15px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.secao-perigo p {
+    font-size: 13px;
+    color: #742A2A;
+    margin: 0 0 15px 0;
+}
+
+.btn-excluir {
+    background-color: #E53E3E;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-excluir:hover {
+    background-color: #C53030;
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .full-width {
+        grid-column: span 1;
+    }
+}
