@@ -9,7 +9,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Captura o ID do adotante logado
 $adotante_id = $_SESSION['adotante_id'] ?? $_SESSION['usuario_id'] ?? $_SESSION['id'] ?? null;
-//$adotante_id = $_SESSION['adotante_id'] ?? $_SESSION['id'] ?? null;
 
 if (!$adotante_id) {
     header("Location: login.php");
@@ -95,16 +94,22 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
             <?php else: ?>
                 <?php foreach ($candidaturas as $item): ?>
                     <?php 
+                        $statusLower = strtolower($item['status_candidatura']);
+
                         $statusClass = 'status-pendente';
-                        if (strtolower($item['status_candidatura']) === 'aprovado') {
+                        $cardStatusClass = 'card-pendente';
+
+                        if ($statusLower === 'aprovado') {
                             $statusClass = 'status-aprovado';
-                        } elseif (strtolower($item['status_candidatura']) === 'recusado') {
+                            $cardStatusClass = 'card-aprovado';
+                        } elseif ($statusLower === 'recusado') {
                             $statusClass = 'status-recusado';
+                            $cardStatusClass = 'card-recusado';
                         }
 
                         $dataEnvio = date('d/m/Y \à\s H:i', strtotime($item['data_envio']));
                     ?>
-                    <div class="candidatura-card">
+                    <div class="candidatura-card <?= $cardStatusClass ?>">
                         <div class="card-left">
                             <div class="match-badge"><?= htmlspecialchars($item['compatibilidade'] ?? '70%') ?></div>
 
@@ -122,8 +127,6 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
                         </div>
 
                         <div class="card-actions">
-                            
-
                             <form method="POST" action="candidaturas.php" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta solicitação?');">
                                 <input type="hidden" name="acao" value="cancelar">
                                 <input type="hidden" name="candidatura_id" value="<?= $item['id'] ?>">

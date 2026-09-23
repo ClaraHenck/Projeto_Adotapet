@@ -2,6 +2,8 @@
 // 1. Carrega as configurações (o auth.php inicia a sessão)
 require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/db.php';
+$stmt = null;
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -178,7 +180,7 @@ try {
             <a href="index.php">Início</a>
             <a href="meus_animais.php">Meus Animais</a>
             <a href="candidaturas_recebidas.php">Candidaturas Recebidas</a>
-            <a href="minha_ong.php" class="active">MINHA ONG</a>
+            <a href="minha_ong.php" class="active">Meu Perfil</a>
             <a href="logout.php" class="btn-logout">Sair</a>
         </nav>
     </header>
@@ -335,4 +337,5 @@ try {
     </main>
 
 </body>
+
 </html>

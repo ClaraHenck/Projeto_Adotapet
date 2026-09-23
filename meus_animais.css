@@ -133,6 +133,34 @@ tr:hover {
     transform: translateY(-1px); 
 }
 
+/* Célula de Ações */
+.acoes-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.acoes-cell form {
+    margin: 0;
+    display: inline-flex;
+}
+
+.btn-editar {
+    text-decoration: none;
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-editar:hover {
+    background-color: #EDF2F7;
+}
+
 .btn-deletar { 
     background-color: transparent; 
     color: #E53E3E; 
@@ -142,6 +170,9 @@ tr:hover {
     padding: 6px 10px; 
     border-radius: 8px; 
     transition: background 0.2s; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-deletar:hover { 

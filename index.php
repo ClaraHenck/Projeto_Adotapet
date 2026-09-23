@@ -220,7 +220,7 @@ if ($logado) {
                 <?php else: ?>
 
 
-                    A AdotaPet conecta você ao animal perfeito usando inteligência artificial. Um lar amoroso está a poucos clicks de distância.
+                    A AdotaPet conecta você ao animal perfeito com um algoritmo. Um lar amoroso está a poucos clicks de distância.
 
 
                 <?php endif; ?>
@@ -440,183 +440,57 @@ if ($logado) {
 
 
     <script>
-<<<<<<< HEAD
-      const tipoUsuarioSessao = "<?php echo $tipoUsuario; ?>";
-      const usuarioNomeSessao = "<?php echo $usuario_nome; ?>";
-=======
->>>>>>> 7e9d4b5c8a493b810594995d5509ac45ef3da631
-
-
-<<<<<<< HEAD
-      const btnQuest = document.getElementById("btn-questionario");
-      if (btnQuest) {
-        const jaRespondeu = localStorage.getItem("questionario_respondido_sinc");
-        if (jaRespondeu === "sim") {
-          btnQuest.style.display = "none";
-=======
         /* =================================
            SINCRONIZAÇÃO COM LOCALSTORAGE
         ================================= */
-
-        const tipoUsuarioSessao =
-            <?php echo json_encode($tipoUsuario); ?>;
-
-        const usuarioNomeSessao =
-            <?php echo json_encode($usuario_nome); ?>;
-
+        const tipoUsuarioSessao = <?php echo json_encode($tipoUsuario); ?>;
+        const usuarioNomeSessao = <?php echo json_encode($usuario_nome); ?>;
 
         if (tipoUsuarioSessao) {
-
-
-            localStorage.setItem(
-                "tipoUsuario",
-                tipoUsuarioSessao
-            );
-
-
-            localStorage.setItem(
-                "usuarioLogadoNome",
-                usuarioNomeSessao
-            );
-
-
+            localStorage.setItem("tipoUsuario", tipoUsuarioSessao);
+            localStorage.setItem("usuarioLogadoNome", usuarioNomeSessao);
         } else {
-
-
-            localStorage.removeItem(
-                "tipoUsuario"
-            );
-
-
-            localStorage.removeItem(
-                "usuarioLogadoEmail"
-            );
-
-
-            localStorage.removeItem(
-                "usuarioLogadoNome"
-            );
-
-
->>>>>>> 7e9d4b5c8a493b810594995d5509ac45ef3da631
+            localStorage.removeItem("tipoUsuario");
+            localStorage.removeItem("usuarioLogadoEmail");
+            localStorage.removeItem("usuarioLogadoNome");
         }
-
-
 
         /* =================================
            QUESTIONÁRIO
         ================================= */
-
-        const btnQuest =
-            document.getElementById(
-                "btn-questionario"
-            );
-
+        const btnQuest = document.getElementById("btn-questionario");
 
         if (btnQuest) {
-
-
-            const jaRespondeu =
-                localStorage.getItem(
-                    "questionario_respondido_sinc"
-                );
-
-
+            const jaRespondeu = localStorage.getItem("questionario_respondido_sinc");
             if (jaRespondeu === "sim") {
-
                 btnQuest.style.display = "none";
-
             }
-
         }
-
-
 
         /* =================================
            CARROSSEL AUTOMÁTICO
         ================================= */
-
         let slideAtual = 0;
-
-
-        const track =
-            document.getElementById(
-                "carouselTrack"
-            );
-
-
-        const slides =
-            document.querySelectorAll(
-                ".carousel-slide"
-            );
-
-
-        const totalSlides =
-            slides.length;
-
-
-
-        /* ================================
-           ATUALIZA A IMAGEM
-        ================================= */
+        const track = document.getElementById("carouselTrack");
+        const slides = document.querySelectorAll(".carousel-slide");
+        const totalSlides = slides.length;
 
         function atualizarCarousel() {
-
-
-            if (!track || totalSlides === 0) {
-                return;
-            }
-
-
-            track.style.transform =
-                `translateX(-${slideAtual * 100}%)`;
-
-
+            if (!track || totalSlides === 0) return;
+            track.style.transform = `translateX(-${slideAtual * 100}%)`;
         }
-
-
-
-        /* ================================
-           PRÓXIMO CACHORRO
-        ================================= */
 
         function proximoCachorro() {
-
-
             slideAtual++;
-
-
             if (slideAtual >= totalSlides) {
-
                 slideAtual = 0;
-
             }
-
-
             atualizarCarousel();
-
-
         }
-
-
-
-        /* ================================
-           TROCA AUTOMÁTICA
-           A CADA 3 SEGUNDOS
-        ================================= */
 
         if (totalSlides > 1) {
-
-
-            setInterval(
-                proximoCachorro,
-                3000
-            );
-
-
+            setInterval(proximoCachorro, 3000);
         }
-
-
     </script>
 
 

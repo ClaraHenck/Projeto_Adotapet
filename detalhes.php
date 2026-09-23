@@ -22,7 +22,7 @@ if (!$pet_id) {
 
 // 2. BUSCA OS DADOS DO ANIMAL E DA ONG RESPONSÁVEL
 $stmt = $pdo->prepare("
-    SELECT a.*, o.nome_instituicao, o.telefone as ong_telefone
+    SELECT a.*, a.ong_id, o.nome_instituicao, o.telefone as ong_telefone
     FROM animais a
     LEFT JOIN ongs o ON a.ong_id = o.id
     WHERE a.id = :id
@@ -220,6 +220,7 @@ if ($tem_questionario) {
         $mensagem_match = "Atenção. O perfil deste pet possui exigências específicas para o seu formato de rotina.";
     }
 }
+
 // 5. PROCESSAMENTO DO ENVIO DE CANDIDATURA (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
     
@@ -371,24 +372,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
             <p class="descricao-pet"><?= nl2br(htmlspecialchars($pet['descricao'] ?? '')) ?></p>
             <div class="localizacao">📍 ONG Responsável: <?= htmlspecialchars($pet['nome_instituicao'] ?? 'ONG Parceira') ?> (Contato: <?= htmlspecialchars($pet['ong_telefone'] ?? 'N/A') ?>)</div>
 
-            <!-- BOTÃO DE AÇÃO DA CANDIDATURA -->
-            <form method="POST">
-                <input type="hidden" name="acao_adotar" value="1">
-                <button type="submit" class="btn-adotar">
-                    ♡ Quero Adotar o <?= htmlspecialchars($pet['nome']) ?>
-                </button>
-            </form>
+            <!-- BLOCO DE AÇÕES (BOTÕES FORMATADOS JUNTOS) -->
+            <div class="botoes-acao-container">
+                <form method="POST">
+                    <input type="hidden" name="acao_adotar" value="1">
+                    <button type="submit" class="btn-adotar">
+                        ♡ Quero Adotar o <?= htmlspecialchars($pet['nome']) ?>
+                    </button>
+                </form>
+
+                <a href="perfil_ong.php?id=<?= $pet['ong_id'] ?>" class="btn-sobre-ong">
+                    <span class="btn-icon">🏛️</span>
+                    <span>Conhecer a ONG responsável</span>
+                    <span class="btn-arrow">➔</span>
+                </a>
+            </div>
         </div>
     </main>
-
-    <section class="tabs-container">
-        <div class="tabs-header">
-            <button class="tab-btn active">Prontuário de Saúde</button>
-            <button class="tab-btn">Carteirinha de Vacinação</button>
-            <button class="tab-btn">Sobre a ONG</button>
-        </div>
-        <div class="tab-content">🩺 Prontuário e histórico de saúde do pet...</div>
-    </section>
 
     <!-- MODAL DE LISTAGEM DOS FATORES DE COMPATIBILIDADE -->
     <?php if ($tem_questionario): ?>
@@ -404,15 +404,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
             <ul class="lista-fatores-match">
                 <?php foreach ($relatorio_match as $item): ?>
                     <li class="item-fator <?= $item['tipo'] ?>">
-                    <span class="icone-fator">
-                <?php 
-                    if ($item['tipo'] === 'positivo') echo '✔';
-                    elseif ($item['tipo'] === 'alerta') echo '⚠️';
-                    else echo '✖';
-                ?>
-                    </span>
-                    <span class="texto-fator"><?= htmlspecialchars($item['texto']) ?></span>
-                </li>
+                        <span class="icone-fator">
+                            <?php 
+                                if ($item['tipo'] === 'positivo') echo '✔';
+                                elseif ($item['tipo'] === 'alerta') echo '⚠️';
+                                else echo '✖';
+                            ?>
+                        </span>
+                        <span class="texto-fator"><?= htmlspecialchars($item['texto']) ?></span>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         </div>

@@ -64,10 +64,16 @@ $animais = $stmt->fetchAll();
                                 <td><?= htmlspecialchars($animal['porte']) ?></td>
                                 <td><?= htmlspecialchars($animal['carteira_vacinacao']) ?></td>
                                 <td>
-                                    <form action="deletar_animal.php" method="POST" onsubmit="return confirm('Deseja realmente apagar este animal?');" style="display:inline;">
-                                        <input type="hidden" name="id" value="<?= $animal['id'] ?>">
-                                        <button type="submit" class="btn-deletar" title="Excluir">❌</button>
-                                    </form>
+                                    <div class="acoes-cell">
+                                        <!-- Botão Editar -->
+                                        <a href="cadastrar_animal.php?id=<?= $animal['id'] ?>" class="btn-editar" title="Editar">✏️</a>
+
+                                        <!-- Botão Deletar -->
+                                        <form action="deletar_animal.php" method="POST" onsubmit="return confirm('Deseja realmente apagar este animal?');">
+                                            <input type="hidden" name="id" value="<?= $animal['id'] ?>">
+                                            <button type="submit" class="btn-deletar" title="Excluir">❌</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

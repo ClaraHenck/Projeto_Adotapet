@@ -65,7 +65,8 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.25s ease;
+    overflow: hidden;
 }
 
 .candidatura-card:hover {
@@ -174,4 +175,39 @@ body {
 
 .btn-circle.btn-cancelar:hover {
     color: #FF4D4D;
+}
+
+/* ==========================================================================
+   DESTAQUES DE CARD POR STATUS (APROVADO / RECUSADO / PENDENTE)
+   ========================================================================== */
+
+/* Card Aprovado: Borda Verde, Gradiente Suave e Brilho Verde */
+.candidatura-card.card-aprovado {
+    border: 2px solid #10B981;
+    border-left: 8px solid #059669;
+    background: linear-gradient(to right, #F0FDF4 0%, #FFFFFF 180px);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+}
+
+.candidatura-card.card-aprovado:hover {
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
+    transform: translateY(-2px);
+}
+
+/* Card Recusado: Borda Vermelha, Gradiente Suave e Brilho Vermelho */
+.candidatura-card.card-recusado {
+    border: 2px solid #FCA5A5;
+    border-left: 8px solid #DC2626;
+    background: linear-gradient(to right, #FEF2F2 0%, #FFFFFF 180px);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.12);
+}
+
+.candidatura-card.card-recusado:hover {
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.22);
+    transform: translateY(-2px);
+}
+
+/* Card Pendente: Faixa Laranja na Esquerda */
+.candidatura-card.card-pendente {
+    border-left: 6px solid #F59E0B;
 }

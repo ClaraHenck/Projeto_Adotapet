@@ -67,7 +67,9 @@ function renderizarInterface(ongs) {
         const marker = L.marker([lat, lng]).addTo(map);
         marker.bindPopup(`
             <div style="font-family: sans-serif;">
-                <h3 style="color: #00C1DE; font-size: 15px; margin-bottom: 4px;">${ong.nome}</h3>
+                <h3 style="color: #00C1DE; font-size: 15px; margin-bottom: 4px;">
+                    <a href="perfil_ong.php?id=${ong.id}" style="color: #00C1DE; text-decoration: none;">${ong.nome}</a>
+                </h3>
                 <p style="margin: 0; font-size: 13px; color: #475569;">📍 ${ong.logradouro || ''}, ${ong.numero || ''} - ${ong.cidade}/${ong.estado}</p>
                 <p style="margin-top: 4px; font-size: 13px;">📞 ${ong.telefone}</p>
             </div>
@@ -76,12 +78,19 @@ function renderizarInterface(ongs) {
 
         const card = document.createElement('div');
         card.className = 'ong-card';
+
+        // ALTERAÇÃO PRINCIPAL: O nome agora contém o link com event.stopPropagation()
         card.innerHTML = `
-            <h3>${ong.nome}</h3>
+            <h3>
+                <a href="perfil_ong.php?id=${ong.id}" class="link-nome-ong" onclick="event.stopPropagation();">
+                    ${ong.nome}
+                </a>
+            </h3>
             <p>📍 ${ong.cidade}, ${ong.estado}</p>
             <p>📞 ${ong.telefone}</p>
         `;
 
+        // O clique no restante do card continua focando no mapa normalmente
         card.addEventListener('click', () => {
             map.flyTo([lat, lng], 15, { duration: 1.2 });
             marker.openPopup();
