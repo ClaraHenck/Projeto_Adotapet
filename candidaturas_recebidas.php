@@ -19,18 +19,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $status_validos = ['Aprovado', 'Recusado', 'Pendente'];
     
     if (in_array($novo_status, $status_validos)) {
-        // Atualiza garantindo por segurança que o animal pertence à ONG logada
-        $stmtUpdate = $pdo->prepare("
-            UPDATE candidaturas c
+        // Busca o animal_id associado e garante por segurança que o animal pertence à ONG logada
+        $stmtPet = $pdo->prepare("
+            SELECT c.animal_id 
+            FROM candidaturas c
             INNER JOIN animais a ON c.animal_id = a.id
-            SET c.status_candidatura = :status
             WHERE c.id = :candidatura_id AND a.ong_id = :ong_id
         ");
-        $stmtUpdate->execute([
-            ':status' => $novo_status,
+        $stmtPet->execute([
             ':candidatura_id' => $candidatura_id,
             ':ong_id' => $ong_id
         ]);
+        $candData = $stmtPet->fetch(PDO::FETCH_ASSOC);
+
+        if ($candData) {
+            $animal_id = $candData['animal_id'];
+
+            // Atualiza o status da candidatura
+            $stmtUpdate = $pdo->prepare("
+                UPDATE candidaturas
+                SET status_candidatura = :status
+                WHERE id = :candidatura_id
+            ");
+            $stmtUpdate->execute([
+                ':status' => $novo_status,
+                ':candidatura_id' => $candidatura_id
+            ]);
+
+            // Se for Aprovado, altera o status do animal para 'Indisponível'
+            if ($novo_status === 'Aprovado') {
+                $stmtAnimal = $pdo->prepare("UPDATE animais SET status = 'Indisponível' WHERE id = :animal_id");
+                $stmtAnimal->execute([':animal_id' => $animal_id]);
+            } else {
+                // Se alterado para Recusado ou Pendente, garante que só reverte para Disponível se não houver outra candidatura aprovada
+                $stmtCheck = $pdo->prepare("
+                    SELECT COUNT(*) FROM candidaturas 
+                    WHERE animal_id = :animal_id AND status_candidatura = 'Aprovado'
+                ");
+                $stmtCheck->execute([':animal_id' => $animal_id]);
+                if ($stmtCheck->fetchColumn() == 0) {
+                    $stmtAnimal = $pdo->prepare("UPDATE animais SET status = 'Disponível' WHERE id = :animal_id");
+                    $stmtAnimal->execute([':animal_id' => $animal_id]);
+                }
+            }
+        }
     }
 
     // Redireciona para evitar reenvio do formulário ao atualizar a página
@@ -72,6 +104,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([':ong_id' => $ong_id]);
 $candidaturas = $stmt->fetchAll();
 ?>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -90,7 +123,7 @@ $candidaturas = $stmt->fetchAll();
       <a href="meus_animais.php">Meus Animais</a>
       <a href="candidaturas_recebidas.php" class="active">Candidaturas Recebidas</a>
       <a href="minha_ong.php">MINHA ONG</a>
-      <a href="login/login.php" class="btn-logout">Sair</a>
+      <a href="logout.php" class="btn-logout">Sair</a>
     </nav>
   </header>
   
@@ -383,8 +416,6 @@ $candidaturas = $stmt->fetchAll();
 </head>
 <body>
 
-
-
   <!-- CONTEÚDO PRINCIPAL -->
   <main class="container-painel-ong">
     <div class="cabecalho-secao">
@@ -497,7 +528,6 @@ $candidaturas = $stmt->fetchAll();
       document.getElementById("perfTelefone").innerText = data.adotante_telefone || "-";
       document.getElementById("perfPet").innerText = (data.pet_nome + " (" + data.pet_raca + ")") || "-";
 
-      // Mapeamento dos campos do banco no questionário
       var possuiAnimais = data.tem_outros_animais == 1 ? "Sim, possui outros animais." : "Não possui outros animais.";
       document.getElementById("perfQ1").innerText = possuiAnimais + " | Nível de atividade: " + data.nivel_atividade_fisica;
 

@@ -8,587 +8,519 @@ $pode_cadastrar = $_SESSION["pode_cadastrar"] ?? 0;
 $tipoUsuario = "";
 
 if ($logado) {
-$tipoUsuario = ($pode_cadastrar == 1) ? "ong" : "adotante";
+    $tipoUsuario = ($pode_cadastrar == 1) ? "ong" : "adotante";
 }
 
 /*
-
 Página exclusiva para adotantes.
 */
 if (!$logado || $tipoUsuario !== "adotante") {
-header("Location: index.php");
-exit;
+    header("Location: index.php");
+    exit;
 }
 
 ?>
 
-<!DOCTYPE html> <html lang="pt-BR"> <head>
-<meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Pós-Adoção</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="navbar.css">
 
-<title>AdotaPet - Pós-Adoção</title>
-
-<link rel="stylesheet" href="navbar.css">
-
-<style>
-
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f8fafc;
-        color: #2d3748;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    .navbar {
-        min-height: 75px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 40px;
-        background: white;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .left-brand-box {
-        display: flex;
-        align-items: center;
-    }
-
-    .logo {
-        font-size: 25px;
-        font-weight: bold;
-        color: #ff6070;
-        text-decoration: none;
-    }
-
-    .menu {
-        display: flex;
-        align-items: center;
-        gap: 22px;
-        flex-wrap: wrap;
-    }
-
-    .menu a {
-        text-decoration: none;
-        color: #4a5568;
-        font-weight: 500;
-        transition: 0.2s;
-    }
-
-    .menu a:hover {
-        color: #ff6070;
-    }
-
-    .menu a.active {
-        color: #ff6070;
-        font-weight: 700;
-    }
-
-    .pos-link {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 12px;
-        border-radius: 10px;
-        background: #fff1f3;
-        color: #e94d61 !important;
-    }
-
-    /* =========================
-       CONTAINER
-    ========================= */
-
-    .pagina {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 45px 25px 70px;
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero {
-        text-align: center;
-        margin-bottom: 35px;
-    }
-
-    .hero-icon {
-        width: 85px;
-        height: 85px;
-        margin: 0 auto 18px;
-        border-radius: 50%;
-        background: #fff1f3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 43px;
-        box-shadow: 0 8px 25px rgba(255,96,112,0.12);
-    }
-
-    .hero h1 {
-        margin: 0 0 10px;
-        font-size: 50px;
-        color: #2d3748;
-    }
-
-    .hero p {
-        max-width: 700px;
-        margin: auto;
-        color: #718096;
-        line-height: 1.7;
-        font-size: 16px;
-        
-    }
-
-    /* =========================
-       SELETOR CÃO / GATO
-    ========================= */
-
-    .seletor-animal {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin: 30px 0;
-    }
-
-    .animal-btn {
-        border: none;
-        padding: 13px 28px;
-        border-radius: 30px;
-        background: white;
-        color: #4a5568;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        border: 2px solid #edf0f4;
-        transition: 0.25s;
-    }
-
-    .animal-btn:hover {
-        transform: translateY(-2px);
-        border-color: #ffb4bd;
-    }
-
-    .animal-btn.active {
-        background: #ff6070;
-        color: white;
-        border-color: #ff6070;
-        box-shadow: 0 6px 18px rgba(255,96,112,0.25);
-    }
-
-    /* =========================
-       PAINEL
-    ========================= */
-
-    .painel-animal {
-        display: none;
-    }
-
-    .painel-animal.active {
-        display: block;
-        animation: aparecer 0.3s ease;
-    }
-
-    @keyframes aparecer {
-        from {
-            opacity: 0;
-            transform: translateY(8px);
+    <style>
+        * {
+            box-sizing: border-box;
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .titulo-secao {
-        text-align: center;
-        margin: 35px 0 20px;
-    }
-
-    .titulo-secao h2 {
-        margin: 0 0 7px;
-        font-size: 27px;
-    }
-
-    .titulo-secao p {
-        margin: 0;
-        color: #718096;
-    }
-
-    /* =========================
-       CARDS DE REAÇÃO
-    ========================= */
-
-    .reacoes-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 17px;
-    }
-
-    .reacao-card {
-        background: white;
-        border-radius: 17px;
-        border: 1px solid #edf0f4;
-        overflow: hidden;
-        box-shadow: 0 5px 18px rgba(0,0,0,0.04);
-    }
-
-    .reacao-botao {
-        width: 100%;
-        border: none;
-        background: white;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        text-align: left;
-        cursor: pointer;
-        color: #2d3748;
-    }
-
-    .reacao-botao:hover {
-        background: #fff8f9;
-    }
-
-    .reacao-emoji {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-        border-radius: 13px;
-        background: #fff1f3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 25px;
-    }
-
-    .reacao-titulo {
-        flex: 1;
-    }
-
-    .reacao-titulo strong {
-        display: block;
-        font-size: 17px;
-        margin-bottom: 4px;
-    }
-
-    .reacao-titulo span {
-        color: #a0aec0;
-        font-size: 13px;
-    }
-
-    .seta {
-        font-size: 18px;
-        color: #ff6070;
-        transition: 0.25s;
-    }
-
-    .reacao-card.aberto .seta {
-        transform: rotate(180deg);
-    }
-
-    .reacao-conteudo {
-        display: none;
-        padding: 0 20px 20px 83px;
-        color: #718096;
-        line-height: 1.65;
-        font-size: 14px;
-    }
-
-    .reacao-card.aberto .reacao-conteudo {
-        display: block;
-    }
-
-    /* =========================
-       CHECKLIST
-    ========================= */
-
-    .checklist {
-        margin-top: 38px;
-        background: white;
-        border-radius: 20px;
-        padding: 28px;
-        border: 1px solid #edf0f4;
-        box-shadow: 0 5px 18px rgba(0,0,0,0.04);
-    }
-
-    .checklist h2 {
-        margin: 0 0 6px;
-        font-size: 25px;
-    }
-
-    .checklist-intro {
-        color: #718096;
-        margin-bottom: 18px;
-    }
-
-    .check-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 13px;
-        padding: 15px 0;
-        border-bottom: 1px solid #edf0f4;
-        cursor: pointer;
-    }
-
-    .check-item:last-child {
-        border-bottom: none;
-    }
-
-    .check-box {
-        width: 24px;
-        height: 24px;
-        min-width: 24px;
-        border-radius: 7px;
-        border: 2px solid #ff9ca8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: transparent;
-        font-weight: bold;
-        transition: 0.2s;
-    }
-
-    .check-item.feito .check-box {
-        background: #ff6070;
-        border-color: #ff6070;
-        color: white;
-    }
-
-    .check-item.feito .check-text {
-        text-decoration: line-through;
-        color: #a0aec0;
-    }
-
-    .check-text {
-        color: #4a5568;
-        line-height: 1.5;
-    }
-
-    .progresso {
-        margin-top: 20px;
-        height: 9px;
-        background: #edf0f4;
-        border-radius: 20px;
-        overflow: hidden;
-    }
-
-    .progresso-barra {
-        width: 0%;
-        height: 100%;
-        background: linear-gradient(90deg, #ff6070, #ff8794);
-        border-radius: 20px;
-        transition: 0.3s;
-    }
-
-    .progresso-texto {
-        text-align: right;
-        margin-top: 8px;
-        color: #718096;
-        font-size: 13px;
-    }
-
-    /* =========================
-       EMERGÊNCIA
-    ========================= */
-
-    .emergencia {
-        margin-top: 35px;
-        background: #fff4f4;
-        border: 1px solid #ffcaca;
-        border-radius: 20px;
-        overflow: hidden;
-    }
-
-    .emergencia-header {
-        padding: 22px 25px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .emergencia-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 14px;
-        background: #ffe0e0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 27px;
-    }
-
-    .emergencia-header h2 {
-        margin: 0 0 4px;
-        color: #a8323d;
-    }
-
-    .emergencia-header p {
-        margin: 0;
-        color: #80545a;
-        font-size: 14px;
-    }
-
-    .emergencia-conteudo {
-        padding: 0 25px 25px;
-    }
-
-    .emergencia-conteudo ul {
-        margin: 0;
-        padding-left: 22px;
-        color: #6b4a4d;
-        line-height: 1.8;
-    }
-
-    .emergencia-conteudo li {
-        margin-bottom: 5px;
-    }
-
-    .botao-emergencia {
-        margin-top: 17px;
-        border: none;
-        background: #a8323d;
-        color: white;
-        padding: 11px 18px;
-        border-radius: 9px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .aviso-emergencia {
-        display: none;
-        margin-top: 15px;
-        padding: 15px;
-        background: white;
-        border-radius: 10px;
-        color: #6b4a4d;
-        line-height: 1.5;
-    }
-
-    .aviso-emergencia.visivel {
-        display: block;
-    }
-
-    /* =========================
-       RODAPÉ
-    ========================= */
-
-    .rodape {
-        text-align: center;
-        margin-top: 40px;
-        color: #a0aec0;
-        font-size: 14px;
-    }
-
-    /* =========================
-       RESPONSIVO
-    ========================= */
-
-    @media (max-width: 800px) {
-
-        .navbar {
-            padding: 15px 20px;
-            flex-direction: column;
-            gap: 15px;
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8fafc;
+            color: #2d3748;
         }
 
-        .menu {
-            justify-content: center;
-            gap: 13px;
-        }
-
-        .reacoes-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 550px) {
+        /* =========================
+           CONTAINER
+        ========================= */
 
         .pagina {
-            padding: 30px 15px 50px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 45px 25px 70px;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hero-icon {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #fff1f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 43px;
+            box-shadow: 0 8px 25px rgba(255,96,112,0.12);
         }
 
         .hero h1 {
-            font-size: 28px;
+            margin: 0 0 10px;
+            font-size: 50px;
+            color: #2d3748;
         }
 
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            color: #718096;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* =========================
+           SELETOR CÃO / GATO
+        ========================= */
+
         .seletor-animal {
-            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px 0;
         }
 
         .animal-btn {
+            border: none;
+            padding: 13px 28px;
+            border-radius: 30px;
+            background: white;
+            color: #4a5568;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #edf0f4;
+            transition: 0.25s;
+        }
+
+        .animal-btn:hover {
+            transform: translateY(-2px);
+            border-color: #ffb4bd;
+        }
+
+        .animal-btn.active {
+            background: #ff6070;
+            color: white;
+            border-color: #ff6070;
+            box-shadow: 0 6px 18px rgba(255,96,112,0.25);
+        }
+
+        /* =========================
+           PAINEL
+        ========================= */
+
+        .painel-animal {
+            display: none;
+        }
+
+        .painel-animal.active {
+            display: block;
+            animation: aparecer 0.3s ease;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .titulo-secao {
+            text-align: center;
+            margin: 35px 0 20px;
+        }
+
+        .titulo-secao h2 {
+            margin: 0 0 7px;
+            font-size: 27px;
+        }
+
+        .titulo-secao p {
+            margin: 0;
+            color: #718096;
+        }
+
+        /* =========================
+           CARDS DE REAÇÃO
+        ========================= */
+
+        .reacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .reacao-card {
+            background: white;
+            border-radius: 17px;
+            border: 1px solid #edf0f4;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.04);
+        }
+
+        .reacao-botao {
             width: 100%;
+            border: none;
+            background: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+            cursor: pointer;
+            color: #2d3748;
+        }
+
+        .reacao-botao:hover {
+            background: #fff8f9;
+        }
+
+        .reacao-emoji {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 13px;
+            background: #fff1f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .reacao-titulo {
+            flex: 1;
+        }
+
+        .reacao-titulo strong {
+            display: block;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .reacao-titulo span {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .seta {
+            font-size: 18px;
+            color: #ff6070;
+            transition: 0.25s;
+        }
+
+        .reacao-card.aberto .seta {
+            transform: rotate(180deg);
         }
 
         .reacao-conteudo {
-            padding-left: 20px;
+            display: none;
+            padding: 0 20px 20px 83px;
+            color: #718096;
+            line-height: 1.65;
+            font-size: 14px;
         }
+
+        .reacao-card.aberto .reacao-conteudo {
+            display: block;
+        }
+
+        /* =========================
+           CHECKLIST
+        ========================= */
 
         .checklist {
-            padding: 22px;
+            margin-top: 38px;
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #edf0f4;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.04);
         }
-    }
 
-</style>
+        .checklist h2 {
+            margin: 0 0 6px;
+            font-size: 25px;
+        }
 
-</head> <body>
+        .checklist-intro {
+            color: #718096;
+            margin-bottom: 18px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf0f4;
+            cursor: pointer;
+        }
+
+        .check-item:last-child {
+            border-bottom: none;
+        }
+
+        .check-box {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 7px;
+            border: 2px solid #ff9ca8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .check-item.feito .check-box {
+            background: #ff6070;
+            border-color: #ff6070;
+            color: white;
+        }
+
+        .check-item.feito .check-text {
+            text-decoration: line-through;
+            color: #a0aec0;
+        }
+
+        .check-text {
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .progresso {
+            margin-top: 20px;
+            height: 9px;
+            background: #edf0f4;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progresso-barra {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff6070, #ff8794);
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .progresso-texto {
+            text-align: right;
+            margin-top: 8px;
+            color: #718096;
+            font-size: 13px;
+        }
+
+        /* =========================
+           EMERGÊNCIA
+        ========================= */
+
+        .emergencia {
+            margin-top: 35px;
+            background: #fff4f4;
+            border: 1px solid #ffcaca;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .emergencia-header {
+            padding: 22px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emergencia-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: #ffe0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+        }
+
+        .emergencia-header h2 {
+            margin: 0 0 4px;
+            color: #a8323d;
+        }
+
+        .emergencia-header p {
+            margin: 0;
+            color: #80545a;
+            font-size: 14px;
+        }
+
+        .emergencia-conteudo {
+            padding: 0 25px 25px;
+        }
+
+        .emergencia-conteudo ul {
+            margin: 0;
+            padding-left: 22px;
+            color: #6b4a4d;
+            line-height: 1.8;
+        }
+
+        .emergencia-conteudo li {
+            margin-bottom: 5px;
+        }
+
+        .botao-emergencia {
+            margin-top: 17px;
+            border: none;
+            background: #a8323d;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .aviso-emergencia {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            color: #6b4a4d;
+            line-height: 1.5;
+        }
+
+        .aviso-emergencia.visivel {
+            display: block;
+        }
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        .rodape {
+            text-align: center;
+            margin-top: 40px;
+            color: #a0aec0;
+            font-size: 14px;
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================= */
+
+        @media (max-width: 800px) {
+            .reacoes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .pagina {
+                padding: 30px 15px 50px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .seletor-animal {
+                flex-direction: column;
+            }
+
+            .animal-btn {
+                width: 100%;
+            }
+
+            .reacao-conteudo {
+                padding-left: 20px;
+            }
+
+            .checklist {
+                padding: 22px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
 <!-- =========================
-     HEADER
+     HEADER (PADRONIZADO)
 ========================= -->
 
 <header class="navbar">
 
     <div class="left-brand-box">
-
-        <a href="index.php" class="logo">
-            🐾 AdotaPet
-        </a>
-
+        <a href="index.php" class="logo" style="text-decoration: none;">🐾 AdotaPet</a>
     </div>
 
-    <nav class="menu">
+    <nav class="menu" id="menu-navegacao">
+        <a href="index.php">Início</a>
 
-        <a href="index.php">
-            Início
-        </a>
+        <?php if ($logado && $tipoUsuario === "ong"): ?>
+            <a href="meus_animais.php" id="link-meus-animais">Meus Animais</a>
+        <?php endif; ?>
 
-        <a href="adotar.php">
-            Adotar
-        </a>
+        <?php if (!$logado || $tipoUsuario === "adotante"): ?>
+            <a href="adotar.php" id="link-adotar">Adotar</a>
+        <?php endif; ?>
 
-        <a href="pos_adocao.php" class="pos-link active">
-            🐾 Pós-Adoção
-        </a>
+        <?php if ($logado): ?>
+            <?php if ($tipoUsuario !== 'ong'): ?>
+                <a href="mapa.php" id="link-mapa">Mapa</a>
+            <?php endif; ?>
 
-        <a href="mapa.php">
-            Mapa
-        </a>
+            <a href="<?php echo ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
+                <?php echo ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
+            </a>
+        <?php endif; ?>
 
-        <a href="candidaturas.php">
-            Candidaturas
-        </a>
+        <!-- PÓS-ADOÇÃO (SOMENTE ADOTANTES LOGADOS) -->
+        <?php if ($logado && $tipoUsuario === "adotante"): ?>
+            <a href="pos_adocao.php" id="link-pos-adocao" class="active" title="Guia de Pós-Adoção">
+                🐾 Pós-Adoção
+            </a>
+        <?php endif; ?>
 
-        <a href="meu_perfil.php">
-            Meu Perfil
-        </a>
-
-        <a href="logout.php" style="color:#ff4d4d;">
-            Sair
-        </a>
+        <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
+            <?php if (!$logado): ?>
+                <a href="../login/login.php" class="btn-nav-login">Entrar</a>
+                <a href="../login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
+            <?php else: ?>
+                <?php 
+                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
+                    $textoPerfil = "Meu Perfil";
+                ?>
+                <a href="<?php echo $linkHref; ?>" class="perfil-link-container" style="text-decoration: none;">
+                    <span style="font-weight: 500; color: #718096;"><?php echo $textoPerfil; ?></span>
+                </a>
+                <a href="logout.php" style="color: #ff4d4d; font-weight: 500; text-decoration: none;">Sair</a>
+            <?php endif; ?>
+        </div>
 
     </nav>
 
@@ -1405,3 +1337,6 @@ exit;
     }
 
 </script>
+
+</body>
+</html>

@@ -258,6 +258,32 @@ body {
 }
 
 /* ==========================================================================
+   BORDAS BRILHOSAS CONFORME O STATUS (GLOW EFFECT)
+   ========================================================================== */
+
+/* Card Disponível - Borda e Brilho Verde */
+.card.card-disponivel {
+    border: 2px solid #10B981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.card.card-disponivel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.55), 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Indisponível - Borda e Brilho Vermelho */
+.card.card-indisponivel {
+    border: 2px solid #EF4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
+.card.card-indisponivel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 22px rgba(239, 68, 68, 0.55), 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
    6. CANDIDATURAS
    ========================================================================== */
 .candidaturas-container {
@@ -286,13 +312,35 @@ body {
     margin-bottom: 15px;
 }
 
-.status-badge {
-    background: #FEFCBF;
-    color: #B7791F;
-    padding: 6px 14px;
-    border-radius: var(--radius-pill);
-    font-size: 12px;
+/* ==========================================================================
+   BADGES DE STATUS (DISPONÍVEL / INDISPONÍVEL)
+   ========================================================================== */
+.badge-disponivel,
+.badge-indisponivel {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 11px;
     font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 50px;
+    z-index: 2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.badge-disponivel {
+    background-color: #10B981;
+    color: #FFFFFF;
+}
+
+.badge-indisponivel {
+    background-color: #EF4444;
+    color: #FFFFFF;
 }
 
 .candidatura-body p {

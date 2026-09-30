@@ -194,6 +194,7 @@ $total = count($animais);
     <title>AdotaPet - Encontre seu Companheiro</title>
     <link rel="stylesheet" href="adotar1.css">
     <link rel="stylesheet" href="navbar.css">
+
 </head>
 <body>
 
@@ -262,10 +263,20 @@ $total = count($animais);
 
         <div class="cards-grid">
     <?php if ($total > 0) { ?>
-        <?php foreach($animais as $pet) { ?>
-        <div class="card" data-id="<?= $pet['id']; ?>" data-compatibilidade="<?= $pet['compatibilidade'] ?? 0; ?>">
+        <?php foreach($animais as $pet) { 
+    // Verificação do status do pet
+    $statusPet = $pet['status'] ?? 'Disponível';
+    $isIndisponivel = in_array(strtolower(trim($statusPet)), ['indisponível', 'indisponivel', 'adotado']);
+    
+    $statusTexto  = $isIndisponivel ? 'Indisponível' : 'Disponível';
+    $statusClasse = $isIndisponivel ? 'badge-indisponivel' : 'badge-disponivel';
+    
+    // Define a classe do brilho do card
+    $cardClasse = $isIndisponivel ? 'card-indisponivel' : 'card-disponivel';
+?>
+<div class="card <?= $cardClasse; ?>" data-id="<?= $pet['id']; ?>" data-compatibilidade="<?= $pet['compatibilidade'] ?? 0; ?>">
     <div class="card-img-box">
-        <span class="badge-disponivel">Disponível</span>
+        <span class="<?= $statusClasse; ?>"><?= $statusTexto; ?></span>
         
         <?php if ($pet['compatibilidade'] !== null): ?>
             <span class="badge-compatibilidade"><?= $pet['compatibilidade']; ?>%</span>
@@ -286,7 +297,7 @@ $total = count($animais);
         </div>
     </div>
 </div>
-        <?php } ?>
+<?php } ?>
     <?php } else { ?>
         <p class="no-data">Nenhum animal cadastrado com os filtros selecionados.</p>
     <?php } ?>

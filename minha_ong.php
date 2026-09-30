@@ -20,94 +20,89 @@ if (!$id) {
 $mensagem = '';
 $erro = '';
 
-// 3. Processar exclusão de perfil
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['excluir_perfil'])) {
-    try {
-        $stmtFoto = $pdo->prepare("SELECT foto FROM ongs WHERE id = ?");
-        $stmtFoto->execute([$id]);
-        $fotoAtual = $stmtFoto->fetchColumn();
-
-        if (!empty($fotoAtual) && file_exists(__DIR__ . '/uploads/' . $fotoAtual)) {
-            @unlink(__DIR__ . '/uploads/' . $fotoAtual);
-        }
-
-        $stmtDelete = $pdo->prepare("DELETE FROM ongs WHERE id = ?");
-        $stmtDelete->execute([$id]);
-
-        $_SESSION = array();
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
-        session_destroy();
-
-        header("Location: login/login.php?status=conta_excluida");
-        exit;
-    } catch (PDOException $e) {
-        $erro = "Erro ao excluir conta: " . $e->getMessage();
+/**
+ * Função de Geocodificação no PHP com Fallback Inteligente
+ */
+function buscarCoordenadasPHP($logradouro, $numero, $bairro, $cidade, $estado, $cep) {
+    if (empty($cidade) || empty($estado)) {
+        return ['latitude' => null, 'longitude' => null];
     }
+
+    // Função interna para executar a chamada na API
+    $consultarAPI = function($query) {
+        $url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" . urlencode($query);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_USERAGENT      => 'AdotaPetApp/1.0 (contato@adotapet.org)',
+            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
+        ]);
+
+        $resposta = curl_exec($ch);
+        curl_close($ch);
+
+        if ($resposta) {
+            $dados = json_decode($resposta, true);
+            if (!empty($dados[0]['lat']) && !empty($dados[0]['lon'])) {
+                return [
+                    'latitude'  => $dados[0]['lat'],
+                    'longitude' => $dados[0]['lon']
+                ];
+            }
+        }
+        return null;
+    };
+
+    // TENTATIVA 1: Logradouro, Número, Bairro, Cidade, Estado (Sem o CEP)
+    $q1 = implode(', ', array_filter([$logradouro, $numero, $bairro, $cidade, $estado, 'Brasil']));
+    $res = $consultarAPI($q1);
+    if ($res) return $res;
+
+    // TENTATIVA 2 (Fallback): Sem o número (caso o número exato não exista no mapa)
+    $q2 = implode(', ', array_filter([$logradouro, $bairro, $cidade, $estado, 'Brasil']));
+    $res = $consultarAPI($q2);
+    if ($res) return $res;
+
+    // TENTATIVA 3 (Fallback): Apenas Cidade e Estado (ponto central da cidade)
+    $q3 = implode(', ', array_filter([$cidade, $estado, 'Brasil']));
+    $res = $consultarAPI($q3);
+    if ($res) return $res;
+
+    return ['latitude' => null, 'longitude' => null];
 }
 
-// 4. Processar Upload e Salvamento Exclusivo da Foto
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_foto'])) {
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $extensao = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
-        $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
-
-        if (in_array($extensao, $extensoes_permitidas)) {
-            $diretorio_uploads = __DIR__ . '/uploads/';
-
-            if (!is_dir($diretorio_uploads)) {
-                mkdir($diretorio_uploads, 0755, true);
-            }
-
-            // Busca foto antiga para deletar
-            $stmtFoto = $pdo->prepare("SELECT foto FROM ongs WHERE id = ?");
-            $stmtFoto->execute([$id]);
-            $fotoAntiga = $stmtFoto->fetchColumn();
-
-            $novo_nome_foto = 'ong_' . $id . '_' . time() . '.' . $extensao;
-            $caminho_destino = $diretorio_uploads . $novo_nome_foto;
-
-            if (move_uploaded_file($_FILES['foto']['tmp_name'], $caminho_destino)) {
-                if (!empty($fotoAntiga) && file_exists($diretorio_uploads . $fotoAntiga)) {
-                    @unlink($diretorio_uploads . $fotoAntiga);
-                }
-
-                $stmtUpdateFoto = $pdo->prepare("UPDATE ongs SET foto = ? WHERE id = ?");
-                $stmtUpdateFoto->execute([$novo_nome_foto, $id]);
-
-                $mensagem = "Foto de perfil atualizada com sucesso!";
-            } else {
-                $erro = "Falha ao salvar a imagem no servidor.";
-            }
-        } else {
-            $erro = "Formato de arquivo inválido. Escolha uma imagem JPG, PNG ou WEBP.";
-        }
-    } else {
-        $erro = "Selecione uma foto da sua galeria antes de clicar em salvar.";
-    }
-}
-
-// 5. Processar atualização dos Dados Gerais
+// Processar atualização dos Dados Gerais[cite: 34]
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
-    $nome_instituicao    = trim($_POST['nome_instituicao'] ?? '');
-    $cnpj                = trim($_POST['cnpj'] ?? '') ?: null;
-    $telefone            = trim($_POST['telefone'] ?? '');
-    $instagram           = trim($_POST['instagram'] ?? '') ?: null;
-    $logradouro          = trim($_POST['logradouro'] ?? '') ?: null;
-    $numero              = trim($_POST['numero'] ?? '') ?: null;
-    $bairro              = trim($_POST['bairro'] ?? '') ?: null;
-    $cidade              = trim($_POST['cidade'] ?? '') ?: null;
-    $estado              = trim($_POST['estado'] ?? '') ?: null;
-    $cep                 = trim($_POST['cep'] ?? '') ?: null;
-    $horario_atendimento = trim($_POST['horario_atendimento'] ?? '') ?: null;
-    $raio_atuacao        = trim($_POST['raio_atuacao'] ?? '') ?: null;
-    $chave_pix           = trim($_POST['chave_pix'] ?? '') ?: null;
-    $capacidade_abrigados= $_POST['capacidade_abrigados'] !== '' ? (int)$_POST['capacidade_abrigados'] : null;
+    $nome_instituicao     = trim($_POST['nome_instituicao'] ?? '');
+    $cnpj                 = trim($_POST['cnpj'] ?? '') ?: null;
+    $telefone             = trim($_POST['telefone'] ?? '');
+    $instagram            = trim($_POST['instagram'] ?? '') ?: null;
+    $logradouro           = trim($_POST['logradouro'] ?? '') ?: null;
+    $numero               = trim($_POST['numero'] ?? '') ?: null;
+    $bairro               = trim($_POST['bairro'] ?? '') ?: null;
+    $cidade               = trim($_POST['cidade'] ?? '') ?: null;
+    $estado               = trim($_POST['estado'] ?? '') ?: null;
+    $cep                  = trim($_POST['cep'] ?? '') ?: null;
+    $horario_atendimento  = trim($_POST['horario_atendimento'] ?? '') ?: null;
+    $raio_atuacao         = trim($_POST['raio_atuacao'] ?? '') ?: null;
+    $chave_pix            = trim($_POST['chave_pix'] ?? '') ?: null;
+    $capacidade_abrigados = (isset($_POST['capacidade_abrigados']) && $_POST['capacidade_abrigados'] !== '') ? (int)$_POST['capacidade_abrigados'] : null;
+
+    // Converte o endereço informado em coordenadas geográficas
+    // 1. Busca as coordenadas
+    $coordenadas = buscarCoordenadasPHP($logradouro, $numero, $bairro, $cidade, $estado, $cep);
+
+    // -------------------------------------------------------------
+    
+    // -------------------------------------------------------------
+
+    $latitude  = $coordenadas['latitude'];
+    $longitude = $coordenadas['longitude'];
+
 
     try {
         $sql = "UPDATE ongs SET 
@@ -121,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
                     cidade = :cidade, 
                     estado = :estado, 
                     cep = :cep, 
+                    latitude = :latitude,
+                    longitude = :longitude,
                     horario_atendimento = :horario_atendimento, 
                     raio_atuacao = :raio_atuacao, 
                     chave_pix = :chave_pix, 
@@ -129,38 +126,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
 
         $stmtUpdate = $pdo->prepare($sql);
         $stmtUpdate->execute([
-            ':nome_instituicao'    => $nome_instituicao,
-            ':cnpj'                => $cnpj,
-            ':telefone'            => $telefone,
-            ':instagram'           => $instagram,
-            ':logradouro'          => $logradouro,
-            ':numero'              => $numero,
-            ':bairro'              => $bairro,
-            ':cidade'              => $cidade,
-            ':estado'              => $estado,
-            ':cep'                 => $cep,
-            ':horario_atendimento' => $horario_atendimento,
-            ':raio_atuacao'        => $raio_atuacao,
-            ':chave_pix'           => $chave_pix,
-            ':capacidade_abrigados'=> $capacidade_abrigados,
-            ':id'                  => $id
+            ':nome_instituicao'     => $nome_instituicao,
+            ':cnpj'                 => $cnpj,
+            ':telefone'             => $telefone,
+            ':instagram'            => $instagram,
+            ':logradouro'           => $logradouro,
+            ':numero'               => $numero,
+            ':bairro'               => $bairro,
+            ':cidade'               => $cidade,
+            ':estado'               => $estado,
+            ':cep'                  => $cep,
+            ':latitude'             => $latitude,
+            ':longitude'            => $longitude,
+            ':horario_atendimento'  => $horario_atendimento,
+            ':raio_atuacao'         => $raio_atuacao,
+            ':chave_pix'            => $chave_pix,
+            ':capacidade_abrigados' => $capacidade_abrigados,
+            ':id'                   => $id
         ]);
 
-        $mensagem = "Informações atualizadas com sucesso!";
+        $mensagem = "Informações e localização no mapa atualizadas com sucesso!";
     } catch (PDOException $e) {
         $erro = "Erro ao salvar alterações: " . $e->getMessage();
     }
 }
 
-// 6. Buscar informações atuais da ONG no banco de dados
-try {
-    $stmt = $pdo->prepare("SELECT * FROM ongs WHERE id = ?");
-    $stmt->execute([$id]);
-    $ong = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-} catch (PDOException $e) {
-    $erro = "Erro ao carregar dados: " . $e->getMessage();
-    $ong = [];
-}
+// Buscar dados atualizados da ONG para preenchimento dos campos no formulário[cite: 34]
+$stmtSelect = $pdo->prepare("SELECT * FROM ongs WHERE id = :id");
+$stmtSelect->execute([':id' => $id]);
+$ong = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
