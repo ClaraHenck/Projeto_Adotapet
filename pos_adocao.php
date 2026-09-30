@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 $logado = isset($_SESSION["usuario_id"]);
@@ -9,1614 +8,1400 @@ $pode_cadastrar = $_SESSION["pode_cadastrar"] ?? 0;
 $tipoUsuario = "";
 
 if ($logado) {
-    $tipoUsuario = ($pode_cadastrar == 1)
-        ? "ong"
-        : "adotante";
+$tipoUsuario = ($pode_cadastrar == 1) ? "ong" : "adotante";
 }
 
 /*
- * Esta página é destinada aos adotantes.
- */
+
+Página exclusiva para adotantes.
+*/
 if (!$logado || $tipoUsuario !== "adotante") {
-    header("Location: index.php");
-    exit;
+header("Location: index.php");
+exit;
 }
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html> <html lang="pt-BR"> <head>
+<meta charset="UTF-8">
 
-<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>AdotaPet - Pós-Adoção</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<link rel="stylesheet" href="navbar.css">
 
-    <title>AdotaPet - Pós-Adoção</title>
+<style>
 
-    <link
-        rel="stylesheet"
-        href="navbar.css"
-    >
+    * {
+        box-sizing: border-box;
+    }
 
-    <style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f8fafc;
+        color: #2d3748;
+    }
 
-        * {
-            box-sizing: border-box;
+    /* =========================
+       HEADER
+    ========================= */
+
+    .navbar {
+        min-height: 75px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        background: white;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .left-brand-box {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 25px;
+        font-weight: bold;
+        color: #ff6070;
+        text-decoration: none;
+    }
+
+    .menu {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        flex-wrap: wrap;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #4a5568;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+    .menu a:hover {
+        color: #ff6070;
+    }
+
+    .menu a.active {
+        color: #ff6070;
+        font-weight: 700;
+    }
+
+    .pos-link {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: #fff1f3;
+        color: #e94d61 !important;
+    }
+
+    /* =========================
+       CONTAINER
+    ========================= */
+
+    .pagina {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 45px 25px 70px;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .hero-icon {
+        width: 85px;
+        height: 85px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        background: #fff1f3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 43px;
+        box-shadow: 0 8px 25px rgba(255,96,112,0.12);
+    }
+
+    .hero h1 {
+        margin: 0 0 10px;
+        font-size: 50px;
+        color: #2d3748;
+    }
+
+    .hero p {
+        max-width: 700px;
+        margin: auto;
+        color: #718096;
+        line-height: 1.7;
+        font-size: 16px;
+        
+    }
+
+    /* =========================
+       SELETOR CÃO / GATO
+    ========================= */
+
+    .seletor-animal {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 30px 0;
+    }
+
+    .animal-btn {
+        border: none;
+        padding: 13px 28px;
+        border-radius: 30px;
+        background: white;
+        color: #4a5568;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        border: 2px solid #edf0f4;
+        transition: 0.25s;
+    }
+
+    .animal-btn:hover {
+        transform: translateY(-2px);
+        border-color: #ffb4bd;
+    }
+
+    .animal-btn.active {
+        background: #ff6070;
+        color: white;
+        border-color: #ff6070;
+        box-shadow: 0 6px 18px rgba(255,96,112,0.25);
+    }
+
+    /* =========================
+       PAINEL
+    ========================= */
+
+    .painel-animal {
+        display: none;
+    }
+
+    .painel-animal.active {
+        display: block;
+        animation: aparecer 0.3s ease;
+    }
+
+    @keyframes aparecer {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f8fafc;
-            color: #2d3748;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        /* =====================================
-           HEADER
-        ===================================== */
+    .titulo-secao {
+        text-align: center;
+        margin: 35px 0 20px;
+    }
+
+    .titulo-secao h2 {
+        margin: 0 0 7px;
+        font-size: 27px;
+    }
+
+    .titulo-secao p {
+        margin: 0;
+        color: #718096;
+    }
+
+    /* =========================
+       CARDS DE REAÇÃO
+    ========================= */
+
+    .reacoes-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 17px;
+    }
+
+    .reacao-card {
+        background: white;
+        border-radius: 17px;
+        border: 1px solid #edf0f4;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.04);
+    }
+
+    .reacao-botao {
+        width: 100%;
+        border: none;
+        background: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-align: left;
+        cursor: pointer;
+        color: #2d3748;
+    }
+
+    .reacao-botao:hover {
+        background: #fff8f9;
+    }
+
+    .reacao-emoji {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 13px;
+        background: #fff1f3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+    .reacao-titulo {
+        flex: 1;
+    }
+
+    .reacao-titulo strong {
+        display: block;
+        font-size: 17px;
+        margin-bottom: 4px;
+    }
+
+    .reacao-titulo span {
+        color: #a0aec0;
+        font-size: 13px;
+    }
+
+    .seta {
+        font-size: 18px;
+        color: #ff6070;
+        transition: 0.25s;
+    }
+
+    .reacao-card.aberto .seta {
+        transform: rotate(180deg);
+    }
+
+    .reacao-conteudo {
+        display: none;
+        padding: 0 20px 20px 83px;
+        color: #718096;
+        line-height: 1.65;
+        font-size: 14px;
+    }
+
+    .reacao-card.aberto .reacao-conteudo {
+        display: block;
+    }
+
+    /* =========================
+       CHECKLIST
+    ========================= */
+
+    .checklist {
+        margin-top: 38px;
+        background: white;
+        border-radius: 20px;
+        padding: 28px;
+        border: 1px solid #edf0f4;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.04);
+    }
+
+    .checklist h2 {
+        margin: 0 0 6px;
+        font-size: 25px;
+    }
+
+    .checklist-intro {
+        color: #718096;
+        margin-bottom: 18px;
+    }
+
+    .check-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        padding: 15px 0;
+        border-bottom: 1px solid #edf0f4;
+        cursor: pointer;
+    }
+
+    .check-item:last-child {
+        border-bottom: none;
+    }
+
+    .check-box {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        border-radius: 7px;
+        border: 2px solid #ff9ca8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: transparent;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .check-item.feito .check-box {
+        background: #ff6070;
+        border-color: #ff6070;
+        color: white;
+    }
+
+    .check-item.feito .check-text {
+        text-decoration: line-through;
+        color: #a0aec0;
+    }
+
+    .check-text {
+        color: #4a5568;
+        line-height: 1.5;
+    }
+
+    .progresso {
+        margin-top: 20px;
+        height: 9px;
+        background: #edf0f4;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progresso-barra {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #ff6070, #ff8794);
+        border-radius: 20px;
+        transition: 0.3s;
+    }
+
+    .progresso-texto {
+        text-align: right;
+        margin-top: 8px;
+        color: #718096;
+        font-size: 13px;
+    }
+
+    /* =========================
+       EMERGÊNCIA
+    ========================= */
+
+    .emergencia {
+        margin-top: 35px;
+        background: #fff4f4;
+        border: 1px solid #ffcaca;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .emergencia-header {
+        padding: 22px 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .emergencia-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: #ffe0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+    }
+
+    .emergencia-header h2 {
+        margin: 0 0 4px;
+        color: #a8323d;
+    }
+
+    .emergencia-header p {
+        margin: 0;
+        color: #80545a;
+        font-size: 14px;
+    }
+
+    .emergencia-conteudo {
+        padding: 0 25px 25px;
+    }
+
+    .emergencia-conteudo ul {
+        margin: 0;
+        padding-left: 22px;
+        color: #6b4a4d;
+        line-height: 1.8;
+    }
+
+    .emergencia-conteudo li {
+        margin-bottom: 5px;
+    }
+
+    .botao-emergencia {
+        margin-top: 17px;
+        border: none;
+        background: #a8323d;
+        color: white;
+        padding: 11px 18px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .aviso-emergencia {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        color: #6b4a4d;
+        line-height: 1.5;
+    }
+
+    .aviso-emergencia.visivel {
+        display: block;
+    }
+
+    /* =========================
+       RODAPÉ
+    ========================= */
+
+    .rodape {
+        text-align: center;
+        margin-top: 40px;
+        color: #a0aec0;
+        font-size: 14px;
+    }
+
+    /* =========================
+       RESPONSIVO
+    ========================= */
+
+    @media (max-width: 800px) {
 
         .navbar {
-            min-height: 75px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-            background: white;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .left-brand-box {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-            color: #ff6070;
-            text-decoration: none;
+            padding: 15px 20px;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .menu {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-            flex-wrap: wrap;
+            justify-content: center;
+            gap: 13px;
         }
 
-        .menu a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: 0.2s;
+        .reacoes-grid {
+            grid-template-columns: 1fr;
         }
+    }
 
-        .menu a:hover {
-            color: #ff6070;
-        }
-
-        .menu a.active {
-            color: #ff6070;
-            font-weight: 700;
-        }
-
-        .pos-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            background: #fff1f3;
-            color: #e94d61 !important;
-        }
-
-        /* =====================================
-           CONTAINER
-        ===================================== */
+    @media (max-width: 550px) {
 
         .pagina {
-            max-width: 1150px;
-            margin: 0 auto;
-            padding: 50px 25px 70px;
+            padding: 30px 15px 50px;
         }
 
-        /* =====================================
-           HERO
-        ===================================== */
-
-        .hero-pos {
-            background: linear-gradient(
-                135deg,
-                #fff1f3,
-                #fff8f5
-            );
-
-            border-radius: 25px;
-            padding: 45px;
-            margin-bottom: 35px;
-
-            display: flex;
-            align-items: center;
-            gap: 35px;
-
-            border: 1px solid #ffe0e5;
-        }
-
-        .hero-icon {
-            width: 100px;
-            height: 100px;
-            min-width: 100px;
-
-            border-radius: 50%;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: white;
-
-            font-size: 50px;
-
-            box-shadow:
-                0 8px 25px
-                rgba(255, 96, 112, 0.15);
-        }
-
-        .hero-pos h1 {
-            margin: 0 0 12px;
-            font-size: 36px;
-            color: #2d3748;
-        }
-
-        .hero-pos p {
-            margin: 0;
-            color: #718096;
-            font-size: 17px;
-            line-height: 1.7;
-        }
-
-        /* =====================================
-           AVISO
-        ===================================== */
-
-        .aviso {
-            background: #fffaf0;
-            border: 1px solid #f6d88b;
-            color: #765b00;
-            border-radius: 15px;
-            padding: 20px 23px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .aviso strong {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 17px;
-        }
-
-        /* =====================================
-           TITULOS DE SEÇÃO
-        ===================================== */
-
-        .titulo-secao {
-            margin: 40px 0 20px;
-        }
-
-        .titulo-secao h2 {
-            margin: 0 0 8px;
+        .hero h1 {
             font-size: 28px;
-            color: #2d3748;
         }
 
-        .titulo-secao p {
-            margin: 0;
-            color: #718096;
-            line-height: 1.6;
+        .seletor-animal {
+            flex-direction: column;
         }
 
-        /* =====================================
-           GRID
-        ===================================== */
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 22px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 18px;
-            padding: 27px;
-            border: 1px solid #edf0f4;
-
-            box-shadow:
-                0 5px 18px
-                rgba(0, 0, 0, 0.05);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 17px;
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            min-width: 50px;
-
-            border-radius: 13px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 25px;
-
-            background: #fff1f3;
-        }
-
-        .card h2 {
-            margin: 0;
-            color: #2d3748;
-            font-size: 21px;
-        }
-
-        .card p {
-            color: #718096;
-            line-height: 1.65;
-            margin: 0 0 12px;
-        }
-
-        .card ul {
-            margin: 10px 0 0;
-            padding-left: 21px;
-            color: #4a5568;
-            line-height: 1.8;
-        }
-
-        .card li {
-            margin-bottom: 5px;
-        }
-
-        /* =====================================
-           CARDS DE ESPÉCIES
-        ===================================== */
-
-        .especie-card {
-            border-top: 5px solid #ff6070;
-        }
-
-        .especie-card.gato {
-            border-top-color: #805ad5;
-        }
-
-        .especie-card .icone-especie {
-            font-size: 45px;
-            margin-bottom: 10px;
-        }
-
-        .especie-card h2 {
-            margin-bottom: 12px;
-        }
-
-        /* =====================================
-           DESTAQUE
-        ===================================== */
-
-        .destaque {
-            border-left: 5px solid #ff6070;
-            background: #fff8f9;
-        }
-
-        .positivo {
-            color: #237a45;
-            font-weight: 600;
-        }
-
-        .alerta {
-            color: #946c00;
-            font-weight: 600;
-        }
-
-        .perigo {
-            color: #a8323d;
-            font-weight: 600;
-        }
-
-        /* =====================================
-           REAÇÕES
-        ===================================== */
-
-        .reacoes {
-            margin-top: 40px;
-        }
-
-        .reacoes h2 {
-            font-size: 27px;
-            margin-bottom: 20px;
-            color: #2d3748;
-        }
-
-        .reacao-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .reacao {
-            background: white;
-            border-radius: 16px;
-            padding: 23px;
-            border: 1px solid #edf0f4;
-        }
-
-        .reacao .emoji {
-            font-size: 34px;
-            margin-bottom: 12px;
-        }
-
-        .reacao h3 {
-            margin: 0 0 9px;
-            font-size: 18px;
-        }
-
-        .reacao p {
-            margin: 0;
-            color: #718096;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        /* =====================================
-           COMPARAÇÃO
-        ===================================== */
-
-        .comparacao {
-            margin-top: 40px;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid #edf0f4;
-            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.04);
-        }
-
-        .comparacao h2 {
-            margin-top: 0;
-            font-size: 25px;
-        }
-
-        .tabela-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
+        .animal-btn {
             width: 100%;
-            border-collapse: collapse;
-            min-width: 650px;
         }
 
-        th {
-            background: #fff1f3;
-            color: #4a5568;
-            text-align: left;
-            padding: 14px;
+        .reacao-conteudo {
+            padding-left: 20px;
         }
-
-        td {
-            padding: 14px;
-            border-bottom: 1px solid #edf0f4;
-            color: #718096;
-            line-height: 1.5;
-            vertical-align: top;
-        }
-
-        /* =====================================
-           CHECKLIST
-        ===================================== */
 
         .checklist {
-            margin-top: 40px;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid #edf0f4;
-
-            box-shadow:
-                0 5px 18px
-                rgba(0, 0, 0, 0.04);
+            padding: 22px;
         }
+    }
 
-        .checklist h2 {
-            margin-top: 0;
-            font-size: 25px;
-        }
+</style>
 
-        .check {
-            display: flex;
-            align-items: flex-start;
-            gap: 13px;
-            padding: 14px 0;
-            border-bottom: 1px solid #edf0f4;
-            color: #4a5568;
-            line-height: 1.5;
-        }
+</head> <body>
+<!-- =========================
+     HEADER
+========================= -->
 
-        .check:last-child {
-            border-bottom: none;
-        }
+<header class="navbar">
 
-        .check span {
-            color: #38a169;
-            font-size: 20px;
-            font-weight: bold;
-        }
+    <div class="left-brand-box">
 
-        /* =====================================
-           SINAIS DE ALERTA
-        ===================================== */
+        <a href="index.php" class="logo">
+            🐾 AdotaPet
+        </a>
 
-        .ajuda {
-            margin-top: 40px;
-            padding: 30px;
-            border-radius: 20px;
-            background: #fff0f1;
-            border: 1px solid #ffd4d9;
-        }
+    </div>
 
-        .ajuda h2 {
-            margin-top: 0;
-            color: #a8323d;
-        }
+    <nav class="menu">
 
-        .ajuda h3 {
-            color: #8f3039;
-            margin-top: 25px;
-        }
+        <a href="index.php">
+            Início
+        </a>
 
-        .ajuda ul {
-            line-height: 1.8;
-            color: #5a4a4c;
-        }
+        <a href="adotar.php">
+            Adotar
+        </a>
 
-        /* =====================================
-           RODAPÉ
-        ===================================== */
+        <a href="pos_adocao.php" class="pos-link active">
+            🐾 Pós-Adoção
+        </a>
 
-        .rodape-info {
-            text-align: center;
-            margin-top: 45px;
-            color: #a0aec0;
-            font-size: 14px;
-            line-height: 1.6;
-        }
+        <a href="mapa.php">
+            Mapa
+        </a>
 
-        /* =====================================
-           RESPONSIVIDADE
-        ===================================== */
+        <a href="candidaturas.php">
+            Candidaturas
+        </a>
 
-        @media (max-width: 850px) {
+        <a href="meu_perfil.php">
+            Meu Perfil
+        </a>
 
-            .navbar {
-                padding: 15px 20px;
-                flex-direction: column;
-                gap: 15px;
-            }
+        <a href="logout.php" style="color:#ff4d4d;">
+            Sair
+        </a>
 
-            .menu {
-                justify-content: center;
-                gap: 13px;
-            }
+    </nav>
 
-            .hero-pos {
-                flex-direction: column;
-                text-align: center;
-                padding: 32px 23px;
-            }
+</header>
 
-            .hero-pos h1 {
-                font-size: 29px;
-            }
+<!-- =========================
+     CONTEÚDO
+========================= -->
 
-            .grid {
-                grid-template-columns: 1fr;
-            }
+<main class="pagina">
 
-            .reacao-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    <section class="hero">
 
-        @media (max-width: 500px) {
-
-            .pagina {
-                padding: 30px 15px 50px;
-            }
-
-            .hero-icon {
-                width: 80px;
-                height: 80px;
-                min-width: 80px;
-                font-size: 40px;
-            }
-
-            .hero-pos h1 {
-                font-size: 25px;
-            }
-
-            .card {
-                padding: 21px;
-            }
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-    <!-- =====================================
-         HEADER
-    ===================================== -->
-
-    <header class="navbar">
-
-        <div class="left-brand-box">
-
-            <a
-                href="index.php"
-                class="logo"
-            >
-                🐾 AdotaPet
-            </a>
-
+        <div class="hero-icon">
+            🐾
         </div>
 
+        <h1>
+            Guia de Pós-Adoção
+        </h1>
 
-        <nav class="menu">
+        <p>
+            A chegada a um novo lar pode causar diferentes
+            reações em cada animal. Veja o que pode acontecer
+            e como ajudar seu novo companheiro nos primeiros dias.
+        </p>
 
-            <a href="index.php">
-                Início
-            </a>
+    </section>
 
-            <a href="adotar.php">
-                Adotar
-            </a>
+    <!-- =========================
+         SELETOR
+    ========================= -->
 
-            <a
-                href="pos_adocao.php"
-                class="pos-link active"
-            >
-                🐾 Pós-Adoção
-            </a>
+    <div class="seletor-animal">
 
-            <a href="mapa.php">
-                Mapa
-            </a>
+        <button
+            type="button"
+            class="animal-btn active"
+            onclick="mostrarAnimal('cao', this)"
+        >
+            🐶 Cachorros
+        </button>
 
-            <a href="candidaturas.php">
-                Candidaturas
-            </a>
+        <button
+            type="button"
+            class="animal-btn"
+            onclick="mostrarAnimal('gato', this)"
+        >
+            🐱 Gatos
+        </button>
 
-            <a href="meu_perfil.php">
-                Meu Perfil
-            </a>
+    </div>
 
-            <a
-                href="logout.php"
-                style="color: #ff4d4d;"
-            >
-                Sair
-            </a>
+    <!-- =====================================================
+         CACHORROS
+    ====================================================== -->
 
-        </nav>
-
-    </header>
-
-
-    <!-- =====================================
-         CONTEÚDO
-    ===================================== -->
-
-    <main class="pagina">
-
-
-        <!-- HERO -->
-
-        <section class="hero-pos">
-
-            <div class="hero-icon">
-                🐶🐱
-            </div>
-
-            <div>
-
-                <h1>
-                    Guia de Pós-Adoção
-                </h1>
-
-                <p>
-
-                    A chegada a um novo lar é uma grande mudança
-                    para qualquer animal. Aqui você encontra
-                    orientações sobre cães e gatos, seus possíveis
-                    comportamentos durante a adaptação e cuidados
-                    importantes depois da adoção.
-
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- AVISO -->
-
-        <div class="aviso">
-
-            <strong>
-                💛 Cada animal possui seu próprio tempo de adaptação
-            </strong>
-
-            Cães e gatos podem reagir de maneiras diferentes
-            quando chegam a um novo ambiente. Um animal que era
-            muito carinhoso na ONG pode ficar mais reservado em
-            casa, enquanto outro pode ficar agitado ou buscar
-            atenção constantemente. Essas mudanças podem fazer
-            parte do processo de adaptação.
-
-        </div>
-
-
-        <!-- =====================================
-             CÃES E GATOS
-        ===================================== -->
+    <section id="painel-cao" class="painel-animal active">
 
         <div class="titulo-secao">
 
             <h2>
-                🐶🐱 O que esperar depois da adoção?
+                🐶 Como o cachorro pode reagir
             </h2>
 
             <p>
-                Embora cada animal seja único, existem alguns
-                comportamentos que podem aparecer nos primeiros
-                dias ou semanas.
+                Algumas mudanças de comportamento podem acontecer
+                durante a adaptação ao novo lar.
             </p>
 
         </div>
 
+        <div class="reacoes-grid">
 
-        <section class="grid">
+            <article class="reacao-card">
 
+                <button class="reacao-botao" onclick="abrirReacao(this)">
 
-            <!-- CÃO -->
-
-            <article class="card especie-card">
-
-                <div class="icone-especie">
-                    🐶
-                </div>
-
-                <h2>
-                    Cães
-                </h2>
-
-                <p>
-
-                    Um cachorro recém-adotado pode precisar de
-                    tempo para entender a nova rotina e criar
-                    confiança com seus novos tutores.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Pode ficar assustado ou se esconder.
-                    </li>
-
-                    <li>
-                        Pode apresentar ansiedade quando fica sozinho.
-                    </li>
-
-                    <li>
-                        Pode latir ou vocalizar mais que o habitual.
-                    </li>
-
-                    <li>
-                        Pode apresentar acidentes com as necessidades.
-                    </li>
-
-                    <li>
-                        Pode ficar muito agitado ou procurar atenção.
-                    </li>
-
-                    <li>
-                        Pode dormir mais nos primeiros dias.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- GATO -->
-
-            <article class="card especie-card gato">
-
-                <div class="icone-especie">
-                    🐱
-                </div>
-
-                <h2>
-                    Gatos
-                </h2>
-
-                <p>
-
-                    Gatos costumam valorizar muito o controle
-                    sobre o próprio espaço. Um novo ambiente pode
-                    fazer com que eles procurem esconderijos e
-                    observem a casa antes de interagir.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Pode se esconder por algumas horas ou dias.
-                    </li>
-
-                    <li>
-                        Pode evitar contato inicialmente.
-                    </li>
-
-                    <li>
-                        Pode miar mais ou menos que o habitual.
-                    </li>
-
-                    <li>
-                        Pode demonstrar medo diante de pessoas novas.
-                    </li>
-
-                    <li>
-                        Pode apresentar alterações temporárias no apetite.
-                    </li>
-
-                    <li>
-                        Pode explorar a casa principalmente quando estiver tranquila.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- PRIMEIROS DIAS -->
-
-            <article class="card destaque">
-
-                <div class="card-header">
-
-                    <div class="card-icon">
-                        🏠
-                    </div>
-
-                    <h2>
-                        Primeiros dias em casa
-                    </h2>
-
-                </div>
-
-                <p>
-
-                    Evite apresentar toda a casa, muitas pessoas
-                    e muitos estímulos de uma só vez. Um ambiente
-                    tranquilo facilita a adaptação.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Prepare um espaço seguro e confortável.
-                    </li>
-
-                    <li>
-                        Mantenha água disponível.
-                    </li>
-
-                    <li>
-                        Respeite o tempo de adaptação.
-                    </li>
-
-                    <li>
-                        Evite forçar contato físico.
-                    </li>
-
-                    <li>
-                        Observe como o animal reage ao novo ambiente.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- CONFIANÇA -->
-
-            <article class="card">
-
-                <div class="card-header">
-
-                    <div class="card-icon">
-                        ❤️
-                    </div>
-
-                    <h2>
-                        Construindo confiança
-                    </h2>
-
-                </div>
-
-                <p>
-
-                    A confiança é construída gradualmente.
-                    Não existe um prazo igual para todos os animais.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Fale com voz tranquila.
-                    </li>
-
-                    <li>
-                        Não force carinho.
-                    </li>
-
-                    <li>
-                        Respeite quando o animal quiser ficar sozinho.
-                    </li>
-
-                    <li>
-                        Use recompensas e associações positivas.
-                    </li>
-
-                    <li>
-                        Mantenha uma rotina previsível.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- ALIMENTAÇÃO -->
-
-            <article class="card">
-
-                <div class="card-header">
-
-                    <div class="card-icon">
-                        🍖
-                    </div>
-
-                    <h2>
-                        Alimentação
-                    </h2>
-
-                </div>
-
-                <p>
-
-                    A mudança de ambiente pode alterar temporariamente
-                    o comportamento alimentar.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Siga inicialmente a alimentação indicada pela ONG.
-                    </li>
-
-                    <li>
-                        Disponibilize água limpa e fresca.
-                    </li>
-
-                    <li>
-                        Evite mudanças bruscas na alimentação.
-                    </li>
-
-                    <li>
-                        Observe alterações persistentes no apetite.
-                    </li>
-
-                    <li>
-                        Para gatos, mantenha o alimento em um local tranquilo.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- SONO -->
-
-            <article class="card">
-
-                <div class="card-header">
-
-                    <div class="card-icon">
-                        😴
-                    </div>
-
-                    <h2>
-                        Sono e descanso
-                    </h2>
-
-                </div>
-
-                <p>
-
-                    O descanso é importante durante a adaptação.
-
-                    Cães podem dormir bastante depois de um período
-                    de estresse, enquanto gatos podem alternar períodos
-                    de descanso e exploração.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Prepare um local confortável.
-                    </li>
-
-                    <li>
-                        Evite acordar o animal constantemente.
-                    </li>
-
-                    <li>
-                        Para gatos, ofereça esconderijos seguros.
-                    </li>
-
-                    <li>
-                        Para cães, mantenha um espaço próprio para descanso.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- HIGIENE -->
-
-            <article class="card">
-
-                <div class="card-header">
-
-                    <div class="card-icon">
-                        🧼
-                    </div>
-
-                    <h2>
-                        Higiene e necessidades
-                    </h2>
-
-                </div>
-
-                <p>
-
-                    Mudanças de ambiente podem provocar acidentes
-                    ou alterações temporárias nos hábitos de higiene.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Nunca utilize punição física.
-                    </li>
-
-                    <li>
-                        Cães podem precisar reaprender o local das necessidades.
-                    </li>
-
-                    <li>
-                        Gatos precisam de caixa de areia limpa e acessível.
-                    </li>
-
-                    <li>
-                        Evite colocar a caixa de areia perto da comida.
-                    </li>
-
-                    <li>
-                        Reforce comportamentos adequados de maneira positiva.
-                    </li>
-
-                </ul>
-
-            </article>
-
-
-            <!-- FICAR SOZINHO -->
-
-            <article class="card">
-
-                <div class="card-header">
-
-                    <div class="card-icon">
-                        🏡
-                    </div>
-
-                    <h2>
-                        Quando ficar sozinho
-                    </h2>
-
-                </div>
-
-                <p>
-
-                    Alguns animais podem apresentar sinais de
-                    estresse quando ficam sozinhos.
-
-                </p>
-
-                <ul>
-
-                    <li>
-                        Faça a adaptação gradualmente.
-                    </li>
-
-                    <li>
-                        Evite ausências muito longas inicialmente.
-                    </li>
-
-                    <li>
-                        Para cães, observe latidos, destruição ou agitação.
-                    </li>
-
-                    <li>
-                        Para gatos, ofereça locais seguros e enriquecimento ambiental.
-                    </li>
-
-                    <li>
-                        Mantenha horários previsíveis.
-                    </li>
-
-                </ul>
-
-            </article>
-
-        </section>
-
-
-        <!-- =====================================
-             COMPORTAMENTOS
-        ===================================== -->
-
-        <section class="reacoes">
-
-            <h2>
-                🐾 Como cães e gatos podem reagir
-            </h2>
-
-
-            <div class="reacao-grid">
-
-
-                <article class="reacao">
-
-                    <div class="emoji">
+                    <div class="reacao-emoji">
                         😨
                     </div>
 
-                    <h3>
-                        Medo ou insegurança
-                    </h3>
-
-                    <p>
-
-                        Cães podem evitar pessoas, ficar imóveis
-                        ou procurar esconderijos. Gatos frequentemente
-                        procuram locais mais reservados e podem evitar
-                        contato no começo.
-
-                    </p>
-
-                </article>
-
-
-                <article class="reacao">
-
-                    <div class="emoji">
-                        🐕
+                    <div class="reacao-titulo">
+                        <strong>Medo ou insegurança</strong>
+                        <span>Pode acontecer nos primeiros dias</span>
                     </div>
 
-                    <h3>
-                        Agitação
-                    </h3>
+                    <span class="seta">▼</span>
 
-                    <p>
+                </button>
 
-                        Cães podem correr, pular ou explorar
-                        excessivamente. Gatos podem explorar a casa
-                        principalmente durante períodos mais tranquilos.
+                <div class="reacao-conteudo">
 
-                    </p>
+                    O cachorro pode ficar assustado, se esconder,
+                    evitar contato ou permanecer mais quieto.
+                    Dê espaço e deixe que ele se aproxime
+                    voluntariamente.
 
-                </article>
+                </div>
 
+            </article>
 
-                <article class="reacao">
+            <article class="reacao-card">
 
-                    <div class="emoji">
-                        🗣️
-                    </div>
+                <button class="reacao-botao" onclick="abrirReacao(this)">
 
-                    <h3>
-                        Vocalização
-                    </h3>
-
-                    <p>
-
-                        Cães podem latir ou choramingar.
-                        Gatos podem miar mais ou modificar seus
-                        padrões habituais de vocalização.
-
-                    </p>
-
-                </article>
-
-
-                <article class="reacao">
-
-                    <div class="emoji">
-                        🛋️
-                    </div>
-
-                    <h3>
-                        Se esconder
-                    </h3>
-
-                    <p>
-
-                        É especialmente comum em gatos recém-adotados,
-                        mas cães também podem procurar locais onde
-                        se sintam protegidos.
-
-                    </p>
-
-                </article>
-
-
-                <article class="reacao">
-
-                    <div class="emoji">
+                    <div class="reacao-emoji">
                         🥺
                     </div>
 
-                    <h3>
-                        Busca por atenção
-                    </h3>
+                    <div class="reacao-titulo">
+                        <strong>Carência</strong>
+                        <span>Busca constante por atenção</span>
+                    </div>
 
-                    <p>
+                    <span class="seta">▼</span>
 
-                        Alguns cães podem procurar contato constantemente.
-                        Alguns gatos também podem ficar mais carinhosos,
-                        enquanto outros preferem manter distância.
+                </button>
 
-                    </p>
+                <div class="reacao-conteudo">
 
-                </article>
+                    Alguns cães podem procurar o tutor o tempo
+                    todo. Ofereça carinho, mas também ensine
+                    gradualmente que ficar sozinho por pequenos
+                    períodos é seguro.
 
+                </div>
 
-                <article class="reacao">
+            </article>
 
-                    <div class="emoji">
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        🗣️
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Latidos ou choros</strong>
+                        <span>Comunicação durante a adaptação</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    O cachorro pode latir, chorar ou vocalizar
+                    mais que o habitual. Observe quando isso
+                    acontece para tentar entender se existe medo,
+                    solidão, ansiedade ou outro motivo.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        ⚡
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Agitação</strong>
+                        <span>Exploração e excesso de energia</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    Alguns cães podem ficar muito agitados ao
+                    conhecer o novo ambiente. Uma rotina com
+                    passeios, brincadeiras adequadas e períodos
+                    de descanso pode ajudar.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        🚽
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Acidentes</strong>
+                        <span>Pode esquecer hábitos temporariamente</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    Mesmo um cão acostumado a fazer suas
+                    necessidades no lugar correto pode ter
+                    acidentes durante a adaptação. Evite
+                    punições e reforce o comportamento correto.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
                         😡
                     </div>
 
-                    <h3>
-                        Rosnados, arranhões ou desconforto
-                    </h3>
+                    <div class="reacao-titulo">
+                        <strong>Rosnado ou desconforto</strong>
+                        <span>Um sinal de comunicação</span>
+                    </div>
 
-                    <p>
+                    <span class="seta">▼</span>
 
-                        Rosnados, tentativas de fuga, arranhões ou
-                        outros sinais de desconforto são formas de
-                        comunicação. Evite punições e dê espaço ao animal.
+                </button>
 
-                    </p>
+                <div class="reacao-conteudo">
 
-                </article>
+                    Um cachorro pode rosnar quando está com medo,
+                    desconfortável ou querendo distância. Não puna
+                    o rosnado. Afaste-se e procure orientação
+                    profissional se houver risco de mordida.
 
-            </div>
+                </div>
 
-        </section>
+            </article>
 
+        </div>
 
-        <!-- =====================================
-             DIFERENÇAS ENTRE CÃES E GATOS
-        ===================================== -->
-
-        <section class="comparacao">
-
-            <h2>
-                🐶🐱 Diferenças importantes entre cães e gatos
-            </h2>
-
-            <div class="tabela-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Situação
-                            </th>
-
-                            <th>
-                                🐶 Cães
-                            </th>
-
-                            <th>
-                                🐱 Gatos
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-
-                            <td>
-                                Adaptação
-                            </td>
-
-                            <td>
-                                Podem buscar bastante interação
-                                ou apresentar ansiedade.
-                            </td>
-
-                            <td>
-                                Podem precisar de um espaço reservado
-                                para se sentir seguros.
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                Necessidades
-                            </td>
-
-                            <td>
-                                Precisam de rotina para passeios
-                                e necessidades.
-                            </td>
-
-                            <td>
-                                Precisam de caixas de areia limpas
-                                e facilmente acessíveis.
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                Exercício
-                            </td>
-
-                            <td>
-                                Passeios e atividades adequadas
-                                fazem parte da rotina de muitos cães.
-                            </td>
-
-                            <td>
-                                Brincadeiras e enriquecimento ambiental
-                                ajudam a estimular o comportamento natural.
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                Espaço seguro
-                            </td>
-
-                            <td>
-                                Uma área tranquila onde possa descansar.
-                            </td>
-
-                            <td>
-                                Esconderijos e locais onde possa observar
-                                o ambiente sem ser incomodado.
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                Interação
-                            </td>
-
-                            <td>
-                                Muitos cães gostam de interação frequente,
-                                mas cada animal possui seu próprio perfil.
-                            </td>
-
-                            <td>
-                                Muitos gatos preferem controlar quando
-                                e como acontece o contato.
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             CHECKLIST
-        ===================================== -->
-
-        <section class="checklist">
+        <div class="checklist">
 
             <h2>
                 📋 Checklist dos primeiros dias
             </h2>
 
+            <p class="checklist-intro">
+                Marque o que você já preparou para receber seu cachorro.
+            </p>
 
-            <div class="check">
+            <div class="lista-checks">
 
-                <span>✓</span>
+                <div class="check-item" onclick="marcarCheck(this)">
 
-                <div>
-                    Prepare um local seguro e confortável para o animal.
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Preparei um local tranquilo e seguro para ele.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Deixei água fresca disponível.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Separei alimentação adequada.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Preparei um espaço confortável para descanso.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Evitei apresentar muitas pessoas de uma vez.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Vou respeitar o tempo de adaptação dele.
+                    </div>
+
                 </div>
 
             </div>
 
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Disponibilize água limpa e fresca.
-                </div>
-
+            <div class="progresso">
+                <div class="progresso-barra"></div>
             </div>
 
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Mantenha a alimentação indicada pela ONG inicialmente.
-                </div>
-
+            <div class="progresso-texto">
+                <span class="progresso-numero">0</span>/6 concluídos
             </div>
 
+        </div>
 
-            <div class="check">
+    </section>
 
-                <span>✓</span>
+    <!-- =====================================================
+         GATOS
+    ====================================================== -->
 
-                <div>
-                    Estabeleça uma rotina previsível.
-                </div>
+    <section id="painel-gato" class="painel-animal">
 
-            </div>
-
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Evite apresentar muitas pessoas ao mesmo tempo.
-                </div>
-
-            </div>
-
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Supervisione a interação com crianças e outros animais.
-                </div>
-
-            </div>
-
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Para cães, organize uma rotina adequada de passeios
-                    e necessidades.
-                </div>
-
-            </div>
-
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Para gatos, disponibilize caixa de areia limpa,
-                    esconderijos e locais seguros.
-                </div>
-
-            </div>
-
-
-            <div class="check">
-
-                <span>✓</span>
-
-                <div>
-                    Observe mudanças de comportamento, alimentação
-                    e hábitos de higiene.
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             SINAIS DE ALERTA
-        ===================================== -->
-
-        <section class="ajuda">
+        <div class="titulo-secao">
 
             <h2>
-                🚨 Quando procurar ajuda
+                🐱 Como o gato pode reagir
             </h2>
 
             <p>
-
-                Alguns comportamentos podem fazer parte da adaptação,
-                mas sinais persistentes ou intensos devem ser avaliados
-                por um profissional.
-
+                Gatos costumam precisar de tempo para reconhecer
+                o novo ambiente como seguro.
             </p>
 
+        </div>
 
-            <h3>
-                🩺 Sinais físicos
-            </h3>
+        <div class="reacoes-grid">
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        🙈
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Se esconder</strong>
+                        <span>Uma reação comum à mudança</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    O gato pode permanecer escondido durante
+                    algum tempo. Não tente retirá-lo à força.
+                    Deixe água, alimento e uma caixa de areia
+                    acessíveis.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        😾
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Medo ou irritação</strong>
+                        <span>Pode evitar contato inicialmente</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    O gato pode ficar assustado, recuar ou demonstrar
+                    desconforto ao ser tocado. Respeite os sinais
+                    corporais e não force o contato.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        🐾
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Exploração gradual</strong>
+                        <span>Conhecendo cada espaço</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    Alguns gatos começam a explorar aos poucos.
+                    Permita que ele conheça o ambiente no próprio
+                    ritmo e mantenha portas e janelas seguras.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        🍽️
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Alteração no apetite</strong>
+                        <span>O estresse pode influenciar</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    Alguns gatos podem comer menos durante a adaptação.
+                    Observe a alimentação e procure orientação
+                    veterinária diante de uma recusa persistente.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        🚽
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Mudanças na caixa de areia</strong>
+                        <span>Observe os hábitos</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    O estresse pode alterar temporariamente os
+                    hábitos do gato. Mantenha a caixa de areia
+                    limpa, acessível e em um local tranquilo.
+
+                </div>
+
+            </article>
+
+            <article class="reacao-card">
+
+                <button class="reacao-botao" onclick="abrirReacao(this)">
+
+                    <div class="reacao-emoji">
+                        ❤️
+                    </div>
+
+                    <div class="reacao-titulo">
+                        <strong>Busca por carinho</strong>
+                        <span>Alguns gatos se aproximam rapidamente</span>
+                    </div>
+
+                    <span class="seta">▼</span>
+
+                </button>
+
+                <div class="reacao-conteudo">
+
+                    Alguns gatos podem procurar carinho e atenção
+                    desde o primeiro momento. Mesmo assim, respeite
+                    quando ele demonstrar que quer ficar sozinho.
+
+                </div>
+
+            </article>
+
+        </div>
+
+        <div class="checklist">
+
+            <h2>
+                📋 Checklist dos primeiros dias
+            </h2>
+
+            <p class="checklist-intro">
+                Marque o que você já preparou para receber seu gato.
+            </p>
+
+            <div class="lista-checks">
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Preparei um espaço tranquilo para adaptação.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Separei água e alimentação.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Preparei uma caixa de areia limpa e acessível.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Separei um local onde ele possa se esconder com segurança.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Mantive portas e janelas protegidas.
+                    </div>
+
+                </div>
+
+                <div class="check-item" onclick="marcarCheck(this)">
+
+                    <div class="check-box">✓</div>
+
+                    <div class="check-text">
+                        Vou deixar o gato se aproximar no próprio ritmo.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="progresso">
+                <div class="progresso-barra"></div>
+            </div>
+
+            <div class="progresso-texto">
+                <span class="progresso-numero">0</span>/6 concluídos
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         EMERGÊNCIA
+    ========================= -->
+
+    <section class="emergencia">
+
+        <div class="emergencia-header">
+
+            <div class="emergencia-icon">
+                🚨
+            </div>
+
+            <div>
+
+                <h2>
+                    Sinais de emergência
+                </h2>
+
+                <p>
+                    Alguns sinais precisam de atendimento veterinário.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="emergencia-conteudo">
 
             <ul>
-
-                <li>
-                    Recusa persistente de água ou alimento.
-                </li>
-
-                <li>
-                    Vômitos ou diarreia persistentes.
-                </li>
 
                 <li>
                     Dificuldade para respirar.
                 </li>
 
                 <li>
-                    Sangramentos ou ferimentos.
+                    Sangramento intenso ou ferimento grave.
                 </li>
 
                 <li>
-                    Dor aparente.
+                    Desmaio, convulsão ou perda de consciência.
                 </li>
 
                 <li>
-                    Apatia intensa ou perda de consciência.
+                    Dor intensa ou comportamento de sofrimento.
+                </li>
+
+                <li>
+                    Vômitos ou diarreia intensos ou persistentes.
+                </li>
+
+                <li>
+                    Recusa persistente de água ou alimento.
+                </li>
+
+                <li>
+                    Fraqueza ou apatia intensa.
+                </li>
+
+                <li>
+                    Qualquer situação em que o animal pareça estar em risco imediato.
                 </li>
 
             </ul>
 
+            <button
+                type="button"
+                class="botao-emergencia"
+                onclick="mostrarAvisoEmergencia()"
+            >
+                ⚠️ O que fazer?
+            </button>
 
-            <h3>
-                🧠 Sinais comportamentais
-            </h3>
-
-            <ul>
-
-                <li>
-                    Agressividade intensa ou tentativa de mordida.
-                </li>
-
-                <li>
-                    Medo extremo que não apresenta melhora.
-                </li>
-
-                <li>
-                    Comportamento muito diferente do habitual.
-                </li>
-
-                <li>
-                    Tentativas frequentes de fuga.
-                </li>
-
-                <li>
-                    Alterações persistentes nos hábitos de alimentação
-                    ou higiene.
-                </li>
-
-            </ul>
-
-
-            <p>
+            <div
+                id="aviso-emergencia"
+                class="aviso-emergencia"
+            >
 
                 <strong>
-                    Em situações de emergência ou quando houver
-                    risco à saúde do animal ou das pessoas, procure
-                    atendimento veterinário imediatamente.
+                    Procure atendimento veterinário.
                 </strong>
 
-            </p>
+                Em uma situação de emergência, mantenha o animal
+                em segurança, evite administrar medicamentos por
+                conta própria e procure um serviço veterinário.
+                Se possível, entre em contato também com a ONG
+                responsável pela adoção.
 
-        </section>
-
-
-        <!-- =====================================
-             MENSAGEM FINAL
-        ===================================== -->
-
-        <div class="rodape-info">
-
-            🐾 Cada cão e cada gato possui sua própria personalidade
-            e seu próprio tempo de adaptação.
-
-            <br><br>
-
-            Com segurança, paciência, rotina e cuidado,
-            você pode ajudar seu novo companheiro a construir
-            confiança e se adaptar ao novo lar.
+            </div>
 
         </div>
 
+    </section>
 
-    </main>
+    <div class="rodape">
 
-</body>
+        🐾 Cada animal possui seu próprio tempo de adaptação.
+        <br>
+        Paciência, segurança e respeito ajudam na construção
+        de uma nova rotina.
 
-</html>
+    </div>
+
+</main>
+
+<script>
+
+    /* =========================
+       ALTERNAR CÃO / GATO
+    ========================= */
+
+    function mostrarAnimal(tipo, botao) {
+
+        document
+            .querySelectorAll(".painel-animal")
+            .forEach(function(painel) {
+
+                painel.classList.remove("active");
+
+            });
+
+        document
+            .querySelectorAll(".animal-btn")
+            .forEach(function(btn) {
+
+                btn.classList.remove("active");
+
+            });
+
+        document
+            .getElementById("painel-" + tipo)
+            .classList.add("active");
+
+        botao.classList.add("active");
+
+    }
+
+    /* =========================
+       ABRIR REAÇÕES
+    ========================= */
+
+    function abrirReacao(botao) {
+
+        const card = botao.closest(".reacao-card");
+
+        card.classList.toggle("aberto");
+
+    }
+
+    /* =========================
+       CHECKLIST
+    ========================= */
+
+    function marcarCheck(item) {
+
+        item.classList.toggle("feito");
+
+        atualizarProgresso();
+
+    }
+
+    function atualizarProgresso() {
+
+        const painelAtivo =
+            document.querySelector(".painel-animal.active");
+
+        if (!painelAtivo) return;
+
+        const checks =
+            painelAtivo.querySelectorAll(".check-item");
+
+        const feitos =
+            painelAtivo.querySelectorAll(".check-item.feito");
+
+        const quantidade =
+            feitos.length;
+
+        const total =
+            checks.length;
+
+        const porcentagem =
+            total > 0
+                ? (quantidade / total) * 100
+                : 0;
+
+        const barra =
+            painelAtivo.querySelector(".progresso-barra");
+
+        const numero =
+            painelAtivo.querySelector(".progresso-numero");
+
+        if (barra) {
+            barra.style.width = porcentagem + "%";
+        }
+
+        if (numero) {
+            numero.textContent = quantidade;
+        }
+
+    }
+
+    /* =========================
+       AVISO DE EMERGÊNCIA
+    ========================= */
+
+    function mostrarAvisoEmergencia() {
+
+        const aviso =
+            document.getElementById("aviso-emergencia");
+
+        aviso.classList.toggle("visivel");
+
+    }
+
+</script>
