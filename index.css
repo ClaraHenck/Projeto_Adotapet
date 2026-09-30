@@ -257,6 +257,76 @@ body::after {
     object-position: center;
     transition: transform 0.5s ease;
 }
+/* =================================
+   SEÇÕES EXCLUSIVAS DO ADOTANTE
+================================= */
+
+.adotante-info-section {
+    max-width: 1200px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1a202c;
+    text-align: center;
+    margin-bottom: 32px;
+    letter-spacing: -0.5px;
+}
+
+.cards-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.cards-grid.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.cards-grid.grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.info-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 188, 212, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 188, 212, 0.12);
+}
+
+.card-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+.info-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    font-size: 14px;
+    color: #718096;
+    line-height: 1.5;
+}
+
+
 
 /* =================================
    RESPONSIVIDADE (ADAPTAÇÃO)

@@ -78,6 +78,7 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
         <a href="adotar.php">Adotar</a>
         <a href="mapa.php">Mapa</a> 
         <a href="candidaturas.php" class="active">Candidaturas</a>
+        <a href="pos_adocao.php">Pós-Adoção</a>
         <a href="meu_perfil.php"><?= htmlspecialchars($labelPerfil) ?></a>
         <a href="logout.php" class="btn-logout" title="Sair">Sair</a>
       </nav>

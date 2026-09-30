@@ -3,8 +3,8 @@
 session_start();
 
 $logado = isset($_SESSION["usuario_id"]);
-$usuario_nome = $_SESSION["usuario_nome"] ?? "";
-$pode_cadastrar = $_SESSION["pode_cadastrar"] ?? 0;
+$usuario_nome =$_SESSION["usuario_nome"] ?? "";
+$pode_cadastrar =$_SESSION["pode_cadastrar"] ?? 0;
 
 $tipoUsuario = "";
 
@@ -43,42 +43,30 @@ if ($logado) {
             position: relative;
             width: 100%;
             height: 500px;
-
             overflow: hidden;
-
             border-radius: 25px;
-
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-
             background-color: #f5f5f5;
         }
 
         .carousel-track {
-
             display: flex;
-
             width: 100%;
             height: 100%;
-
             transition: transform 0.8s ease-in-out;
         }
 
         .carousel-slide {
-
             min-width: 100%;
             width: 100%;
             height: 100%;
-
             flex-shrink: 0;
         }
 
         .carousel-slide img {
-
             width: 100%;
             height: 100%;
-
             object-fit: cover;
-
             display: block;
         }
 
@@ -107,9 +95,7 @@ if ($logado) {
         @media (max-width: 600px) {
 
             .carousel {
-
                 height: 320px;
-
                 border-radius: 18px;
             }
         }
@@ -131,7 +117,7 @@ if ($logado) {
       <nav class="menu" id="menu-navegacao">
         <a href="index.php" class="active">Início</a>
         
-        <?php if ($logado && $tipoUsuario === "ong"): ?>
+        <?php if ($logado &&$tipoUsuario === "ong"): ?>
           <a href="meus_animais.php" id="link-meus-animais">Meus Animais</a>
         <?php endif; ?>
 
@@ -144,9 +130,24 @@ if ($logado) {
             <a href="mapa.php" id="link-mapa">Mapa</a>
           <?php endif; ?>
 
-          <a href="<?= ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
-            <?= ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
+          <a href="<?php echo ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
+            <?php echo ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
           </a>
+        <?php endif; ?>
+
+        <!-- ====================================
+             PÓS-ADOÇÃO
+             SOMENTE PARA ADOTANTES
+        ==================================== -->
+        <?php if ($logado &&$tipoUsuario === "adotante"): ?>
+            <a
+                href="pos_adocao.php"
+                id="link-pos-adocao"
+                class="link-pos-adocao"
+                title="Guia de Pós-Adoção"
+            >
+                🐾 Pós-Adoção
+            </a>
         <?php endif; ?>
 
         <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
@@ -163,12 +164,9 @@ if ($logado) {
                 </a>
                 <a href="logout.php" style="color: #ff4d4d; font-weight: 500; text-decoration: none;">Sair</a>
             <?php endif; ?>
-
-
         </div>
 
-
-        
+      </nav>
 
     </header>
 
@@ -183,52 +181,27 @@ if ($logado) {
 
         <section class="hero-text">
 
-
             <span class="badge">
-
                 ✨ Plataforma de Adoção Responsável
-
             </span>
 
-
             <h1>
-
                 Encontre seu
-
                 <br />
-
                 <span class="highlight">
                     melhor amigo
                 </span>
-
                 <br />
-
                 para a vida toda
-
             </h1>
 
-
             <p id="hero-descricao">
-
-
                 <?php if ($tipoUsuario === "ong"): ?>
-
-
                     Gerencie seus animais cadastrados, avalie candidaturas de adoção e encontre tutores responsáveis.
-
-
                 <?php else: ?>
-
-
                     A AdotaPet conecta você ao animal perfeito com um algoritmo. Um lar amoroso está a poucos clicks de distância.
-
-
                 <?php endif; ?>
-
-
             </p>
-
-
 
             <div
                 class="buttons"
@@ -241,18 +214,9 @@ if ($logado) {
                 "
             >
 
-
-                <div
-                    style="
-                        display: flex;
-                        gap: 10px;
-                        flex-wrap: wrap;
-                    "
-                >
-
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
 
                     <?php if ($tipoUsuario !== "ong"): ?>
-
 
                         <a
                             href="adotar.php"
@@ -265,14 +229,10 @@ if ($logado) {
                                 border-radius: 10px;
                             "
                         >
-
                             🔍 Encontrar um Animal
-
                         </a>
 
-
                     <?php else: ?>
-
 
                         <a
                             href="cadastrar_animal.php"
@@ -285,11 +245,8 @@ if ($logado) {
                                 border-radius: 10px;
                             "
                         >
-
                             ➕ Cadastrar Novo Animal
-
                         </a>
-
 
                         <a
                             href="meus_animais.php"
@@ -301,21 +258,14 @@ if ($logado) {
                                 border-radius: 10px;
                             "
                         >
-
                             Gerenciar Animais →
-
                         </a>
-
 
                     <?php endif; ?>
 
-
                 </div>
 
-
-
                 <?php if ($tipoUsuario === "adotante"): ?>
-
 
                     <a
                         href="questionario.php"
@@ -333,110 +283,105 @@ if ($logado) {
                             font-weight: bold;
                         "
                     >
-
                         📝 Responder Questionário de Adoção
-
                     </a>
-
 
                 <?php endif; ?>
 
-
             </div>
 
-
         </section>
-
 
 
         <!-- =========================
              CARROSSEL AUTOMÁTICO
-             SOMENTE CACHORROS
         ========================= -->
 
         <section class="hero-image-box">
 
-
             <div class="carousel">
-
-
-                <div
-                    class="carousel-track"
-                    id="carouselTrack"
-                >
-
-
-                    <!-- CACHORRO 1 -->
-
-                    <div class="carousel-slide">
-
-                        <img
-                            src="1.png"
-                            alt="Cachorro para adoção"
-                        />
-
-                    </div>
-
-
-                    <!-- CACHORRO 2 -->
-
-                    <div class="carousel-slide">
-
-                        <img
-                            src="2.png"
-                            alt="Cachorro para adoção"
-                        />
-
-                    </div>
-
-
-                    <!-- CACHORRO 3 -->
-
-                    <div class="carousel-slide">
-
-                        <img
-                            src="3.png"
-                            alt="Cachorro para adoção"
-                        />
-
-                    </div>
-
-
-                    <!-- CACHORRO 4 -->
-
-                    <div class="carousel-slide">
-
-                        <img
-                            src="4.png"
-                            alt="Cachorro para adoção"
-                        />
-
-                    </div>
-
-
-                    <!-- CACHORRO 5 -->
-
-                    <div class="carousel-slide">
-
-                        <img
-                            src="5.png"
-                            alt="Cachorro para adoção"
-                        />
-
-                    </div>
-
-
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="carousel-slide"><img src="1.png" alt="Cachorro para adoção" /></div>
+                    <div class="carousel-slide"><img src="2.png" alt="Cachorro para adoção" /></div>
+                    <div class="carousel-slide"><img src="3.png" alt="Cachorro para adoção" /></div>
+                    <div class="carousel-slide"><img src="4.png" alt="Cachorro para adoção" /></div>
+                    <div class="carousel-slide"><img src="5.png" alt="Cachorro para adoção" /></div>
                 </div>
-
-
             </div>
-
 
         </section>
 
-
     </main>
 
+
+    <!-- =========================================================
+         INFORMAÇÕES ADICIONAIS (EXCLUSIVAS PARA ADOTANTES LOGADOS)
+    ========================================================= -->
+    <?php if ($tipoUsuario === "adotante"): ?>
+
+        <!-- SEÇÃO: DICAS RÁPIDAS PARA ADOTANTES -->
+        <section class="adotante-info-section">
+            <h2 class="section-title">Dicas Rápidas para Adotantes</h2>
+            
+            <div class="cards-grid grid-3">
+                <div class="info-card">
+                    <div class="card-icon">🏠</div>
+                    <h3>Preparando sua Casa</h3>
+                    <p>Preparando sua casa e arrumá-la para o novo pet. Crie um ambiente seguro.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-icon">📦</div>
+                    <h3>Os Primeiros Dias</h3>
+                    <p>Organize seus favoritos, os primeiros dias do pet e inicie o processo de adaptação.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-icon">🩺</div>
+                    <h3>Check-up Veterinário</h3>
+                    <p>Check-up Veterinário para garantir a saúde e bem-estar. Faça as primeiras vacinas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: O CAMINHO PARA SUA NOVA FAMÍLIA -->
+        <section class="adotante-info-section">
+            <h2 class="section-title">O Caminho para sua Nova Família</h2>
+            
+            <div class="cards-grid grid-5">
+                <div class="info-card">
+                    <div class="card-icon">🔍</div>
+                    <h3>1. Pesquise e Filtre</h3>
+                    <p>Use nossos filtros detalhados para encontrar o animal ideal.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-icon">💖</div>
+                    <h3>2. Favorite e Candidate-se</h3>
+                    <p>Salve seus favoritos e inicie o processo de interesse.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-icon">📅</div>
+                    <h3>3. Agende uma Visita</h3>
+                    <p>Marque um horário para conhecer o animal pessoalmente no abrigo.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-icon">📝</div>
+                    <h3>4. Entrevista e Termos</h3>
+                    <p>Converse com a equipe e assine o contrato de adoção.</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-icon">🏡</div>
+                    <h3>5. Leve para Casa</h3>
+                    <p>Bem-vindo à sua nova família!</p>
+                </div>
+            </div>
+        </section>
+
+    <?php endif; ?>
 
 
     <script>
@@ -492,7 +437,6 @@ if ($logado) {
             setInterval(proximoCachorro, 3000);
         }
     </script>
-
 
 </body>
 

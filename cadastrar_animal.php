@@ -14,6 +14,8 @@ $raca = '';
 $idade = '';
 $porte = '';
 $carteira_vacinacao = '';
+$temperamento = '';
+$sociabilidade = '';
 $foto_url = '';
 $descricao = '';
 $modo_edicao = false;
@@ -38,6 +40,8 @@ if ($id && $ong_id) {
 
         $porte = $animal['porte'];
         $carteira_vacinacao = $animal['carteira_vacinacao'];
+        $temperamento = $animal['temperamento'] ?? '';
+        $sociabilidade = $animal['sociabilidade'] ?? '';
         $foto_url = $animal['foto_url'];
         $descricao = $animal['descricao'];
     }
@@ -53,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idade = trim($_POST['idade'] ?? '');
     $porte = trim($_POST['porte'] ?? '');
     $carteira_vacinacao = trim($_POST['carteira_vacinacao'] ?? '');
+    $temperamento = trim($_POST['temperamento'] ?? '');
+    $sociabilidade = trim($_POST['sociabilidade'] ?? '');
     $foto_url = trim($_POST['foto_url'] ?? '');
     $descricao = trim($_POST['observacoes'] ?? '');
 
@@ -63,7 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validação simples dos campos obrigatórios
     if (!$ong_id) {
         $mensagemErro = "Sessão expirada. Faça login novamente como ONG.";
-    } elseif (empty($nome) || empty($especie) || empty($porte) || empty($carteira_vacinacao) || empty($foto_url) || empty($descricao)) {
+    } elseif (
+        empty($nome) || empty($especie) || empty($porte) || 
+        empty($carteira_vacinacao) || empty($temperamento) || 
+        empty($sociabilidade) || empty($foto_url) || empty($descricao)
+    ) {
         $mensagemErro = "Por favor, preencha todos os campos obrigatórios (*).";
     } else {
         try {
@@ -75,6 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             idade_estimada = :idade_estimada, 
                             porte = :porte, 
                             carteira_vacinacao = :carteira_vacinacao, 
+                            temperamento = :temperamento,
+                            sociabilidade = :sociabilidade,
                             foto_url = :foto_url, 
                             descricao = :descricao 
                         WHERE id = :id AND ong_id = :ong_id";
@@ -86,6 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':idade_estimada'     => $idade_estimada,
                     ':porte'              => $porte,
                     ':carteira_vacinacao' => $carteira_vacinacao,
+                    ':temperamento'       => $temperamento,
+                    ':sociabilidade'      => $sociabilidade,
                     ':foto_url'           => $foto_url,
                     ':descricao'          => $descricao,
                     ':id'                 => $id,
@@ -93,8 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             } else {
                 // NOVO CADASTRO (INSERT)
-                $sql = "INSERT INTO animais (ong_id, nome, especie_raca, idade_estimada, porte, carteira_vacinacao, foto_url, descricao) 
-                        VALUES (:ong_id, :nome, :especie_raca, :idade_estimada, :porte, :carteira_vacinacao, :foto_url, :descricao)";
+                $sql = "INSERT INTO animais (
+                            ong_id, nome, especie_raca, idade_estimada, porte, 
+                            carteira_vacinacao, temperamento, sociabilidade, foto_url, descricao
+                        ) 
+                        VALUES (
+                            :ong_id, :nome, :especie_raca, :idade_estimada, :porte, 
+                            :carteira_vacinacao, :temperamento, :sociabilidade, :foto_url, :descricao
+                        )";
                 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
@@ -104,6 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':idade_estimada'     => $idade_estimada,
                     ':porte'              => $porte,
                     ':carteira_vacinacao' => $carteira_vacinacao,
+                    ':temperamento'       => $temperamento,
+                    ':sociabilidade'      => $sociabilidade,
                     ':foto_url'           => $foto_url,
                     ':descricao'          => $descricao
                 ]);
@@ -208,6 +230,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="Pendente de Vacinação" <?= $carteira_vacinacao === 'Pendente de Vacinação' ? 'selected' : '' ?>>Pendente de Vacinação</option>
                         <option value="Completa" <?= $carteira_vacinacao === 'Completa' ? 'selected' : '' ?>>Completa</option>
                     </select>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="temperamento">Temperamento *</label>
+                        <select id="temperamento" name="temperamento" required>
+                            <option value="" disabled <?= empty($temperamento) ? 'selected' : '' ?>>Selecione</option>
+                            <option value="Dócil" <?= $temperamento === 'Dócil' ? 'selected' : '' ?>>Dócil</option>
+                            <option value="Carinhoso" <?= $temperamento === 'Carinhoso' ? 'selected' : '' ?>>Carinhoso</option>
+                            <option value="Calmo" <?= $temperamento === 'Calmo' ? 'selected' : '' ?>>Calmo</option>
+                            <option value="Brincalhão" <?= $temperamento === 'Brincalhão' ? 'selected' : '' ?>>Brincalhão</option>
+                            <option value="Tímido" <?= $temperamento === 'Tímido' ? 'selected' : '' ?>>Tímido</option>
+                            <option value="Agitado" <?= $temperamento === 'Agitado' ? 'selected' : '' ?>>Agitado</option>
+                            <option value="Dominante" <?= $temperamento === 'Dominante' ? 'selected' : '' ?>>Dominante</option>
+                            <option value="Antissocial" <?= $temperamento === 'Antissocial' ? 'selected' : '' ?>>Antissocial</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sociabilidade">Sociabilidade *</label>
+                        <select id="sociabilidade" name="sociabilidade" required>
+                            <option value="" disabled <?= empty($sociabilidade) ? 'selected' : '' ?>>Selecione</option>
+                            <option value="Sociável com todos" <?= $sociabilidade === 'Sociável com todos' ? 'selected' : '' ?>>Sociável com todos</option>
+                            <option value="Apenas com humanos" <?= $sociabilidade === 'Apenas com humanos' ? 'selected' : '' ?>>Apenas com humanos</option>
+                            <option value="Apenas com animais" <?= $sociabilidade === 'Apenas com animais' ? 'selected' : '' ?>>Apenas com animais</option>
+                            <option value="Não é sociável" <?= $sociabilidade === 'Não é sociável' ? 'selected' : '' ?>>Não é sociável</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">

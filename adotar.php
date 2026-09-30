@@ -211,6 +211,9 @@ $total = count($animais);
           <a href="candidaturas.php" id="link-candidaturas">
             <?php echo ($tipoUsuario === "ong") ? "Candidaturas Recebidas" : "Candidaturas"; ?>
           </a>
+          <?php if ($tipoUsuario === "adotante"): ?>
+            <a href="pos_adocao.php" id="link-pos-adocao" title="Guia de Pós-Adoção">Pós-Adoção</a>
+          <?php endif; ?>
         <?php endif; ?>
 
         <div id="area-usuario-nav">
@@ -253,8 +256,6 @@ $total = count($animais);
                 <option value="Adulto" <?php echo ($idade == 'Adulto') ? 'selected' : ''; ?>>Adulto</option>
                 <option value="Idoso" <?php echo ($idade == 'Idoso') ? 'selected' : ''; ?>>Idoso</option>
             </select>
-
-            
 
             <button type="submit" class="btn-filtrar">Filtrar</button>
         </form>

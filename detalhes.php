@@ -43,7 +43,7 @@ if ($adotante_id) {
     $questionario = $stmtQ->fetch(PDO::FETCH_ASSOC);
 }
 
-// 4. ALGORITMO DINÂMICO DE COMPATIBILIDADE
+// 4. ALGORITMO DINÂMICO E RIGOROSO DE COMPATIBILIDADE
 $tem_questionario = (bool)$questionario;
 $porcentagem_match = 0;
 $mensagem_match = "";
@@ -51,15 +51,17 @@ $relatorio_match = [];
 
 if ($tem_questionario) {
     // === EXTRAÇÃO E NORMALIZAÇÃO DOS DADOS DO PET ===
-    $portePet      = strtolower(trim($pet['porte'] ?? 'médio'));
-    $especieRaca   = strtolower(trim($pet['especie_raca'] ?? ''));
-    $descricaoPet  = strtolower(trim($pet['descricao'] ?? ''));
-    $idadeTexto    = strtolower(trim($pet['idade_estimada'] ?? ''));
+    $portePet         = strtolower(trim($pet['porte'] ?? 'médio'));
+    $especieRaca      = strtolower(trim($pet['especie_raca'] ?? ''));
+    $descricaoPet     = strtolower(trim($pet['descricao'] ?? ''));
+    $idadeTexto       = strtolower(trim($pet['idade_estimada'] ?? ''));
+    $temperamentoPet  = strtolower(trim($pet['temperamento'] ?? ''));
+    $sociabilidadePet = strtolower(trim($pet['sociabilidade'] ?? ''));
     
-    $isGato        = (str_contains($especieRaca, 'gato') || str_contains($especieRaca, 'felina'));
+    $isGato           = (str_contains($especieRaca, 'gato') || str_contains($especieRaca, 'felina'));
     preg_match('/\d+/', $idadeTexto, $matches);
-    $idadeAnos     = isset($matches[0]) ? intval($matches[0]) : 3;
-    $isFilhote     = ($idadeAnos <= 1);
+    $idadeAnos        = isset($matches[0]) ? intval($matches[0]) : 3;
+    $isFilhote        = ($idadeAnos <= 1);
 
     // === EXTRAÇÃO DAS RESPOSTAS DO ADOTANTE ===
     $ondeMora     = strtolower($questionario['onde_mora'] ?? 'apartamento');
@@ -69,6 +71,9 @@ if ($tem_questionario) {
     $temCriancas  = (int)($questionario['tem_criancas'] ?? 0);
     $temAnimais   = (int)($questionario['tem_outros_animais'] ?? 0);
     $atividade    = strtolower($questionario['nivel_atividade_fisica'] ?? 'moderado');
+
+    // Mapeamento de incompatibilidade crítica de segurança
+    $incompatibilidadeCritica = false;
 
     // 1º: HORAS FORA DE CASA (20%)
     if ($isFilhote) {
@@ -144,43 +149,73 @@ if ($tem_questionario) {
         }
     }
 
-    // 4º: OUTROS ANIMAIS EM CASA (12%)
-    $petRestritoAnimais = (str_contains($descricaoPet, 'único') || str_contains($descricaoPet, 'nao gosta de caes') || str_contains($descricaoPet, 'não gosta de gatos'));
+    // 4º: VALIDAÇÃO CRÍTICA DE OUTROS ANIMAIS EM CASA (12%)
+    $petIncompativelAnimais = (
+        str_contains($sociabilidadePet, 'humanos') || 
+        str_contains($sociabilidadePet, 'não') || 
+        str_contains($sociabilidadePet, 'nao') || 
+        str_contains($sociabilidadePet, 'único') || 
+        str_contains($sociabilidadePet, 'unico') || 
+        str_contains($temperamentoPet, 'dominante') || 
+        str_contains($temperamentoPet, 'territorial') ||
+        str_contains($descricaoPet, 'animal único') ||
+        str_contains($descricaoPet, 'não aceita outros')
+    );
+
     if ($temAnimais === 1) {
-        if ($petRestritoAnimais) {
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Possui outros animais - Este pet precisa ser animal único."];
+        if ($petIncompativelAnimais) {
+            $incompatibilidadeCritica = true;
+            $relatorio_match[] = [
+                'tipo' => 'negativo', 
+                'texto' => "⚠️ RISCO DE SEGURANÇA: Você possui outros animais, mas este pet é cadastrado com perfil dominante, territorial ou não sociável com outros pets."
+            ];
         } else {
             $porcentagem_match += 12;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui outros animais - Pet sociável para convivência."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui outros animais - Pet sociável para convivência compartilhada."];
         }
     } else {
         $porcentagem_match += 12;
-        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem outros animais - Sem disputa por território ou atenção."];
+        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem outros animais - Sem disputa territorial."];
     }
 
-    // 5º: CRIANÇAS EM CASA (12%)
-    $petAriscoOuBravo = (str_contains($descricaoPet, 'bravo') || str_contains($descricaoPet, 'arisco') || str_contains($descricaoPet, 'não recomendado para crianças'));
+    // 5º: VALIDAÇÃO CRÍTICA DE CRIANÇAS EM CASA (12%)
+    $petIncompativelCriancas = (
+        str_contains($temperamentoPet, 'dominante') || 
+        str_contains($temperamentoPet, 'antissocial') || 
+        str_contains($temperamentoPet, 'bravo') || 
+        str_contains($temperamentoPet, 'arisco') ||
+        str_contains($sociabilidadePet, 'adultos') || 
+        str_contains($sociabilidadePet, 'não') || 
+        str_contains($sociabilidadePet, 'nao') || 
+        str_contains($descricaoPet, 'não recomendado para crianças') ||
+        str_contains($descricaoPet, 'sem crianças')
+    );
+
     if ($temCriancas === 1) {
-        if ($petAriscoOuBravo) {
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Possui crianças - Pet arisco/reativo, exige supervisão redobrada."];
+        if ($petIncompativelCriancas) {
+            $incompatibilidadeCritica = true;
+            $relatorio_match[] = [
+                'tipo' => 'negativo', 
+                'texto' => "⚠️ RISCO DE SEGURANÇA: Você possui crianças em casa, porém o perfil dominante ou sociabilidade deste pet exige um ambiente apenas com adultos."
+            ];
         } else {
             $porcentagem_match += 12;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui crianças - Perfil amigável para convivência familiar."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Possui crianças - Temperamento e perfil amigáveis para ambiente familiar."];
         }
     } else {
         $porcentagem_match += 12;
-        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem crianças pequenas - Ambiente mais calmo e previsível."];
+        $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Sem crianças em casa - Ambiente mais calmo e previsível."];
     }
 
     // 6º: NÍVEL DE ATIVIDADE FÍSICA (12%)
-    $petAltaEnergia = ($isFilhote || $portePet === 'grande' || str_contains($descricaoPet, 'ativo') || str_contains($descricaoPet, 'brincalhão'));
+    $petAltaEnergia = ($isFilhote || $portePet === 'grande' || in_array($temperamentoPet, ['brincalhão', 'agitado']));
     if ($petAltaEnergia) {
         if ($atividade === 'ativo') {
             $porcentagem_match += 12;
             $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Tutor ativo - Sintonia perfeita com o ritmo de energia do pet."];
         } elseif ($atividade === 'moderado') {
             $porcentagem_match += 7;
-            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Tutor moderado - Pet muito ativo pode exigir um ritmo de exercícios maior."];
+            $relatorio_match[] = ['tipo' => 'alerta', 'texto' => "Tutor moderado - Pet ativo pode exigir um ritmo de exercícios maior."];
         } else {
             $porcentagem_match += 2;
             $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Tutor sedentário - Desalinhamento: o pet demanda bastante exercício físico."];
@@ -196,23 +231,32 @@ if ($tem_questionario) {
     }
 
     // 7º: EXPERIÊNCIA PRÉVIA (11%)
-    $exigeExperiencia = ($portePet === 'grande' || $isFilhote || str_contains($descricaoPet, 'especial') || str_contains($descricaoPet, 'trauma'));
+    $exigeExperiencia = ($portePet === 'grande' || $isFilhote || in_array($temperamentoPet, ['dominante', 'antissocial', 'tímido']));
     if ($exigeExperiencia) {
         if ($experiencia === 'experiente' || $experiencia === 'ja_teve') {
             $porcentagem_match += 11;
-            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Experiência prévia - Conhecimento adequado para o manejo do pet."];
+            $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Experiência prévia - Conhecimento adequado para o manejo de pets dominantes ou de grande porte."];
         } else {
             $porcentagem_match += 2;
-            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Primeira viagem - Este pet possui particularidades que exigem mais bagagem."];
+            $relatorio_match[] = ['tipo' => 'negativo', 'texto' => "Primeira viagem - Este pet possui perfil dominante ou exigências que requerem experiência prévia de manejo."];
         }
     } else {
         $porcentagem_match += 11;
         $relatorio_match[] = ['tipo' => 'positivo', 'texto' => "Manejo simples - Adaptável para qualquer perfil de tutor."];
     }
 
-    $porcentagem_match = min(100, max(0, $porcentagem_match));
+    // === REGRA DE SEGURANÇA MÁXIMA (TETO RIGOROSO) ===
+    if ($incompatibilidadeCritica) {
+        // Bloqueia a nota para no máximo 30%, independentemente de outros pontos positivos
+        $porcentagem_match = min($porcentagem_match, 30);
+    } else {
+        $porcentagem_match = min(100, max(0, $porcentagem_match));
+    }
 
-    if ($porcentagem_match >= 85) {
+    // MENSAGEM FINAL DE ACORDO COM A NOTA E RESTRIÇÕES
+    if ($incompatibilidadeCritica) {
+        $mensagem_match = "Incompatibilidade de Segurança: Este pet possui temperamento dominante ou restrições de sociabilidade incompatíveis com a presença de crianças ou outros animais na sua casa.";
+    } elseif ($porcentagem_match >= 85) {
         $mensagem_match = "Excelente combinação! O seu estilo de vida encaixa perfeitamente com este pet.";
     } elseif ($porcentagem_match >= 65) {
         $mensagem_match = "Boa combinação. A rotina de vocês é compatível e exige poucos ajustes.";
@@ -332,7 +376,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
                 <?php endif; ?>
             </div>
 
-            <!-- CARACTERÍSTICAS -->
+            <!-- GRID DE CARACTERÍSTICAS -->
             <div class="grid-caracteristicas">
                 <div class="card-caracteristica">
                     <div class="icone-caract">📅</div>
@@ -349,10 +393,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
                     </div>
                 </div>
                 <div class="card-caracteristica">
-                    <div class="icone-caract">🏢</div>
+                    <div class="icone-caract">🎭</div>
                     <div class="textos-caract">
-                        <span>ONG</span>
-                        <strong><?= htmlspecialchars($pet['nome_instituicao'] ?? 'ONG Parceira') ?></strong>
+                        <span>Temperamento</span>
+                        <strong><?= htmlspecialchars($pet['temperamento'] ?? 'Não informado') ?></strong>
+                    </div>
+                </div>
+                <div class="card-caracteristica">
+                    <div class="icone-caract">👥</div>
+                    <div class="textos-caract">
+                        <span>Sociabilidade</span>
+                        <strong><?= htmlspecialchars($pet['sociabilidade'] ?? 'Não informada') ?></strong>
                     </div>
                 </div>
                 <div class="card-caracteristica">
@@ -362,17 +413,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
                         <strong><?= htmlspecialchars($pet['carteira_vacinacao'] ?? 'Em dia') ?></strong>
                     </div>
                 </div>
+                <div class="card-caracteristica">
+                    <div class="icone-caract">🏢</div>
+                    <div class="textos-caract">
+                        <span>ONG</span>
+                        <strong><?= htmlspecialchars($pet['nome_instituicao'] ?? 'ONG Parceira') ?></strong>
+                    </div>
+                </div>
             </div>
 
             <!-- TAGS E DESCRIÇÃO -->
             <div class="tags-container">
                 <span class="tag vacinado">💉 <?= htmlspecialchars($pet['carteira_vacinacao'] ?? 'Vacinado') ?></span>
+                <?php if (!empty($pet['temperamento'])): ?>
+                    <span class="tag temperamento">🎭 <?= htmlspecialchars($pet['temperamento']) ?></span>
+                <?php endif; ?>
+                <?php if (!empty($pet['sociabilidade'])): ?>
+                    <span class="tag sociabilidade">👥 <?= htmlspecialchars($pet['sociabilidade']) ?></span>
+                <?php endif; ?>
             </div>
 
             <p class="descricao-pet"><?= nl2br(htmlspecialchars($pet['descricao'] ?? '')) ?></p>
             <div class="localizacao">📍 ONG Responsável: <?= htmlspecialchars($pet['nome_instituicao'] ?? 'ONG Parceira') ?> (Contato: <?= htmlspecialchars($pet['ong_telefone'] ?? 'N/A') ?>)</div>
 
-            <!-- BLOCO DE AÇÕES (BOTÕES FORMATADOS JUNTOS) -->
+            <!-- BLOCO DE AÇÕES -->
             <div class="botoes-acao-container">
                 <form method="POST">
                     <input type="hidden" name="acao_adotar" value="1">

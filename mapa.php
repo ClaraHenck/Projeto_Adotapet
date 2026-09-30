@@ -25,6 +25,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="adotar.php">Adotar</a>
             <a href="mapa.php" class="active">Mapa</a>
             <a href="candidaturas.php">Candidaturas</a>
+            <a href="pos_adocao.php">Pós-Adoção</a>
             <a href="meu_perfil.php">MEU PERFIL</a>
             <a href="logout.php" style="color: #ff4d4d">Sair</a>
         </nav>

@@ -188,6 +188,7 @@ $biografia_valor = $usuario['biografia'] ?? '';
             <a href="adotar.php">Adotar</a>
             <a href="mapa.php">Mapa</a>
             <a href="candidaturas.php">Candidaturas</a>
+            <a href="pos_adocao.php">Pós-Adoção</a>
             <a href="meu_perfil.php" class="active"><?= $e_ong ? 'MINHA ONG' : 'MEU PERFIL' ?></a>
             <a href="logout.php" class="btn-logout">Sair</a>
         </nav>
