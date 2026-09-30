@@ -20,12 +20,24 @@ if ($logado) {
 <head>
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
 
-    <title>AdotaPet - Plataforma de Adoção</title>
+    <title>
+        AdotaPet - Plataforma de Adoção
+    </title>
 
-    <link rel="stylesheet" href="navbar.css" />
-    <link rel="stylesheet" href="index.css" />
+    <link
+        rel="stylesheet"
+        href="navbar.css"
+    />
+
+    <link
+        rel="stylesheet"
+        href="index.css"
+    />
 
     <style>
 
@@ -34,52 +46,99 @@ if ($logado) {
         ========================= */
 
         .hero-image-box {
+
             position: relative;
+
             width: 50%;
+
             max-width: 600px;
         }
 
+
         .carousel {
+
             position: relative;
+
             width: 100%;
+
             height: 500px;
 
             overflow: hidden;
 
             border-radius: 25px;
 
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            box-shadow:
+                0 15px 40px
+                rgba(0, 0, 0, 0.15);
 
             background-color: #f5f5f5;
         }
+
 
         .carousel-track {
 
             display: flex;
 
             width: 100%;
+
             height: 100%;
 
-            transition: transform 0.8s ease-in-out;
+            transition:
+                transform 0.8s ease-in-out;
         }
+
 
         .carousel-slide {
 
             min-width: 100%;
+
             width: 100%;
+
             height: 100%;
 
             flex-shrink: 0;
         }
 
+
         .carousel-slide img {
 
             width: 100%;
+
             height: 100%;
 
             object-fit: cover;
 
             display: block;
+        }
+
+
+        /* =========================
+           LINK PÓS-ADOÇÃO
+        ========================= */
+
+        .link-pos-adocao {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #e94d61 !important;
+
+            font-weight: 600 !important;
+
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+        }
+
+
+        .link-pos-adocao:hover {
+
+            color: #c9364b !important;
+
+            transform: translateY(-1px);
         }
 
 
@@ -90,17 +149,24 @@ if ($logado) {
         @media (max-width: 900px) {
 
             .hero-container {
+
                 flex-direction: column;
             }
 
+
             .hero-image-box {
+
                 width: 100%;
+
                 max-width: 600px;
             }
 
+
             .carousel {
+
                 height: 400px;
             }
+
         }
 
 
@@ -112,6 +178,7 @@ if ($logado) {
 
                 border-radius: 18px;
             }
+
         }
 
     </style>
@@ -122,57 +189,220 @@ if ($logado) {
 <body>
 
 
+    <!-- =========================
+         HEADER
+    ========================= -->
+
     <header class="navbar">
 
-      <div class="left-brand-box">
-        <a href="index.php" class="logo" style="text-decoration: none;">🐾 AdotaPet</a>
-      </div>
 
-      <nav class="menu" id="menu-navegacao">
-        <a href="index.php" class="active">Início</a>
-        
-        <?php if ($logado && $tipoUsuario === "ong"): ?>
-          <a href="meus_animais.php" id="link-meus-animais">Meus Animais</a>
-        <?php endif; ?>
+        <div class="left-brand-box">
 
-        <?php if (!$logado || $tipoUsuario === "adotante"): ?>
-          <a href="adotar.php" id="link-adotar">Adotar</a>
-        <?php endif; ?>
-
-        <?php if ($logado): ?>
-          <?php if ($tipoUsuario !== 'ong'): ?>
-            <a href="mapa.php" id="link-mapa">Mapa</a>
-          <?php endif; ?>
-
-          <a href="<?= ($tipoUsuario === 'ong') ? 'candidaturas_recebidas.php' : 'candidaturas.php'; ?>" id="link-candidaturas">
-            <?= ($tipoUsuario === 'ong') ? 'Candidaturas Recebidas' : 'Candidaturas'; ?>
-          </a>
-        <?php endif; ?>
-
-        <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
-            <?php if (!$logado): ?>
-                <a href="../projeto_adotapet/login/login.php" class="btn-nav-login">Entrar</a>
-                <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
-            <?php else: ?>
-                <?php 
-                    $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
-                    $textoPerfil = "Meu Perfil";
-                ?>
-                <a href="<?php echo $linkHref; ?>" class="perfil-link-container" style="text-decoration: none;">
-                    <span style="font-weight: 500; color: #718096;"><?php echo $textoPerfil; ?></span>
-                </a>
-                <a href="logout.php" style="color: #ff4d4d; font-weight: 500; text-decoration: none;">Sair</a>
-            <?php endif; ?>
-
+            <a
+                href="index.php"
+                class="logo"
+                style="text-decoration: none;"
+            >
+                🐾 AdotaPet
+            </a>
 
         </div>
 
 
-        
+        <nav
+            class="menu"
+            id="menu-navegacao"
+        >
+
+
+            <!-- INÍCIO -->
+
+            <a
+                href="index.php"
+                class="active"
+            >
+                Início
+            </a>
+
+
+            <!-- MEUS ANIMAIS - SOMENTE ONG -->
+
+            <?php if ($logado && $tipoUsuario === "ong"): ?>
+
+                <a
+                    href="meus_animais.php"
+                    id="link-meus-animais"
+                >
+                    Meus Animais
+                </a>
+
+            <?php endif; ?>
+
+
+            <!-- ADOTAR -->
+
+            <?php if (!$logado || $tipoUsuario === "adotante"): ?>
+
+                <a
+                    href="adotar.php"
+                    id="link-adotar"
+                >
+                    Adotar
+                </a>
+
+            <?php endif; ?>
+
+
+            <!-- =================================
+                 PÓS-ADOÇÃO
+                 SOMENTE PARA ADOTANTES
+            ================================== -->
+
+            <?php if ($logado && $tipoUsuario === "adotante"): ?>
+
+                <a
+                    href="pos_adocao.php"
+                    id="link-pos-adocao"
+                    class="link-pos-adocao"
+                    title="Guia de Pós-Adoção"
+                >
+                    🐾 Pós-Adoção
+                </a>
+
+            <?php endif; ?>
+
+
+            <!-- MAPA -->
+
+            <?php if ($logado): ?>
+
+                <?php if ($tipoUsuario !== 'ong'): ?>
+
+                    <a
+                        href="mapa.php"
+                        id="link-mapa"
+                    >
+                        Mapa
+                    </a>
+
+                <?php endif; ?>
+
+
+                <!-- CANDIDATURAS -->
+
+                <a
+                    href="<?= ($tipoUsuario === 'ong')
+                        ? 'candidaturas_recebidas.php'
+                        : 'candidaturas.php'; ?>"
+                    id="link-candidaturas"
+                >
+
+                    <?= ($tipoUsuario === 'ong')
+                        ? 'Candidaturas Recebidas'
+                        : 'Candidaturas'; ?>
+
+                </a>
+
+            <?php endif; ?>
+
+
+            <!-- =========================
+                 ÁREA DO USUÁRIO
+            ========================= -->
+
+            <div
+                id="area-usuario-nav"
+                style="
+                    display: flex;
+                    align-items: center;
+                    gap: 24px;
+                "
+            >
+
+
+                <?php if (!$logado): ?>
+
+
+                    <!-- USUÁRIO NÃO LOGADO -->
+
+                    <a
+                        href="../projeto_adotapet/login/login.php"
+                        class="btn-nav-login"
+                    >
+                        Entrar
+                    </a>
+
+
+                    <a
+                        href="../projeto_adotapet/login/cadastrar.php"
+                        class="btn-nav-cadastro"
+                    >
+                        Cadastrar-se
+                    </a>
+
+
+                <?php else: ?>
+
+
+                    <!-- USUÁRIO LOGADO -->
+
+                    <?php
+
+                    $linkHref =
+                        ($tipoUsuario === "ong")
+                            ? "minha_ong.php"
+                            : "meu_perfil.php";
+
+                    $textoPerfil = "Meu Perfil";
+
+                    ?>
+
+
+                    <a
+                        href="<?= $linkHref ?>"
+                        class="perfil-link-container"
+                        style="text-decoration: none;"
+                    >
+
+                        <span
+                            style="
+                                font-weight: 500;
+                                color: #718096;
+                            "
+                        >
+                            <?= $textoPerfil ?>
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="logout.php"
+                        style="
+                            color: #ff4d4d;
+                            font-weight: 500;
+                            text-decoration: none;
+                        "
+                    >
+                        Sair
+                    </a>
+
+
+                <?php endif; ?>
+
+
+            </div>
+
+
+        </nav>
+
 
     </header>
 
 
+    <!-- =========================
+         CONTEÚDO PRINCIPAL
+    ========================= -->
 
     <main class="hero-container">
 
@@ -214,13 +444,17 @@ if ($logado) {
                 <?php if ($tipoUsuario === "ong"): ?>
 
 
-                    Gerencie seus animais cadastrados, avalie candidaturas de adoção e encontre tutores responsáveis.
+                    Gerencie seus animais cadastrados,
+                    avalie candidaturas de adoção e encontre
+                    tutores responsáveis.
 
 
                 <?php else: ?>
 
 
-                    A AdotaPet conecta você ao animal perfeito com um algoritmo. Um lar amoroso está a poucos clicks de distância.
+                    A AdotaPet conecta você ao animal perfeito
+                    com um algoritmo. Um lar amoroso está a
+                    poucos clicks de distância.
 
 
                 <?php endif; ?>
@@ -229,6 +463,9 @@ if ($logado) {
             </p>
 
 
+            <!-- =========================
+                 BOTÕES
+            ========================= -->
 
             <div
                 class="buttons"
@@ -254,6 +491,8 @@ if ($logado) {
                     <?php if ($tipoUsuario !== "ong"): ?>
 
 
+                        <!-- ADOTANTE / VISITANTE -->
+
                         <a
                             href="adotar.php"
                             id="btn-encontrar"
@@ -273,6 +512,8 @@ if ($logado) {
 
                     <?php else: ?>
 
+
+                        <!-- ONG -->
 
                         <a
                             href="cadastrar_animal.php"
@@ -313,6 +554,10 @@ if ($logado) {
                 </div>
 
 
+                <!-- =========================
+                     QUESTIONÁRIO
+                     SOMENTE ADOTANTE
+                ========================= -->
 
                 <?php if ($tipoUsuario === "adotante"): ?>
 
@@ -348,9 +593,8 @@ if ($logado) {
         </section>
 
 
-
         <!-- =========================
-             CARROSSEL AUTOMÁTICO
+             CARROSSEL
              SOMENTE CACHORROS
         ========================= -->
 
@@ -438,59 +682,150 @@ if ($logado) {
     </main>
 
 
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
 
     <script>
+
+
         /* =================================
            SINCRONIZAÇÃO COM LOCALSTORAGE
         ================================= */
-        const tipoUsuarioSessao = <?php echo json_encode($tipoUsuario); ?>;
-        const usuarioNomeSessao = <?php echo json_encode($usuario_nome); ?>;
+
+        const tipoUsuarioSessao =
+            <?php echo json_encode($tipoUsuario); ?>;
+
+        const usuarioNomeSessao =
+            <?php echo json_encode($usuario_nome); ?>;
+
 
         if (tipoUsuarioSessao) {
-            localStorage.setItem("tipoUsuario", tipoUsuarioSessao);
-            localStorage.setItem("usuarioLogadoNome", usuarioNomeSessao);
+
+            localStorage.setItem(
+                "tipoUsuario",
+                tipoUsuarioSessao
+            );
+
+            localStorage.setItem(
+                "usuarioLogadoNome",
+                usuarioNomeSessao
+            );
+
         } else {
-            localStorage.removeItem("tipoUsuario");
-            localStorage.removeItem("usuarioLogadoEmail");
-            localStorage.removeItem("usuarioLogadoNome");
+
+            localStorage.removeItem(
+                "tipoUsuario"
+            );
+
+            localStorage.removeItem(
+                "usuarioLogadoEmail"
+            );
+
+            localStorage.removeItem(
+                "usuarioLogadoNome"
+            );
+
         }
+
 
         /* =================================
            QUESTIONÁRIO
         ================================= */
-        const btnQuest = document.getElementById("btn-questionario");
+
+        const btnQuest =
+            document.getElementById(
+                "btn-questionario"
+            );
+
 
         if (btnQuest) {
-            const jaRespondeu = localStorage.getItem("questionario_respondido_sinc");
+
+            const jaRespondeu =
+                localStorage.getItem(
+                    "questionario_respondido_sinc"
+                );
+
+
             if (jaRespondeu === "sim") {
-                btnQuest.style.display = "none";
+
+                btnQuest.style.display =
+                    "none";
+
             }
+
         }
+
 
         /* =================================
            CARROSSEL AUTOMÁTICO
         ================================= */
+
         let slideAtual = 0;
-        const track = document.getElementById("carouselTrack");
-        const slides = document.querySelectorAll(".carousel-slide");
-        const totalSlides = slides.length;
+
+
+        const track =
+            document.getElementById(
+                "carouselTrack"
+            );
+
+
+        const slides =
+            document.querySelectorAll(
+                ".carousel-slide"
+            );
+
+
+        const totalSlides =
+            slides.length;
+
 
         function atualizarCarousel() {
-            if (!track || totalSlides === 0) return;
-            track.style.transform = `translateX(-${slideAtual * 100}%)`;
+
+            if (
+                !track ||
+                totalSlides === 0
+            ) {
+
+                return;
+
+            }
+
+
+            track.style.transform =
+                `translateX(-${slideAtual * 100}%)`;
+
         }
+
 
         function proximoCachorro() {
+
             slideAtual++;
-            if (slideAtual >= totalSlides) {
+
+
+            if (
+                slideAtual >= totalSlides
+            ) {
+
                 slideAtual = 0;
+
             }
+
+
             atualizarCarousel();
+
         }
 
+
         if (totalSlides > 1) {
-            setInterval(proximoCachorro, 3000);
+
+            setInterval(
+                proximoCachorro,
+                3000
+            );
+
         }
+
     </script>
 
 
