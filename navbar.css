@@ -105,3 +105,32 @@
 .btn-logout:hover {
     background-color: #FFF5F5;
 }
+
+/* Estilização e Alinhamento da Logo na Navbar */
+.left-brand-box {
+    display: flex;
+    align-items: center;
+}
+
+.left-brand-box {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* 🟢 Aumentando a altura da logo */
+.navbar-logo-img {
+    height: 50px;             /* Alterado de 48px para 70px (ou teste 65px/80px) */
+    width: auto;              /* Preserva a proporção da imagem */
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.navbar-logo-img:hover {
+    transform: scale(1.04);
+}

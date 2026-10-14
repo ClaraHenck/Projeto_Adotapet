@@ -4,73 +4,73 @@ require_once "../config/db.php";
 
 $erro = "";
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST["nome"]);
     $email = trim(strtolower($_POST["email"]));
     $senha = $_POST["senha"];
     $telefone = trim($_POST["telefone"]);
     $tipo_conta = $_POST["tipo_conta"];
-    
-    // Extrai o domínio do e-mail para validar se existe (ex: gmail.com, hotmail.com)
-    $dominio = substr(strrchr($email, "@"), 1);
 
-    // 1. VALIDAÇÃO DE E-MAIL (Formato e se o domínio existe)
+    // 1. VALIDAÇÃO DE E-MAIL (Validação de formato padrão)
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erro = "Por favor, informe um endereço de e-mail válido!";
-    } elseif (empty($dominio) || !checkdnsrr($dominio, "MX")) {
-        $erro = "O e-mail informado parece não existir ou não possui um domínio de e-mail válido!";
     } 
     // 2. VALIDAÇÃO DE SENHA (Mínimo de 8 caracteres)
     elseif (strlen($senha) < 8) {
         $erro = "A senha deve ter no mínimo 8 caracteres!";
     } 
     else {
-        // Verifica se o e-mail já existe na tabela de adotantes
-        $sqlCheckAdotante = "SELECT id FROM adotantes WHERE email = ?";
-        $stmtCheckAdotante = $pdo->prepare($sqlCheckAdotante);
-        $stmtCheckAdotante->execute([$email]);
-        
-        // Verifica se o e-mail já existe na tabela de ongs
-        $sqlCheckOng = "SELECT id FROM ongs WHERE email = ?";
-        $stmtCheckOng = $pdo->prepare($sqlCheckOng);
-        $stmtCheckOng->execute([$email]);
-        
-        if ($stmtCheckAdotante->fetch() || $stmtCheckOng->fetch()) {
-            $erro = "Este e-mail já está registrado!";
-        } else {
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-            $sucesso = false;
+        try {
+            // Verifica se o e-mail já existe na tabela de adotantes
+            $sqlCheckAdotante = "SELECT id FROM adotantes WHERE email = ?";
+            $stmtCheckAdotante = $pdo->prepare($sqlCheckAdotante);
+            $stmtCheckAdotante->execute([$email]);
             
-            // Define permissão padrão com base na escolha
-            $pode_cadastrar = ($tipo_conta === 'ong') ? 1 : 0;
-            $pode_editar = 0;
-            $pode_excluir = 0;
+            // Verifica se o e-mail já existe na tabela de ongs
+            $sqlCheckOng = "SELECT id FROM ongs WHERE email = ?";
+            $stmtCheckOng = $pdo->prepare($sqlCheckOng);
+            $stmtCheckOng->execute([$email]);
             
-            // Insere os dados na tabela correspondente ao tipo selecionado no formulário
-            if ($tipo_conta === 'ong') {
-                $sqlInsert = "INSERT INTO ongs (nome_instituicao, email, senha, telefone) VALUES (?, ?, ?, ?)";
-                $stmtInsert = $pdo->prepare($sqlInsert);
-                $sucesso = $stmtInsert->execute([$nome, $email, $senhaHash, $telefone]);
+            if ($stmtCheckAdotante->fetch() || $stmtCheckOng->fetch()) {
+                $erro = "Este e-mail já está registrado!";
             } else {
-                $sqlInsert = "INSERT INTO adotantes (nome_completo, email, senha, telefone) VALUES (?, ?, ?, ?)";
-                $stmtInsert = $pdo->prepare($sqlInsert);
-                $sucesso = $stmtInsert->execute([$nome, $email, $senhaHash, $telefone]);
-            }
-            
-            if ($sucesso) {
-                $_SESSION["usuario_id"] = $pdo->lastInsertId();
-                $_SESSION["usuario_nome"] = $nome;
-                $_SESSION["tipo_usuario"] = $tipo_conta;
-                $_SESSION["pode_cadastrar"] = $pode_cadastrar;
-                $_SESSION["pode_editar"] = $pode_editar;
-                $_SESSION["pode_excluir"] = $pode_excluir;
+                $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+                $sucesso = false;
                 
-                // REDIRECIONA PARA A INDEX PRINCIPAL APÓS CRIAR A CONTA
-                header("Location: ../index.php");
-                exit;
-            } else {
-                $erro = "Ocorreu um erro ao criar a conta.";
+                $pode_cadastrar = ($tipo_conta === 'ong') ? 1 : 0;
+                $pode_editar = 0;
+                $pode_excluir = 0;
+                
+                // Insere os dados na tabela correspondente
+                if ($tipo_conta === 'ong') {
+                    $sqlInsert = "INSERT INTO ongs (nome_instituicao, email, senha, telefone) VALUES (?, ?, ?, ?)";
+                    $stmtInsert = $pdo->prepare($sqlInsert);
+                    $sucesso = $stmtInsert->execute([$nome, $email, $senhaHash, $telefone]);
+                } else {
+                    $sqlInsert = "INSERT INTO adotantes (nome_completo, email, senha, telefone) VALUES (?, ?, ?, ?)";
+                    $stmtInsert = $pdo->prepare($sqlInsert);
+                    $sucesso = $stmtInsert->execute([$nome, $email, $senhaHash, $telefone]);
+                }
+                
+                if ($sucesso) {
+                    $_SESSION["usuario_id"] = $pdo->lastInsertId();
+                    $_SESSION["usuario_nome"] = $nome;
+                    $_SESSION["tipo_usuario"] = $tipo_conta;
+                    $_SESSION["pode_cadastrar"] = $pode_cadastrar;
+                    $_SESSION["pode_editar"] = $pode_editar;
+                    $_SESSION["pode_excluir"] = $pode_excluir;
+                    
+                    // REDIRECIONA PARA A INDEX PRINCIPAL
+                    // (Ajuste para "index.php" se cadastrar.php estiver na mesma pasta da raiz)
+                    header("Location: ./../index.php");
+                    exit();
+                } else {
+                    $erro = "Ocorreu um erro ao criar a conta.";
+                }
             }
+        } catch (PDOException $e) {
+            $erro = "Erro no banco de dados: " . $e->getMessage();
         }
     }
 }

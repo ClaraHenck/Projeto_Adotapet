@@ -121,8 +121,10 @@ if (!$logado || $tipoUsuario !== "ong") {
   ========================= -->
   <header class="navbar relative z-50">
     <div class="left-brand-box">
-        <a href="index.php" class="logo" style="text-decoration: none;">🐾 AdotaPet</a>
-    </div>
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+        </a>
+      </div>
 
     <nav class="menu" id="menu-navegacao">
         <a href="index.php" class="active">Início</a>

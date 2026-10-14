@@ -75,9 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
     <header>
-        <a href="index.php" class="logo">
-            🐾 <span>Adota</span>Pet
+        <div class="left-brand-box">
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
         </a>
+      </div>
         <nav>
             <a href="index.php" class="active">Início</a>
             <a href="#">Mapa</a>

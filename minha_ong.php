@@ -169,7 +169,11 @@ $ong = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
     <!-- NAVBAR PADRONIZADA -->
     <header class="navbar">
-        <a href="index.php" class="logo">🐾 AdotaPet</a>
+        <div class="left-brand-box">
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+        </a>
+      </div>
         <nav class="menu">
             <a href="index.php">Início</a>
             <a href="meus_animais.php">Meus Animais</a>
@@ -212,10 +216,9 @@ $ong = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
                     <!-- Controles para Seleção e Upload -->
                     <div style="flex: 1; min-width: 250px;">
-                        <label for="foto" style="display: block; font-weight: 600; margin-bottom: 8px;">Escolher imagem da galeria</label>
-                        <input type="file" id="foto" name="foto" accept="image/png, image/jpeg, image/jpg, image/webp" required style="margin-bottom: 12px;">
-                        <br>
-                        <button type="submit" name="salvar_foto" value="1" class="btn-salvar" style="padding: 10px 20px; width: auto;">Salvar Foto</button>
+                        <label for="foto" style="display: block; font-weight: 600; margin-bottom: 10px; color: #4A5568;">Escolher imagem da galeria</label>
+                        <input type="file" id="foto" name="foto" accept="image/png, image/jpeg, image/jpg, image/webp" required style="margin-bottom: 16px; display: block; width: 100%;">
+                        <button type="submit" name="salvar_foto" value="1" class="btn-salvar" style="padding: 10px 22px; width: auto;">Salvar Foto</button>
                     </div>
 
                 </div>

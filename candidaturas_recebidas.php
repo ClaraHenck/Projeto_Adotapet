@@ -117,12 +117,16 @@ $candidaturas = $stmt->fetchAll();
 
   <!-- NAVBAR PADRONIZADA -->
   <header class="navbar">
-    <a href="index.php" class="logo">🐾 AdotaPet</a>
+    <div class="left-brand-box">
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+        </a>
+      </div>
     <nav class="menu">
       <a href="index.php">Início</a>
       <a href="meus_animais.php">Meus Animais</a>
       <a href="candidaturas_recebidas.php" class="active">Candidaturas Recebidas</a>
-      <a href="minha_ong.php">MINHA ONG</a>
+      <a href="minha_ong.php">Meu Perfil</a>
       <a href="logout.php" class="btn-logout">Sair</a>
     </nav>
   </header>

@@ -200,7 +200,9 @@ $total = count($animais);
 
     <header class="navbar">
       <div class="left-brand-box">
-        <div class="logo">🐾 AdotaPet</div>
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+        </a>
       </div>
 
       <nav class="menu" id="menu-navegacao">

@@ -70,42 +70,6 @@ body::after {
     }
 }
 
-/* =================================
-   NAVEGAÇÃO / CABEÇALHO
-================================= */
-
-.logo {
-    font-size: 26px;
-    font-weight: 800;
-    color: #1a202c;
-    letter-spacing: -0.5px;
-}
-
-.menu {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-}
-
-.menu a {
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 500;
-    color: #718096;
-    transition: color 0.2s ease;
-}
-
-.menu a:hover {
-    color: #00bcd4;
-}
-
-.menu a.active {
-    color: #ffffff;
-    background-color: #00bcd4;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: 600;
-}
 
 /* =================================
    HERO / ÁREA PRINCIPAL (TEXTO MAIOR E À ESQUERDA)

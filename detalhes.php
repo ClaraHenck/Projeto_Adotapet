@@ -530,10 +530,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao_adotar'])) {
 <body>
 
     <header class="main-header">
-        <a href="index.php" class="logo">
-            <span class="paw-icon">🐾</span>
-            <h1>Adota<span>Pet</span></h1>
-        </a>
+        <div class="left-brand-box">
+         <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+             <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+         </a>
+        </div>
         <nav class="nav-links">
             <a href="index.php">Início</a>
             <a href="adotar.php" class="active">Adotar</a>

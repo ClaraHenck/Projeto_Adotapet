@@ -71,7 +71,11 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
 
     <!-- NAVBAR -->
     <header class="navbar">
-      <a href="index.php" class="logo">🐾 AdotaPet</a>
+      <div class="left-brand-box">
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+        </a>
+      </div>
 
       <nav class="menu" id="menu-navegacao">
         <a href="index.php">Início</a>

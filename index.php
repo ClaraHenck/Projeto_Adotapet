@@ -72,7 +72,7 @@ if ($logado) {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #e94d61 !important;
+            
             font-weight: 600 !important;
             text-decoration: none;
             transition: all 0.2s ease;
@@ -127,16 +127,17 @@ if ($logado) {
 </head>
 
 <body>
-
     <header class="navbar">
-      <div class="left-brand-box">
-        <a href="index.php" class="logo" style="text-decoration: none;">🐾 AdotaPet</a>
+     <div class="left-brand-box">
+        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+        </a>
       </div>
 
       <nav class="menu" id="menu-navegacao">
         <a href="index.php" class="active">Início</a>
         
-        <?php if ($logado &&$tipoUsuario === "ong"): ?>
+        <?php if ($logado && $tipoUsuario === "ong"): ?>
           <a href="meus_animais.php" id="link-meus-animais">Meus Animais</a>
         <?php endif; ?>
 
@@ -155,7 +156,7 @@ if ($logado) {
         <?php endif; ?>
 
         <!-- PÓS-ADOÇÃO (SOMENTE PARA ADOTANTES LOGADOS) -->
-        <?php if ($logado &&$tipoUsuario === "adotante"): ?>
+        <?php if ($logado && $tipoUsuario === "adotante"): ?>
             <a href="pos_adocao.php" id="link-pos-adocao" class="link-pos-adocao" title="Guia de Pós-Adoção">
                 🐾 Pós-Adoção
             </a>
@@ -164,7 +165,7 @@ if ($logado) {
         <div id="area-usuario-nav" style="display: flex; align-items: center; gap: 24px;">
             <?php if (!$logado): ?>
                 <a href="../projeto_adotapet/login/login.php" class="btn-nav-login">Entrar</a>
-                <a href="../projeto_adotapet/login/login.php" class="btn-nav-cadastro">Cadastrar-se</a>
+                <a href="../projeto_adotapet/login/cadastrar.php" class="btn-nav-cadastro">Cadastrar-se</a>
             <?php else: ?>
                 <?php 
                     $linkHref = ($tipoUsuario === "ong") ? "minha_ong.php" : "meu_perfil.php";
@@ -177,7 +178,9 @@ if ($logado) {
             <?php endif; ?>
         </div>
       </nav>
-    </header>
+</header>
+    
+    
 
     <!-- =========================
          CONTEÚDO PRINCIPAL
