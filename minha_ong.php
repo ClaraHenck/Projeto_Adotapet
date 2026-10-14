@@ -28,7 +28,6 @@ function buscarCoordenadasPHP($logradouro, $numero, $bairro, $cidade, $estado, $
         return ['latitude' => null, 'longitude' => null];
     }
 
-    // Função interna para executar a chamada na API
     $consultarAPI = function($query) {
         $url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" . urlencode($query);
 
@@ -57,17 +56,14 @@ function buscarCoordenadasPHP($logradouro, $numero, $bairro, $cidade, $estado, $
         return null;
     };
 
-    // TENTATIVA 1: Logradouro, Número, Bairro, Cidade, Estado (Sem o CEP)
     $q1 = implode(', ', array_filter([$logradouro, $numero, $bairro, $cidade, $estado, 'Brasil']));
     $res = $consultarAPI($q1);
     if ($res) return $res;
 
-    // TENTATIVA 2 (Fallback): Sem o número (caso o número exato não exista no mapa)
     $q2 = implode(', ', array_filter([$logradouro, $bairro, $cidade, $estado, 'Brasil']));
     $res = $consultarAPI($q2);
     if ($res) return $res;
 
-    // TENTATIVA 3 (Fallback): Apenas Cidade e Estado (ponto central da cidade)
     $q3 = implode(', ', array_filter([$cidade, $estado, 'Brasil']));
     $res = $consultarAPI($q3);
     if ($res) return $res;
@@ -75,7 +71,55 @@ function buscarCoordenadasPHP($logradouro, $numero, $bairro, $cidade, $estado, $
     return ['latitude' => null, 'longitude' => null];
 }
 
-// Processar atualização dos Dados Gerais[cite: 34]
+// =========================================================================
+// PROCESSAR UPLOAD DA FOTO DE PERFIL DA ONG
+// =========================================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_foto'])) {
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $arquivoTmp   = $_FILES['foto']['tmp_name'];
+        $nomeOriginal = $_FILES['foto']['name'];
+        $extensao     = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
+
+        $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (in_array($extensao, $extensoesPermitidas)) {
+            $diretorioUpload = __DIR__ . '/uploads/';
+
+            // Cria a pasta uploads caso ela ainda não exista
+            if (!is_dir($diretorioUpload)) {
+                mkdir($diretorioUpload, 0755, true);
+            }
+
+            // Gera um nome exclusivo para a foto da ONG (ex: ong_foto_1_1690000000.jpg)
+            $novoNomeFoto = 'ong_foto_' . $id . '_' . time() . '.' . $extensao;
+            $caminhoDestino = $diretorioUpload . $novoNomeFoto;
+
+            if (move_uploaded_file($arquivoTmp, $caminhoDestino)) {
+                try {
+                    $stmtFoto = $pdo->prepare("UPDATE ongs SET foto = :foto WHERE id = :id");
+                    $stmtFoto->execute([
+                        ':foto' => $novoNomeFoto,
+                        ':id'   => $id
+                    ]);
+
+                    $mensagem = "Foto de perfil atualizada com sucesso!";
+                } catch (PDOException $e) {
+                    $erro = "Erro ao salvar foto no banco de dados: " . $e->getMessage();
+                }
+            } else {
+                $erro = "Falha ao mover a imagem para a pasta de uploads.";
+            }
+        } else {
+            $erro = "Formato de imagem inválido. Envie apenas JPG, JPEG, PNG ou WEBP.";
+        }
+    } else {
+        $erro = "Por favor, selecione uma imagem válida antes de salvar.";
+    }
+}
+
+// =========================================================================
+// PROCESSAR ATUALIZAÇÃO DOS DADOS GERAIS
+// =========================================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
     $nome_instituicao     = trim($_POST['nome_instituicao'] ?? '');
     $cnpj                 = trim($_POST['cnpj'] ?? '') ?: null;
@@ -92,17 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
     $chave_pix            = trim($_POST['chave_pix'] ?? '') ?: null;
     $capacidade_abrigados = (isset($_POST['capacidade_abrigados']) && $_POST['capacidade_abrigados'] !== '') ? (int)$_POST['capacidade_abrigados'] : null;
 
-    // Converte o endereço informado em coordenadas geográficas
-    // 1. Busca as coordenadas
     $coordenadas = buscarCoordenadasPHP($logradouro, $numero, $bairro, $cidade, $estado, $cep);
-
-    // -------------------------------------------------------------
-    
-    // -------------------------------------------------------------
 
     $latitude  = $coordenadas['latitude'];
     $longitude = $coordenadas['longitude'];
-
 
     try {
         $sql = "UPDATE ongs SET 
@@ -151,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_dados'])) {
     }
 }
 
-// Buscar dados atualizados da ONG para preenchimento dos campos no formulário[cite: 34]
+// Buscar dados atualizados da ONG
 $stmtSelect = $pdo->prepare("SELECT * FROM ongs WHERE id = :id");
 $stmtSelect->execute([':id' => $id]);
 $ong = $stmtSelect->fetch(PDO::FETCH_ASSOC);

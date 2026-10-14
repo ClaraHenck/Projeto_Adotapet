@@ -61,7 +61,7 @@ $animais = $stmt->fetchAll();
                     <tbody>
                         <?php foreach ($animais as $animal): ?>
                             <tr>
-                                <td><img src="<?= htmlspecialchars($animal['foto_url']) ?>" alt="Foto de <?= htmlspecialchars($animal['nome']) ?>" class="img-thumb"></td>
+                                <td><img src="<?= htmlspecialchars($animal['foto']) ?>" alt="Foto de <?= htmlspecialchars($animal['nome']) ?>" class="img-thumb"></td>
                                 <td><strong><?= htmlspecialchars($animal['nome']) ?></strong></td>
                                 <td><?= htmlspecialchars($animal['especie_raca']) ?></td>
                                 <td><?= htmlspecialchars($animal['idade_estimada']) ?></td>

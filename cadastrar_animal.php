@@ -3,7 +3,11 @@
 require_once 'config/auth.php';
 require_once 'config/db.php';
 
-$ong_id = $_SESSION['usuario_id'] ?? $_SESSION['ong_id'] ?? null;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$ong_id = $_SESSION['usuario_id'] ?? $_SESSION['ong_id'] ?? $_SESSION['id'] ?? null;
 $mensagemErro = '';
 
 // Variáveis padrão para o formulário
@@ -16,11 +20,11 @@ $porte = '';
 $carteira_vacinacao = '';
 $temperamento = '';
 $sociabilidade = '';
-$foto_url = '';
+$foto = '';
 $descricao = '';
 $modo_edicao = false;
 
-// 2. SE VIER UM ID, BUSCA OS DADOS DO ANIMAL NO BANCO PARA PREENCHER O FORMULÁRIO
+// 2. SE VIER UM ID, BUSCA OS DADOS DO ANIMAL NO BANCO PARA EDICÃO
 if ($id && $ong_id) {
     $stmt = $pdo->prepare("SELECT * FROM animais WHERE id = ? AND ong_id = ?");
     $stmt->execute([$id, $ong_id]);
@@ -42,7 +46,7 @@ if ($id && $ong_id) {
         $carteira_vacinacao = $animal['carteira_vacinacao'];
         $temperamento = $animal['temperamento'] ?? '';
         $sociabilidade = $animal['sociabilidade'] ?? '';
-        $foto_url = $animal['foto_url'];
+        $foto = $animal['foto'];
         $descricao = $animal['descricao'];
     }
 }
@@ -59,12 +63,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carteira_vacinacao = trim($_POST['carteira_vacinacao'] ?? '');
     $temperamento = trim($_POST['temperamento'] ?? '');
     $sociabilidade = trim($_POST['sociabilidade'] ?? '');
-    $foto_url = trim($_POST['foto_url'] ?? '');
     $descricao = trim($_POST['observacoes'] ?? '');
 
-    // Formatação para combinar Espécie + Raça no campo 'especie_raca'
+    // Formatação combinada
     $especie_raca = !empty($raca) ? "{$especie} - {$raca}" : $especie;
     $idade_estimada = !empty($idade) ? "{$idade} anos" : "Não informada";
+
+    // -------------------------------------------------------------------------
+    // LÓGICA DE UPLOAD DA FOTO DO PET
+    // -------------------------------------------------------------------------
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $arquivoTmp   = $_FILES['foto']['tmp_name'];
+        $nomeOriginal = $_FILES['foto']['name'];
+        $extensao     = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
+
+        $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (in_array($extensao, $extensoesPermitidas)) {
+            $diretorioUpload = __DIR__ . '/uploads/';
+
+            if (!is_dir($diretorioUpload)) {
+                mkdir($diretorioUpload, 0755, true);
+            }
+
+            // Nome do arquivo gerado
+            $novoNomeFoto = 'pet_' . time() . '_' . uniqid() . '.' . $extensao;
+            $caminhoDestino = $diretorioUpload . $novoNomeFoto;
+
+            if (move_uploaded_file($arquivoTmp, $caminhoDestino)) {
+                // Guarda o caminho relativo para a exibição nas páginas do site
+                $foto = 'uploads/' . $novoNomeFoto;
+            } else {
+                $mensagemErro = "Falha ao mover a foto do pet para a pasta de uploads.";
+            }
+        } else {
+            $mensagemErro = "Formato de imagem inválido. Use apenas JPG, JPEG, PNG ou WEBP.";
+        }
+    } elseif (!$modo_edicao && empty($foto)) {
+        // Se for um novo cadastro e nenhuma foto foi enviada
+        $mensagemErro = "Por favor, selecione uma foto para o animal.";
+    }
 
     // Validação simples dos campos obrigatórios
     if (!$ong_id) {
@@ -72,13 +110,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (
         empty($nome) || empty($especie) || empty($porte) || 
         empty($carteira_vacinacao) || empty($temperamento) || 
-        empty($sociabilidade) || empty($foto_url) || empty($descricao)
+        empty($sociabilidade) || empty($foto) || empty($descricao)
     ) {
-        $mensagemErro = "Por favor, preencha todos os campos obrigatórios (*).";
+        if (empty($mensagemErro)) {
+            $mensagemErro = "Por favor, preencha todos os campos obrigatórios (*).";
+        }
     } else {
         try {
             if ($modo_edicao) {
-                // ATUALIZAÇÃO (UPDATE) - Mantém o registro e altera os dados
+                // ATUALIZAÇÃO (UPDATE)
                 $sql = "UPDATE animais SET 
                             nome = :nome, 
                             especie_raca = :especie_raca, 
@@ -87,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             carteira_vacinacao = :carteira_vacinacao, 
                             temperamento = :temperamento,
                             sociabilidade = :sociabilidade,
-                            foto_url = :foto_url, 
+                            foto = :foto, 
                             descricao = :descricao 
                         WHERE id = :id AND ong_id = :ong_id";
                 
@@ -100,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':carteira_vacinacao' => $carteira_vacinacao,
                     ':temperamento'       => $temperamento,
                     ':sociabilidade'      => $sociabilidade,
-                    ':foto_url'           => $foto_url,
+                    ':foto'           => $foto,
                     ':descricao'          => $descricao,
                     ':id'                 => $id,
                     ':ong_id'             => $ong_id
@@ -109,11 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // NOVO CADASTRO (INSERT)
                 $sql = "INSERT INTO animais (
                             ong_id, nome, especie_raca, idade_estimada, porte, 
-                            carteira_vacinacao, temperamento, sociabilidade, foto_url, descricao
+                            carteira_vacinacao, temperamento, sociabilidade, foto, descricao
                         ) 
                         VALUES (
                             :ong_id, :nome, :especie_raca, :idade_estimada, :porte, 
-                            :carteira_vacinacao, :temperamento, :sociabilidade, :foto_url, :descricao
+                            :carteira_vacinacao, :temperamento, :sociabilidade, foto, :descricao
                         )";
                 
                 $stmt = $pdo->prepare($sql);
@@ -126,12 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':carteira_vacinacao' => $carteira_vacinacao,
                     ':temperamento'       => $temperamento,
                     ':sociabilidade'      => $sociabilidade,
-                    ':foto_url'           => $foto_url,
+                    ':foto'           => $foto,
                     ':descricao'          => $descricao
                 ]);
             }
 
-            // Redireciona após salvar com sucesso
             header("Location: meus_animais.php?sucesso=1");
             exit;
 
@@ -147,7 +186,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $modo_edicao ? 'Editar Animal' : 'Cadastro de Animal' ?> - AdotaPet</title>
-    <!-- Importação do CSS da Navbar e de Cadastro -->
     <link rel="stylesheet" href="navbar.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="cadastrar_animal.css?v=<?php echo time(); ?>">
 </head>
@@ -156,10 +194,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- NAVBAR PADRONIZADA -->
     <header class="navbar">
         <div class="left-brand-box">
-        <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
-            <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
-        </a>
-      </div>
+            <a href="index.php" class="logo-link" style="text-decoration: none; display: flex; align-items: center;">
+                <img src="./img/logo_adotapet.jpg" alt="AdotaPet" class="navbar-logo-img">
+            </a>
+        </div>
         <nav class="menu">
             <a href="index.php">Início</a>
             <a href="meus_animais.php" class="active">Meus Animais</a>
@@ -178,9 +216,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert-error"><?= htmlspecialchars($mensagemErro) ?></div>
             <?php endif; ?>
 
-            <form action="cadastrar_animal.php<?= $modo_edicao ? '?id=' . $id : '' ?>" method="POST">
+            <!-- ATENÇÃO: enctype="multipart/form-data" adicionado para permitir upload de arquivos -->
+            <form action="cadastrar_animal.php<?= $modo_edicao ? '?id=' . $id : '' ?>" method="POST" enctype="multipart/form-data">
                 
-                <!-- Campo oculto com o ID para manter o modo de edição no submit -->
                 <?php if ($modo_edicao): ?>
                     <input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>">
                 <?php endif; ?>
@@ -264,9 +302,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <!-- CAMPO DE SELEÇÃO DE ARQUIVO DA FOTO DO PET -->
                 <div class="form-group">
-                    <label for="foto_url">URL da Foto do Pet *</label>
-                    <input type="url" id="foto_url" name="foto_url" required placeholder="https://exemplo.com/imagem.jpg" value="<?= htmlspecialchars($foto_url) ?>">
+                    <label for="foto">Foto do Pet *</label>
+                    <input type="file" id="foto" name="foto" accept="image/png, image/jpeg, image/jpg, image/webp" <?= $modo_edicao ? '' : 'required' ?>>
+                    
+                    <?php if ($modo_edicao && !empty($foto)): ?>
+                        <div style="margin-top: 10px; display: flex; align-items: center; gap: 12px;">
+                            <img src="<?= htmlspecialchars($foto) ?>" alt="Foto atual" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            <span style="font-size: 13px; color: #64748b;">Foto salva atualmente. Selecione um novo arquivo apenas se quiser alterá-la.</span>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-group">

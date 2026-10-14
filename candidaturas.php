@@ -44,7 +44,7 @@ $sql = "
         c.data_envio,
         a.id AS animal_id,
         a.nome AS pet_nome,
-        a.foto_url AS pet_foto,
+        a.foto AS foto,
         a.especie_raca
     FROM candidaturas c
     INNER JOIN animais a ON c.animal_id = a.id
@@ -83,7 +83,7 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
         <a href="mapa.php">Mapa</a> 
         <a href="candidaturas.php" class="active">Candidaturas</a>
         <a href="pos_adocao.php">Pós-Adoção</a>
-        <a href="meu_perfil.php"><?= htmlspecialchars($labelPerfil) ?></a>
+        <a href="meu_perfil.php">MEU PERFIL</a>
         <a href="logout.php" class="btn-logout" title="Sair">Sair</a>
       </nav>
     </header>

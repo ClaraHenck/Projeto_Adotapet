@@ -283,11 +283,11 @@ $descricaoOng = $ong['descricao'] ?? $ong['sobre'] ?? $ong['biografia'] ?? '';
         <a href="adotar.php">Adotar</a>
         <a href="mapa.php">Mapa</a> 
         <a href="candidaturas.php">Candidaturas</a>
-        <a href="meu_perfil.php"><?= htmlspecialchars($labelPerfil) ?></a>
+        <a href="meu_perfil.php">MEU PERFIL</a>
         <?php if (isset($_SESSION['id']) || isset($_SESSION['ong_id']) || isset($_SESSION['adotante_id'])): ?>
             <a href="logout.php" class="btn-logout" title="Sair">Sair</a>
         <?php else: ?>
-            <a href="login/login.php" class="btn-login">Entrar</a>
+            <a href="logout.php" class="btn-logout">sair</a>
         <?php endif; ?>
       </nav>
     </header>
@@ -384,8 +384,8 @@ $descricaoOng = $ong['descricao'] ?? $ong['sobre'] ?? $ong['biografia'] ?? '';
                                 <span class="badge-compatibilidade"><?= $pet['compatibilidade']; ?>%</span>
                             <?php endif; ?>
 
-                            <?php if (!empty($pet['foto_url'])): ?>
-                                <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
+                            <?php if (!empty($pet['foto'])): ?>
+                                <img src="<?= htmlspecialchars($pet['foto']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
                             <?php elseif (!empty($pet['foto']) && file_exists(__DIR__ . '/uploads/' . $pet['foto'])): ?>
                                 <img src="uploads/<?= htmlspecialchars($pet['foto']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
                             <?php else: ?>

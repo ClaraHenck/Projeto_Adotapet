@@ -284,7 +284,7 @@ $total = count($animais);
             <span class="badge-compatibilidade"><?= $pet['compatibilidade']; ?>%</span>
         <?php endif; ?>
 
-        <img src="<?= htmlspecialchars($pet['foto_url']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
+        <img src="<?= htmlspecialchars($pet['foto']); ?>" alt="<?= htmlspecialchars($pet['nome']); ?>">
     </div>
     
     <div class="card-info">
