@@ -54,24 +54,29 @@ function calcularCompatibilidadeReal($pet, $questionario) {
     if (!$questionario) return null;
 
     $porcentagem_match = 0;
+    $incompatibilidadeCritica = false;
 
-    $portePet      = strtolower(trim($pet['porte'] ?? 'médio'));
-    $especieRaca   = strtolower(trim($pet['especie_raca'] ?? ''));
-    $descricaoPet  = strtolower(trim($pet['descricao'] ?? ''));
-    $idadeTexto    = strtolower(trim($pet['idade_estimada'] ?? ''));
+    // Extração e normalização das colunas do pet
+    $portePet         = strtolower(trim($pet['porte'] ?? 'médio'));
+    $especieRaca      = strtolower(trim($pet['especie_raca'] ?? ''));
+    $descricaoPet     = strtolower(trim($pet['descricao'] ?? ''));
+    $idadeTexto       = strtolower(trim($pet['idade_estimada'] ?? ''));
+    $temperamentoPet  = strtolower(trim($pet['temperamento'] ?? ''));
+    $sociabilidadePet = strtolower(trim($pet['sociabilidade'] ?? ''));
     
-    $isGato        = (str_contains($especieRaca, 'gato') || str_contains($especieRaca, 'felina'));
+    $isGato           = (str_contains($especieRaca, 'gato') || str_contains($especieRaca, 'felina'));
     preg_match('/\d+/', $idadeTexto, $matches);
-    $idadeAnos     = isset($matches[0]) ? intval($matches[0]) : 3;
-    $isFilhote     = ($idadeAnos <= 1);
+    $idadeAnos        = isset($matches[0]) ? intval($matches[0]) : 3;
+    $isFilhote        = ($idadeAnos <= 1);
 
-    $ondeMora     = strtolower($questionario['onde_mora'] ?? 'apartamento');
-    $areaExterna  = (int)($questionario['tem_area_externa'] ?? 0);
-    $horasFora    = (int)($questionario['horas_fora_casa'] ?? 8);
-    $experiencia  = strtolower($questionario['experiencia'] ?? 'primeira_vez');
-    $temCriancas  = (int)($questionario['tem_criancas'] ?? 0);
-    $temAnimais   = (int)($questionario['tem_outros_animais'] ?? 0);
-    $atividade    = strtolower($questionario['nivel_atividade_fisica'] ?? 'moderado');
+    // Extração das respostas do adotante
+    $ondeMora    = strtolower($questionario['onde_mora'] ?? 'apartamento');
+    $areaExterna = (int)($questionario['tem_area_externa'] ?? 0);
+    $horasFora   = (int)($questionario['horas_fora_casa'] ?? 8);
+    $experiencia = strtolower($questionario['experiencia'] ?? 'primeira_vez');
+    $temCriancas = (int)($questionario['tem_criancas'] ?? 0);
+    $temAnimais  = (int)($questionario['tem_outros_animais'] ?? 0);
+    $atividade   = strtolower($questionario['nivel_atividade_fisica'] ?? 'moderado');
 
     // 1º: HORAS FORA DE CASA (20%)
     if ($isFilhote) {
@@ -99,7 +104,7 @@ function calcularCompatibilidadeReal($pet, $questionario) {
     // 3º: ÁREA EXTERNA (15%)
     if ($isGato) {
         $porcentagem_match += 15;
-    } elseif ($portePet === 'grande' || $portePet === 'médio' || $portePet === 'medio') {
+    } elseif (in_array($portePet, ['grande', 'médio', 'medio'])) {
         if ($areaExterna === 1) $porcentagem_match += 15;
         else $porcentagem_match += 4;
     } else {
@@ -108,42 +113,79 @@ function calcularCompatibilidadeReal($pet, $questionario) {
     }
 
     // 4º: OUTROS ANIMAIS EM CASA (12%)
-    $petRestritoAnimais = (str_contains($descricaoPet, 'único') || str_contains($descricaoPet, 'nao gosta de caes') || str_contains($descricaoPet, 'não gosta de gatos'));
+    $petIncompativelAnimais = (
+        str_contains($sociabilidadePet, 'humanos') || 
+        str_contains($sociabilidadePet, 'não') || 
+        str_contains($sociabilidadePet, 'nao') || 
+        str_contains($sociabilidadePet, 'único') || 
+        str_contains($sociabilidadePet, 'unico') || 
+        str_contains($temperamentoPet, 'dominante') || 
+        str_contains($temperamentoPet, 'territorial') ||
+        str_contains($descricaoPet, 'animal único') ||
+        str_contains($descricaoPet, 'não aceita outros')
+    );
+
     if ($temAnimais === 1) {
-        if (!$petRestritoAnimais) $porcentagem_match += 12;
+        if ($petIncompativelAnimais) {
+            $incompatibilidadeCritica = true;
+        } else {
+            $porcentagem_match += 12;
+        }
     } else {
         $porcentagem_match += 12;
     }
 
     // 5º: CRIANÇAS EM CASA (12%)
-    $petAriscoOuBravo = (str_contains($descricaoPet, 'bravo') || str_contains($descricaoPet, 'arisco') || str_contains($descricaoPet, 'não recomendado para crianças'));
+    $petIncompativelCriancas = (
+        str_contains($temperamentoPet, 'dominante') || 
+        str_contains($temperamentoPet, 'antissocial') || 
+        str_contains($temperamentoPet, 'bravo') || 
+        str_contains($temperamentoPet, 'arisco') ||
+        str_contains($sociabilidadePet, 'adultos') || 
+        str_contains($sociabilidadePet, 'não') || 
+        str_contains($sociabilidadePet, 'nao') || 
+        str_contains($descricaoPet, 'não recomendado para crianças') ||
+        str_contains($descricaoPet, 'sem crianças')
+    );
+
     if ($temCriancas === 1) {
-        if (!$petAriscoOuBravo) $porcentagem_match += 12;
+        if ($petIncompativelCriancas) {
+            $incompatibilidadeCritica = true;
+        } else {
+            $porcentagem_match += 12;
+        }
     } else {
         $porcentagem_match += 12;
     }
 
     // 6º: NÍVEL DE ATIVIDADE FÍSICA (12%)
-    $petAltaEnergia = ($isFilhote || $portePet === 'grande' || str_contains($descricaoPet, 'ativo') || str_contains($descricaoPet, 'brincalhão'));
+    $petAltaEnergia = ($isFilhote || $portePet === 'grande' || in_array($temperamentoPet, ['brincalhão', 'agitado']));
     if ($petAltaEnergia) {
         if ($atividade === 'ativo') $porcentagem_match += 12;
         elseif ($atividade === 'moderado') $porcentagem_match += 7;
         else $porcentagem_match += 2;
     } else {
-        if ($atividade === 'sedentario' || $atividade === 'moderado') $porcentagem_match += 12;
+        if (in_array($atividade, ['sedentario', 'moderado'])) $porcentagem_match += 12;
         else $porcentagem_match += 9;
     }
 
     // 7º: EXPERIÊNCIA PRÉVIA (11%)
-    $exigeExperiencia = ($portePet === 'grande' || $isFilhote || str_contains($descricaoPet, 'especial') || str_contains($descricaoPet, 'trauma'));
+    $exigeExperiencia = ($portePet === 'grande' || $isFilhote || in_array($temperamentoPet, ['dominante', 'antissocial', 'tímido']));
     if ($exigeExperiencia) {
-        if ($experiencia === 'experiente' || $experiencia === 'ja_teve') $porcentagem_match += 11;
+        if (in_array($experiencia, ['experiente', 'ja_teve'])) $porcentagem_match += 11;
         else $porcentagem_match += 2;
     } else {
         $porcentagem_match += 11;
     }
 
-    return min(100, max(0, $porcentagem_match));
+    // TETO DE SEGURANÇA SE HOUVER INCOMPATIBILIDADE CRÍTICA
+    if ($incompatibilidadeCritica) {
+        $porcentagem_match = min($porcentagem_match, 30);
+    } else {
+        $porcentagem_match = min(100, max(0, $porcentagem_match));
+    }
+
+    return $porcentagem_match;
 }
 
 // Query SQL para buscar animais

@@ -24,7 +24,7 @@ $foto = '';
 $descricao = '';
 $modo_edicao = false;
 
-// 2. SE VIER UM ID, BUSCA OS DADOS DO ANIMAL NO BANCO PARA EDICÃO
+// 2. SE VIER UM ID, BUSCA OS DADOS DO ANIMAL NO BANCO PARA EDIÇÃO
 if ($id && $ong_id) {
     $stmt = $pdo->prepare("SELECT * FROM animais WHERE id = ? AND ong_id = ?");
     $stmt->execute([$id, $ong_id]);
@@ -46,7 +46,7 @@ if ($id && $ong_id) {
         $carteira_vacinacao = $animal['carteira_vacinacao'];
         $temperamento = $animal['temperamento'] ?? '';
         $sociabilidade = $animal['sociabilidade'] ?? '';
-        $foto = $animal['foto'];
+        $foto = $animal['foto'] ?? '';
         $descricao = $animal['descricao'];
     }
 }
@@ -86,12 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mkdir($diretorioUpload, 0755, true);
             }
 
-            // Nome do arquivo gerado
+            // Gera o novo nome para o ficheiro
             $novoNomeFoto = 'pet_' . time() . '_' . uniqid() . '.' . $extensao;
             $caminhoDestino = $diretorioUpload . $novoNomeFoto;
 
             if (move_uploaded_file($arquivoTmp, $caminhoDestino)) {
-                // Guarda o caminho relativo para a exibição nas páginas do site
                 $foto = 'uploads/' . $novoNomeFoto;
             } else {
                 $mensagemErro = "Falha ao mover a foto do pet para a pasta de uploads.";
@@ -100,11 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mensagemErro = "Formato de imagem inválido. Use apenas JPG, JPEG, PNG ou WEBP.";
         }
     } elseif (!$modo_edicao && empty($foto)) {
-        // Se for um novo cadastro e nenhuma foto foi enviada
         $mensagemErro = "Por favor, selecione uma foto para o animal.";
     }
 
-    // Validação simples dos campos obrigatórios
+    // Validação dos campos obrigatórios
     if (!$ong_id) {
         $mensagemErro = "Sessão expirada. Faça login novamente como ONG.";
     } elseif (
@@ -140,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':carteira_vacinacao' => $carteira_vacinacao,
                     ':temperamento'       => $temperamento,
                     ':sociabilidade'      => $sociabilidade,
-                    ':foto'           => $foto,
+                    ':foto'               => $foto,
                     ':descricao'          => $descricao,
                     ':id'                 => $id,
                     ':ong_id'             => $ong_id
@@ -153,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ) 
                         VALUES (
                             :ong_id, :nome, :especie_raca, :idade_estimada, :porte, 
-                            :carteira_vacinacao, :temperamento, :sociabilidade, foto, :descricao
+                            :carteira_vacinacao, :temperamento, :sociabilidade, :foto, :descricao
                         )";
                 
                 $stmt = $pdo->prepare($sql);
@@ -166,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':carteira_vacinacao' => $carteira_vacinacao,
                     ':temperamento'       => $temperamento,
                     ':sociabilidade'      => $sociabilidade,
-                    ':foto'           => $foto,
+                    ':foto'               => $foto,
                     ':descricao'          => $descricao
                 ]);
             }

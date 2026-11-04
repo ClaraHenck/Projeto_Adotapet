@@ -118,7 +118,7 @@ $labelPerfil = (isset($_SESSION['pode_cadastrar']) && $_SESSION['pode_cadastrar'
                         <div class="card-left">
                             <div class="match-badge"><?= htmlspecialchars($item['compatibilidade'] ?? '70%') ?></div>
 
-                            <img src="<?= htmlspecialchars($item['pet_foto'] ?? 'img/default-pet.png') ?>" alt="Foto de <?= htmlspecialchars($item['pet_nome']) ?>" class="pet-thumb" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px;">
+                            <img src="<?= htmlspecialchars($item['foto'] ?? 'img/default-pet.png') ?>" alt="Foto de <?= htmlspecialchars($item['pet_nome']) ?>" class="pet-thumb" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px;">
 
                             <div class="pet-info">
                                 <div class="pet-title-row">
